@@ -1,0 +1,8 @@
+Data	Horas Trabalhadas	Tipo Tarefa		Descrição da Tarefa Realizada
+15/08	0.5			estudar			download do arcabouço e leitura da documentação
+18/08	2			estudar			leitura do paper do Arndt
+							ftp://ftp.inf.puc-rio.br/pub/docs/techreports/03_09_staa.pdf
+18/08	1			estudar			estudo dos exemplos
+19/08	0.5			estudar 		compilar e rodar exemplos
+03/09   1.5			especificar os módulos	estudo e especificação do módulo de lista de caracteres
+03/09	1.5			codificar módulo	fazer as alterações necessárias no módulo LISTA
