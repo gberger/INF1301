@@ -15,6 +15,8 @@
 #include   <malloc.h>
 #include   <stdio.h>
 
+#include "LISTA.H"
+
 #define MATRIZ_OWN
 #include "MATRIZ.H"
 #undef MATRIZ_OWN
