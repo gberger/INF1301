@@ -2,11 +2,10 @@
 #define MATRIZ_
 /***************************************************************************
 *
-*  $MCD Módulo de definição: Módulo matriz
+*  $MCD Módulo de definição: Módulo matriz quadrada
 *
 *  Arquivo gerado:              MATRIZ.H
 *  Letras identificadoras:      MAT
-*
 *
 *  Projeto: T1 INF1301 2013.2
 *  Autores: gb - Guilherme Berger
