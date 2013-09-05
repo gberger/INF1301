@@ -1,9 +1,8 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: Módulo árvore
+*  $MCI Módulo de implementação: Módulo matriz quadrada
 *
 *  Arquivo gerado:              MATRIZ.C
 *  Letras identificadoras:      MAT
-*
 *
 *  Projeto: T1 INF1301 2013.2
 *  Autores: gb - Guilherme Berger
@@ -12,8 +11,8 @@
 *
 ***************************************************************************/
 
-#include   <malloc.h>
-#include   <stdio.h>
+#include <malloc.h>
+#include <stdio.h>
 
 #include "LISTA.H"
 
@@ -23,68 +22,48 @@
 
 /***********************************************************************
 *
-*  $TC Tipo de dados: ARV Descritor do nó da árvore
-*
+*  $TC Tipo de dados: MAT Descritor da célula da matriz
 *
 *  $ED Descrição do tipo
-*     Descreve a organização do nó
+*     Descreve a organização da célula
 *
 ***********************************************************************/
 
-   typedef struct tgNoArvore {
+   typedef struct tagCelulaMatriz {
 
-         struct tgNoArvore * pNoPai ;
-               /* Ponteiro para pai
+         LIS_tppLista pValor ;
+               /* Ponteiro para a lista (valor) */
+
+         struct tgCelulaMatriz * vpVizinhos[8] ;
+               /* Vetor de ponteiros para os vizinhos
                *
                *$EED Assertivas estruturais
-               *   É NULL sse o nó é raiz
-               *   Se não for raiz, um de pNoEsq ou pNoDir de pNoPai do nó
-               *   corrente apontam para o nó corrente */
+               *   é NULL se não existir tal vizinho */
 
-         struct tgNoArvore * pNoEsq ;
-               /* Ponteiro para filho à esquerda
-               *
-               *$EED Assertivas estruturais
-               *   se pNoEsq do nó X != NULL então pNoPai de pNoEsq aponta para o nó X */
-
-         struct tgNoArvore * pNoDir ;
-               /* Ponteiro para filho à direita
-               *
-               *$EED Assertivas estruturais
-               *   se pNoDir do nó X != NULL então pNoPai de pNoDir aponta para o nó X */
-
-         char Valor ;
-               /* Valor do nó */
-
-   } tpNoArvore ;
+   } tpCelulaMatriz ;
 
 /***********************************************************************
 *
-*  $TC Tipo de dados: ARV Descritor da cabeça de uma árvore
+*  $TC Tipo de dados: MAT Descritor da cabeça de uma matriz
 *
 *
 *  $ED Descrição do tipo
-*     A cabe‡a da árvore é o ponto de acesso para uma determinada árvore.
-*     Por intermédio da referência para o nó corrente e do ponteiro
-*     pai pode-se navegar a árvore sem necessitar de uma pilha.
-*     Pode-se, inclusive, operar com a árvore em forma de co-rotina.
+*     A cabeça da matriz é o ponto de acesso para uma determinada matriz.
+*     Por intermédio da referência para a célula corrente pode-se navegar
+*     pela matriz.
 *
 ***********************************************************************/
 
-   typedef struct tgArvore {
+   typedef struct MAT_tagMatriz {
 
-         tpNoArvore * pNoRaiz ;
-               /* Ponteiro para a raiz da árvore */
+         tpNoArvore * pCelulaCorr ;
+               /* Ponteiro para a célula corrente da matriz */
 
-         tpNoArvore * pNoCorr ;
-               /* Ponteiro para o nó corrente da árvore */
+   } MAT_tpMatriz ;
 
-   } tpArvore ;
 
-/*****  Dados encapsulados no módulo  *****/
+/* A PARTIR DAQUI ESTÁ CRU */
 
-      static tpArvore * pArvore = NULL ;
-            /* Ponteiro para a cabe‡a da árvore */
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
