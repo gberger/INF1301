@@ -14,8 +14,8 @@
 *           jv - João Vicente
 *
 *  $ED Descrição do módulo
-*     Implementa funções para criar e explorar matrizes.
-*     Podem existir n matrizes em operação simultaneamente.
+*     Implementa funções para criar e explorar matrizes quadradas.
+*     Podem existir inúmeras matrizes em operação simultaneamente.
 *     As matrizes possuem uma cabeça encapsulando o seu estado.
 *     Cada elemento da matriz pode armazenar uma lista de caracteres.
 *
@@ -37,7 +37,6 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *
 *  $TC Tipo de dados: MAT Condicoes de retorno
 *
-*
 *  $ED Descrição do tipo
 *     Condições de retorno das funções da matriz
 *
@@ -45,13 +44,41 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 
    typedef enum {
 
-         MAT_CondRetOK = 0 ,
-               /* Executou correto */
+         MAT_CondRetOK ,
+               /* Executou corretamente */
 
-         MAT_CondRetFaltouMemoria = 8
+         MAT_CondRetPonteiroNulo ,
+               /* Foi passado um ponteiro para NULL */
+
+         MAT_CondRetDirecaoInvalida ,
+               /* A direção que se quer mover é inválida */
+
+         MAT_CondRetFaltouMemoria 
                /* Faltou memória ao alocar dados */
 
    } MAT_tpCondRet ;
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: MAT Direcoes
+*
+*  $ED Descrição do tipo
+*     Direcoes disponíveis para mover a célula corrente da matriz
+*     Equivalem às direções da rosa dos ventos
+*
+***********************************************************************/
+   typedef enum {
+
+         MAT_N,
+         MAT_NE,
+         MAT_L,
+         MAT_SE,
+         MAT_S,
+         MAT_SO,
+         MAT_O,
+         MAT_NO
+
+   } MAT_tpDirecao ;
 
 
 /***********************************************************************
@@ -59,8 +86,13 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *  $FC Função: MAT Criar matriz
 *
 *  $ED Descrição da função
-*     Cria uma nova matriz vazia.
-*     Caso já exista uma matriz, esta será destruída.
+*     Cria uma nova matriz de tamanho N x N.
+*     O ponteiro para a nova matriz será fornecido no valor do ponteiro
+*     de ponteiro para matriz.
+*
+*  $EP Parâmetros
+*     $P ppMatriz - ponteiro para o ponteiro de matriz.
+*     $P n        - tamanho da matriz
 *
 *  $FV Valor retornado
 *     MAT_CondRetOK
@@ -68,7 +100,7 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *
 ***********************************************************************/
 
-   MAT_tpCondRet MAT_CriarMatriz( void ) ;
+   MAT_tpCondRet MAT_CriarMatriz( MAT_tppMatriz * ppMatriz, int n ) ;
 
 
 /***********************************************************************
@@ -76,93 +108,80 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *  $FC Função: MAT Destruir matriz
 *
 *  $ED Descrição da função
-*     Destrói o corpo e a cabeça da matriz, anulando a matriz corrente.
-*     Faz nada caso a matriz corrente não exista.
-*
-***********************************************************************/
-
-   void MAT_DestruirMatriz( void ) ;
-
-
-/***********************************************************************
-*
-*  $FC Função: MAT Adicionar filho à esquerda
+*     Destrói o corpo e a cabeça da matriz, liberando o espaço ocupado
+*     pela matriz e pelas listas.
 *
 *  $EP Parâmetros
-*     $P ValorParm - valor a ser inserido no novo nó.
+*     $P pMatriz - ponteiro para a matriz.
 *
 *  $FV Valor retornado
 *     MAT_CondRetOK
-*     MAT_CondRetErroEstrutura
-*     MAT_CondRetFaltouMemoria
-*     MAT_CondRetNaoEhFolha     - caso não seja folha para a esquerda
+*     MAT_CondRetPonteiroNulo
 *
 ***********************************************************************/
 
-   MAT_tpCondRet MAT_InserirEsquerda( char ValorParm ) ;
+   MAT_tpCondRet MAT_DestruirMatriz( MAT_tppMatriz pMatriz ) ;
 
 
 /***********************************************************************
 *
-*  $FC Função: MAT Adicionar filho à direita
+*  $FC Função: MAT Esvaziar
+*
+*  $ED Descrição da função
+*     Esvazia a matriz, isso é, libera todas as listas contidas nas
+*     céluals da matriz.
 *
 *  $EP Parâmetros
-*     $P ValorParm - valor a ser inserido no novo nó
+*     $P pMatriz - ponteiro para a matriz.
 *
 *  $FV Valor retornado
 *     MAT_CondRetOK
-*     MAT_CondRetErroEstrutura
-*     MAT_CondRetFaltouMemoria
-*     MAT_CondRetNaoEhFolha     - caso não seja folha para a direita
+*     MAT_CondRetPonteiroNulo
 *
 ***********************************************************************/
 
-   MAT_tpCondRet MAT_InserirDireita( char ValorParm ) ;
+   MAT_tpCondRet MAT_EsvaziarMatriz( MAT_tppMatriz pMatriz ) ;
 
 
 /***********************************************************************
 *
-*  $FC Função: MAT Ir para nó pai
+*  $FC Função: MAT Mover célula corrente.
+*
+*  $ED Descrição da função
+*     Move a célula corrente da matriz, de acordo com a direcao fornecida.
+*
+*  $EP Parâmetros
+*     $P pMatriz - ponteiro para a matriz.
+*     $P direcao - direcao para a qual mover.
 *
 *  $FV Valor retornado
 *     MAT_CondRetOK
-*     MAT_CondRetMatrizNaoExiste
-*     MAT_CondRetMatrizVazia
-*     MAT_CondRetNoEhRaiz
+*     MAT_CondRetPonteiroNulo
+*     MAT_CondRetDirecaoInvalida
 *
 ***********************************************************************/
 
-   MAT_tpCondRet MAT_IrPai( void ) ;
+   MAT_tpCondRet MAT_MoverCorrente( MAT_tppMatriz pMatriz, MAT_tpDirecao direcao ) ;
 
 
 /***********************************************************************
 *
-*  $FC Função: MAT Ir para nó à esquerda
+*  $FC Função: MAT Atribuir valor
+*
+*  $ED Descrição da função
+*     Atribui a lista à célula corrente da matriz.
+*
+*  $EP Parâmetros
+*     $P pMatriz - ponteiro para a matriz.
+*     $P pLista  - ponteiro para a lista a ser atribuída
 *
 *  $FV Valor retornado
 *     MAT_CondRetOK
-*     MAT_CondRetMatrizNaoExiste
-*     MAT_CondRetMatrizVazia
-*     MAT_CondRetNaoPossuiFilho   - nó corrente não possui filho à esquerda
+*     MAT_CondRetPonteiroNulo
 *
 ***********************************************************************/
 
-   MAT_tpCondRet MAT_IrNoEsquerda( void ) ;
-
-
-/***********************************************************************
-*
-*  $FC Função: MAT Ir para nó à direita
-*
-*  $FV Valor retornado
-*     MAT_CondRetOK
-*     MAT_CondRetMatrizNaoExiste
-*     MAT_CondRetMatrizVazia
-*     MAT_CondRetNaoPossuiFilho   - nó corrente não possui filho à direita
-*
-***********************************************************************/
-
-   MAT_tpCondRet MAT_IrNoDireita( void ) ;
+   MAT_tpCondRet MAT_AtribuirValorCorrente( MAT_tppMatriz pMatriz, LIS_tppLista pLista ) ;
 
 
 /***********************************************************************
@@ -170,17 +189,15 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *  $FC Função: MAT Obter valor corrente
 *
 *  $EP Parâmetros
-*     $P ValorParm - é o parâmetro que receberá o valor contido no nó.
-*                    Este parâmetro é passado por referência.
+*     $P matriz - ponteiro para a matriz.
 *
 *  $FV Valor retornado
 *     MAT_CondRetOK
-*     MAT_CondRetMatrizNaoExiste
-*     MAT_CondRetMatrizVazia
+*     MAT_CondRetPonteiroNulo
 *
 ***********************************************************************/
 
-   MAT_tpCondRet MAT_ObterValorCorr( char * ValorParm ) ;
+   MAT_tpCondRet MAT_ObterValorCorrente( MAT_tppMatriz matriz ) ;
 
 #undef Matriz_EXT
 
