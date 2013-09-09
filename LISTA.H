@@ -191,8 +191,8 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     pLista - ponteiro para a lista de onde se quer o valor
 *
 *  $FV Valor retornado
-*     não NULL - se o elemento corrente existe
-*     NULL     - se a lista estiver vazia
+*     caracter nulo ('\0') - se a lista estiver vazia
+*     caracter não nulo - se o elemento corrente existe
 *
 ***********************************************************************/
 

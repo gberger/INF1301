@@ -1,0 +1,22 @@
+? Referencia de tipos de tarefa:
+? estudar 
+? especificar os módulos 
+? especificar as funções 
+? revisar especificações 
+? projetar 
+? revisar projetos 
+? codificar módulo
+? revisar código do módulo 
+? redigir script de teste 
+? revisar script de teste 
+? realizar os testes 
+? diagnosticar e corrigir os problemas encontrados 
+
+Data	Horas Trabalhadas	Tipo Tarefa				Descrição da Tarefa Realizada
+20/08	1					estudar					Estudo da monografia escrita por Arndt Von Staa sobre o Arcabouço de Testes de programas redigidos em C
+25/08	3					estudar					Familiriazação com os exemplos de uso do arcabouço
+01/09	2					estudar					Familiriazação com os exemplos de uso do arcabouço
+08/09	0,5					codificar módulo		Finalizar adapatações ao módulo LISTA
+08/09	0,5					redigir script de teste	Script TesteLista.script adaptado
+08/09	0,1					realiar os testes		Teste do módulo LISTA realizado e nenhum erro econtrado.
+08/09	0,2					revisar especificações	Especificações do módulo LISTA alteradas

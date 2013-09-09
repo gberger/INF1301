@@ -310,7 +310,7 @@
 
       return pLista->pElemCorr->valor ;
 
-   } /* Fim função: LIS  &Obter referência para o valor contido no elemento */
+   } /* Fim função: LIS  &Obter o valor contido no elemento */
 
 /***************************************************************************
 *
