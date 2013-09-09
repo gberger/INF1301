@@ -95,7 +95,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
       int numElem = -1 ;
 
-      StringDado[ 0 ] = 0 ;
+      //StringDado[ 0 ] = 0 ;
 
       /* Efetuar reset de teste de lista */
 
@@ -180,7 +180,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
          {
 
             numLidos = LER_LerParametros( "ici" ,
-                       &inxLista , CharDado , &CondRetEsp ) ;
+                       &inxLista , &CharDado , &CondRetEsp ) ;
 
             if ( ( numLidos != 3 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
@@ -201,7 +201,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
          {
 
             numLidos = LER_LerParametros( "ici" ,
-                       &inxLista , CharDado , &CondRetEsp ) ;
+                       &inxLista , &CharDado , &CondRetEsp ) ;
 
             if ( ( numLidos != 3 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
@@ -241,36 +241,18 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
          else if ( strcmp( ComandoTeste , OBTER_VALOR_CMD ) == 0 )
          {
 
-            numLidos = LER_LerParametros( "iCi" ,
-                       &inxLista , CharDado , &ValEsp ) ;
+            numLidos = LER_LerParametros( "ic" ,
+                       &inxLista , &CharDado ) ;
 
-            if ( ( numLidos != 3 )
+            if ( ( numLidos != 2 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
             {
                return TST_CondRetParm ;
             } /* if */
 
-/*******************************************************************
-            CONSERTAR
-
-            pDado = LIS_ObterValor( vtListas[ inxLista ] ) ;
-
-            if ( ValEsp == 0 )
-            {
-               return TST_CompararPonteiroNulo( 0 , pDado ,
-                         "Valor não deveria existir." ) ;
-            } 
-
-            if ( pDado == NULL )
-            {
-               return TST_CompararPonteiroNulo( 1 , pDado ,
-                         "Dado tipo um deveria existir." ) ;
-            } 
-
-            return TST_CompararString( StringDado , pDado ,
-                         "Valor do elemento errado." ) ;
-
-******************************************************************/
+			return TST_CompararChar( CharDado,
+					LIS_ObterValor( vtListas[ inxLista ] ),
+					"Valor do elemento corrente está errado." );
 
          } /* fim ativa: Testar obter valor do elemento corrente */
 

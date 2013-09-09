@@ -305,7 +305,7 @@
 
       if ( pLista->pElemCorr == NULL )
       {
-        return NULL ;
+        return '\0' ;
       } /* if */
 
       return pLista->pElemCorr->valor ;
