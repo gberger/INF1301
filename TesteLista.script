@@ -22,9 +22,6 @@
 
 =declararparm   cNULL          char  '\0'
 
-=declararparm   pNULL          int  0
-=declararparm   pNaoNULL       int  1
-
 == Criar a lista 0
 =criarlista      lista0 
 
