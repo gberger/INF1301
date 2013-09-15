@@ -128,7 +128,7 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *
 *  $ED Descrição da função
 *     Esvazia a matriz, isso é, libera todas as listas contidas nas
-*     céluals da matriz.
+*     células da matriz.
 *
 *  $EP Parâmetros
 *     $P pMatriz - ponteiro para a matriz.
@@ -188,7 +188,8 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *  $FC Função: MAT Obter valor corrente
 *
 *  $EP Parâmetros
-*     $P matriz - ponteiro para a matriz.
+*     $P pMatriz - ponteiro para a matriz.
+*     $P ppLista - ponteiro para o ponteiro de lista a ser obtida
 *
 *  $FV Valor retornado
 *     MAT_CondRetOK
@@ -196,7 +197,7 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *
 ***********************************************************************/
 
-   MAT_tpCondRet MAT_ObterValorCorrente( MAT_tppMatriz matriz ) ;
+   MAT_tpCondRet MAT_ObterValorCorrente( MAT_tppMatriz pMatriz, LIS_tppLista * ppLista ) ;
 
 #undef Matriz_EXT
 
