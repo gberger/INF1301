@@ -34,7 +34,7 @@
          LIS_tppLista pValor ;
                /* Ponteiro para a lista (valor) */
 
-         struct tgCelulaMatriz * vpVizinhos[8] ;
+         struct tagCelulaMatriz * vpVizinhos[8] ;
                /* Vetor de ponteiros para os vizinhos
                *
                *$EED Assertivas estruturais
@@ -62,267 +62,215 @@
    } MAT_tpMatriz ;
 
 
-/* A PARTIR DAQUI ESTÁ CRU */
-
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
-   static tpNoArvore * CriarNo( char ValorParm ) ;
-
-   static ARV_tpCondRet CriarNoRaiz( char ValorParm ) ;
-
-   static void DestroiArvore( tpNoArvore * pNo ) ;
+   static tpCelulaMatriz * obterPrimeiraCelula( MAT_tppMatriz pMatriz ) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
 /***************************************************************************
 *
-*  Função: ARV Criar árvore
+*  Função: MAT Criar matriz
 *  ****/
 
-   ARV_tpCondRet ARV_CriarArvore( void )
+   MAT_tpCondRet MAT_CriarMatriz( MAT_tppMatriz * ppMatriz, int n )
    {
-
-      if ( pArvore != NULL )
+      /* Criar cabeça da matriz */
+      *ppMatriz = ( MAT_tagMatriz* ) malloc( sizeof(MAT_tagMatriz) );
+      if(*ppMatriz == NULL)
       {
-         ARV_DestruirArvore( ) ;
+         return MAT_CondRetFaltouMemoria;
+      }
+
+      tpCelulaMatriz **matrizAuxiliar, *elementoCorrente;
+      int linhaCorrente, colunaCorrente;
+
+      /* Criar estrutura da matriz a partir de um vetor bidimensional padrão */
+      matrizAuxiliar = ( MAT_tagMatriz** ) malloc( n * sizeof( MAT_tagMatriz* )) ;
+      if( matrizAuxiliar == NULL)
+      {
+         free(*ppMatriz);
+         return MAT_CondRetFaltouMemoria;
       } /* if */
 
-      pArvore = ( tpArvore * ) malloc( sizeof( tpArvore )) ;
-      if ( pArvore == NULL )
+      for( linhaCorrente = 0; linhaCorrente < n; linhaCorrente++ )
       {
-         return ARV_CondRetFaltouMemoria ;
-      } /* if */
-
-      pArvore->pNoRaiz = NULL ;
-      pArvore->pNoCorr = NULL ;
-
-      return ARV_CondRetOK ;
-
-   } /* Fim função: ARV Criar árvore */
-
-/***************************************************************************
-*
-*  Função: ARV Destruir árvore
-*  ****/
-
-   void ARV_DestruirArvore( void )
-   {
-
-      if ( pArvore != NULL )
-      {
-         if ( pArvore->pNoRaiz != NULL )
+         matrizAuxiliar[linhaCorrente] = ( MAT_tagMatriz* ) malloc( n * sizeof( MAT_tagMatriz )) ;
+         if( matrizAuxiliar[linhaCorrente] == NULL)
          {
-            DestroiArvore( pArvore->pNoRaiz ) ;
-         } /* if */
-         free( pArvore ) ;
-         pArvore = NULL ;
-      } /* if */
-
-   } /* Fim função: ARV Destruir árvore */
-
-/***************************************************************************
-*
-*  Função: ARV Adicionar filho à esquerda
-*  ****/
-
-   ARV_tpCondRet ARV_InserirEsquerda( char ValorParm )
-   {
-
-      ARV_tpCondRet CondRet ;
-
-      tpNoArvore * pCorr ;
-      tpNoArvore * pNo ;
-
-      /* Tratar vazio, esquerda */
-
-         CondRet = CriarNoRaiz( ValorParm ) ;
-         if ( CondRet != ARV_CondRetNaoCriouRaiz )
-         {
-            return CondRet ;
-         } /* if */
-
-      /* Criar nó à esquerda de folha */
-
-         pCorr = pArvore->pNoCorr ;
-         if ( pCorr == NULL )
-         {
-            return ARV_CondRetErroEstrutura ;
-         } /* if */
-               
-         if ( pCorr->pNoEsq == NULL )
-         {
-            pNo = CriarNo( ValorParm ) ;
-            if ( pNo == NULL )
+            linhaCorrente--;
+            while(linhaCorrente != 0)
             {
-               return ARV_CondRetFaltouMemoria ;
-            } /* if */
-            pNo->pNoPai      = pCorr ;
-            pCorr->pNoEsq    = pNo ;
-            pArvore->pNoCorr = pNo ;
-
-            return ARV_CondRetOK ;
+               free(matrizAuxiliar[linhaCorrente]);
+            } /* while */
+            free(matrizAuxiliar);
+            free(*ppMatriz);
+            return MAT_CondRetFaltouMemoria;
          } /* if */
+      } /* for */
 
-      /* Tratar não folha à esquerda */
+      /* Encadear células da matriz criada e criar lista em cada célula */
+      for( linhaCorrente = 0; linhaCorrente < n; linhaCorrente++ )
+      {
+         for( colunaCorrente = 0; colunaCorrente < n; colunaCorrente++ )
+         {
+            elementoCorrente = &matrizAuxiliar[linhaCorrente][colunaCorrente];
 
-         return ARV_CondRetNaoEhFolha ;
+            elementoCorrente->vpVizinhos[ MAT_N ] = (linhaCorrente == 0) ? NULL : &matrizAuxiliar[ linhaCorrente - 1 ][ colunaCorrente ];
+            elementoCorrente->vpVizinhos[ MAT_S ] = (linhaCorrente == n) ? NULL : &matrizAuxiliar[ linhaCorrente + 1 ][ colunaCorrente ];
+            elementoCorrente->vpVizinhos[ MAT_O ] = (colunaCorrente == 0) ? NULL : &matrizAuxiliar[ linhaCorrente ][ colunaCorrente-1 ];
+            elementoCorrente->vpVizinhos[ MAT_L ] = (colunaCorrente == n) ? NULL : &matrizAuxiliar[ linhaCorrente ][ colunaCorrente+1 ];
 
-   } /* Fim função: ARV Adicionar filho à esquerda */
+            elementoCorrente->vpVizinhos[ MAT_NO ] = (colunaCorrente == 0 || linhaCorrente == 0) ? NULL : &matrizAuxiliar[ linhaCorrente - 1 ][ colunaCorrente - 1 ];
+            elementoCorrente->vpVizinhos[ MAT_SE ] = (colunaCorrente == n || linhaCorrente == n) ? NULL : &matrizAuxiliar[ linhaCorrente + 1 ][ colunaCorrente + 1 ];
+            elementoCorrente->vpVizinhos[ MAT_NE ] = (colunaCorrente == n || linhaCorrente == 0) ? NULL : &matrizAuxiliar[ linhaCorrente - 1 ][ colunaCorrente + 1 ];
+            elementoCorrente->vpVizinhos[ MAT_SO ] = (colunaCorrente == 0 || linhaCorrente == n) ? NULL : &matrizAuxiliar[ linhaCorrente + 1 ][ colunaCorrente - 1 ];
+         } /* for */
+      } /* for */
 
-/***************************************************************************
+      /* Definir célula corrente inicial */
+      *ppMatriz->pCelulaCorr = &matrizAuxiliar[0][0];
+
+      /* Eliminar estrutura auxiliar */
+      free(matrizAuxiliar);
+
+      return MAT_CondRetOK;
+
+   } /* Fim função: MAT Criar matriz */
+
+/***********************************************************************
 *
-*  Função: ARV Adicionar filho à direita
+*  $FC Função: MAT Esvaziar
 *  ****/
 
-   ARV_tpCondRet ARV_InserirDireita( char ValorParm )
+   MAT_tpCondRet MAT_EsvaziarMatriz( MAT_tppMatriz pMatriz )
    {
+      if(pMatriz == NULL)
+      {
+         return MAT_CondRetPonteiroNulo;
+      } /* if */
 
-      ARV_tpCondRet CondRet ;
+      tpCelulaMatriz *elementoCorrente, *primeiroDaLinha;
 
-      tpNoArvore * pCorr ;
-      tpNoArvore * pNo ;
+      elementoCorrente = obterPrimeiraCelula( pMatriz );
 
-      /* Tratar vazio, direita */
-
-         CondRet = CriarNoRaiz( ValorParm ) ;
-         if ( CondRet != ARV_CondRetNaoCriouRaiz )
+      /* Destruir conteúdo das celulas */
+      primeiroDaLinha = elementoCorrente;
+      while(primeiroDaLinha != NULL)
+      {
+         elementoCorrente = primeiroDaLinha;
+         while(elementoCorrente != NULL)
          {
-            return CondRet ;
-         } /* if */
-
-      /* Criar nó à direita de folha */
-
-         pCorr = pArvore->pNoCorr ;
-         if ( pCorr == NULL )
-         {
-            return ARV_CondRetErroEstrutura ;
-         } /* if */
-
-         if ( pCorr->pNoDir == NULL )
-         {
-            pNo = CriarNo( ValorParm ) ;
-            if ( pNo == NULL )
+            if(elementoCorrente->pValor != NULL)
             {
-               return ARV_CondRetFaltouMemoria ;
+               LIS_DestruirLista(elementoCorrente->pValor);
+               elementoCorrente->pValor = NULL;
             } /* if */
-            pNo->pNoPai      = pCorr ;
-            pCorr->pNoDir    = pNo ;
-            pArvore->pNoCorr = pNo ;
+         } /* while */
 
-            return ARV_CondRetOK ;
-         } /* if */
+         primeiroDaLinha = primeiroDaLinha->vpVizinhos[MAT_S];
+      } /* while */
 
-      /* Tratar não folha à direita */
-
-         return ARV_CondRetNaoEhFolha ;
-
-   } /* Fim função: ARV Adicionar filho à direita */
+      return MAT_CondRetOK;
+   } /* Fim Função: MAT Esvaziar */
 
 /***************************************************************************
 *
-*  Função: ARV Ir para nó pai
+*  Função: MAT Destruir matriz
 *  ****/
-
-   ARV_tpCondRet ARV_IrPai( void )
+   
+   MAT_tpCondRet MAT_DestruirMatriz( MAT_tppMatriz pMatriz )
    {
-
-      if ( pArvore == NULL )
+      if(pMatriz == NULL)
       {
-         return ARV_CondRetArvoreNaoExiste ;
-      } /* if */
-      if ( pArvore->pNoCorr == NULL )
-      {
-         return ARV_CondRetArvoreVazia ;
+         return MAT_CondRetPonteiroNulo;
       } /* if */
 
-      if ( pArvore->pNoCorr->pNoPai != NULL )
+      tpCelulaMatriz *elementoCorrente;
+
+      MAT_EsvaziarMatriz( pMatriz );
+
+      elementoCorrente = obterPrimeiraCelula( pMatriz );
+
+      /* Destruir linhas */
+      while(elementoCorrente != NULL)
       {
-         pArvore->pNoCorr = pArvore->pNoCorr->pNoPai ;
-         return ARV_CondRetOK ;
-      } else {
-         return ARV_CondRetNohEhRaiz ;
-      } /* if */
+         elementoCorrente = elementoCorrente->vpVizinhos[MAT_S];
+         free(elementoCorrente->vpVizinhos[MAT_N]);
+      } /* while */
 
-   } /* Fim função: ARV Ir para nó pai */
+      /* Destruir cabeça da matriz */
+      free( pMatriz );
 
-/***************************************************************************
+      return MAT_CondRetOK;
+
+   } /* Fim função: MAT Destruir matriz */
+
+/***********************************************************************
 *
-*  Função: ARV Ir para nó à esquerda
+*  $FC Função: MAT Mover célula corrente
 *  ****/
 
-   ARV_tpCondRet ARV_IrNoEsquerda( void )
+   MAT_tpCondRet MAT_MoverCorrente( MAT_tppMatriz pMatriz, MAT_tpDirecao direcao )
    {
-
-      if ( pArvore == NULL )
+      if(pMatriz == NULL)
       {
-         return ARV_CondRetArvoreNaoExiste ;
+         return MAT_CondRetPonteiroNulo;
       } /* if */
 
-      if ( pArvore->pNoCorr == NULL )
+      if(pMatriz->pCelulaCorr->vpVizinhos[direcao] == NULL)
       {
-         return ARV_CondRetArvoreVazia ;
+         return MAT_CondRetDirecaoInvalida;
       } /* if */
-
-      if ( pArvore->pNoCorr->pNoEsq == NULL )
+      else
       {
-         return ARV_CondRetNaoPossuiFilho ;
-      } /* if */
+         pMatriz->pCelulaCorr = pMatriz->pCelulaCorr->vpVizinhos[direcao];
+         return MAT_CondRetOK;
+      } /* else */
 
-      pArvore->pNoCorr = pArvore->pNoCorr->pNoEsq ;
-      return ARV_CondRetOK ;
+   } /* Fim Função: MAT Mover célula corrente */
 
-   } /* Fim função: ARV Ir para nó à esquerda */
-
-/***************************************************************************
+/***********************************************************************
 *
-*  Função: ARV Ir para nó à direita
+*  $FC Função: MAT Atribuir valor
 *  ****/
 
-   ARV_tpCondRet ARV_IrNoDireita( void )
+   MAT_tpCondRet MAT_AtribuirValorCorrente( MAT_tppMatriz pMatriz, LIS_tppLista pLista )
    {
-
-      if ( pArvore == NULL )
+      if(pMatriz == NULL)
       {
-         return ARV_CondRetArvoreNaoExiste ;
+         return MAT_CondRetPonteiroNulo;
       } /* if */
 
-      if ( pArvore->pNoCorr == NULL )
+      if(pMatriz->pCelulaCorr->pValor != NULL)
       {
-         return ARV_CondRetArvoreVazia ;
+         LIS_DestruirLista( pMatriz->pCelulaCorr->pValor );
       } /* if */
 
-      if ( pArvore->pNoCorr->pNoDir == NULL )
-      {
-         return ARV_CondRetNaoPossuiFilho ;
-      } /* if */
+      pMatriz->pCelulaCorr->pValor = pLista;
 
-      pArvore->pNoCorr = pArvore->pNoCorr->pNoDir ;
-      return ARV_CondRetOK ;
+      return MAT_CondRetOK;
 
-   } /* Fim função: ARV Ir para nó à direita */
+   } /* Fim Função: MAT Atribuir valor */
 
-/***************************************************************************
+/***********************************************************************
 *
-*  Função: ARV Obter valor corrente
+*  $FC Função: MAT Obter valor corrente
 *  ****/
 
-   ARV_tpCondRet ARV_ObterValorCorr( char * ValorParm )
+   MAT_tpCondRet MAT_ObterValorCorrente( MAT_tppMatriz pMatriz, LIS_tppLista * ppLista )
    {
-
-      if ( pArvore == NULL )
+      if(pMatriz == NULL)
       {
-         return ARV_CondRetArvoreNaoExiste ;
+         return MAT_CondRetPonteiroNulo;
       } /* if */
-      if ( pArvore->pNoCorr == NULL )
-      {
-         return ARV_CondRetArvoreVazia ;
-      } /* if */
-      * ValorParm = pArvore->pNoCorr->Valor ;
 
-      return ARV_CondRetOK ;
+      *ppLista = pMatriz->pCelulaCorr->pValor;
 
-   } /* Fim função: ARV Obter valor corrente */
+      return MAT_CondRetOK;
+
+   } /* Fim Função: MAT Obter valor corrente */
 
 
 /*****  Código das funções encapsuladas no módulo  *****/
@@ -330,106 +278,37 @@
 
 /***********************************************************************
 *
-*  $FC Função: ARV Criar nó da árvore
-*
-*  $FV Valor retornado
-*     Ponteiro para o nó criado.
-*     Será NULL caso a memória tenha se esgotado.
-*     Os ponteiros do nó criado estarão nulos e o valor é igual ao do
-*     parâmetro.
-*
-***********************************************************************/
-
-   tpNoArvore * CriarNo( char ValorParm )
-   {
-
-      tpNoArvore * pNo ;
-
-      pNo = ( tpNoArvore * ) malloc( sizeof( tpNoArvore )) ;
-      if ( pNo == NULL )
-      {
-         return NULL ;
-      } /* if */
-
-      pNo->pNoPai = NULL ;
-      pNo->pNoEsq = NULL ;
-      pNo->pNoDir = NULL ;
-      pNo->Valor  = ValorParm ;
-      return pNo ;
-
-   } /* Fim função: ARV Criar nó da árvore */
-
-
-/***********************************************************************
-*
-*  $FC Função: ARV Criar nó raiz da árvore
-*
-*  $FV Valor retornado
-*     ARV_CondRetOK
-*     ARV_CondRetFaltouMemoria
-*     ARV_CondRetNaoCriouRaiz
-*
-***********************************************************************/
-
-   ARV_tpCondRet CriarNoRaiz( char ValorParm )
-   {
-
-      ARV_tpCondRet CondRet ;
-      tpNoArvore * pNo ;
-
-      if ( pArvore == NULL )
-      {
-         CondRet = ARV_CriarArvore( ) ;
-
-         if ( CondRet != ARV_CondRetOK )
-         {
-            return CondRet ;
-         } /* if */
-      } /* if */
-
-      if ( pArvore->pNoRaiz == NULL )
-      {
-         pNo = CriarNo( ValorParm ) ;
-         if ( pNo == NULL )
-         {
-            return ARV_CondRetFaltouMemoria ;
-         } /* if */
-         pArvore->pNoRaiz = pNo ;
-         pArvore->pNoCorr = pNo ;
-
-         return ARV_CondRetOK ;
-      } /* if */
-
-      return ARV_CondRetNaoCriouRaiz ;
-
-   } /* Fim função: ARV Criar nó raiz da árvore */
-
-
-/***********************************************************************
-*
-*  $FC Função: ARV Destruir a estrutura da árvore
+*  $FC Função: MAT Obter primeira célula
 *
 *  $EAE Assertivas de entradas esperadas
-*     pNoArvore != NULL
+*     pMatriz != NULL
+*
+*  $FV Valor retornado
+*     Ponteiro para a primeira célula da matriz.
 *
 ***********************************************************************/
 
-   void DestroiArvore( tpNoArvore * pNo )
+   tpCelulaMatriz * obterPrimeiraCelula( MAT_tppMatriz pMatriz )
    {
+      tpCelulaMatriz *elementoCorrente;
 
-      if ( pNo->pNoEsq != NULL )
+      elementoCorrente = pMatriz->pCelulaCorr;
+
+      /* Obter primeiro elemento da matriz */
+      while(elementoCorrente->vpVizinhos[ MAT_O ] != NULL)
       {
-         DestroiArvore( pNo->pNoEsq ) ;
-      } /* if */
+         elementoCorrente = elementoCorrente->vpVizinhos[ MAT_O ];
+      } /* while */
 
-      if ( pNo->pNoDir != NULL )
+      while(elementoCorrente->vpVizinhos[ MAT_N ] != NULL)
       {
-         DestroiArvore( pNo->pNoDir ) ;
-      } /* if */
+         elementoCorrente = elementoCorrente->vpVizinhos[ MAT_N ];
+      } /* while */
 
-      free( pNo ) ;
+      return elementoCorrente;
 
-   } /* Fim função: ARV Destruir a estrutura da árvore */
+   } /* Fim Função: MAT Obter primeira célula */
 
-/********** Fim do módulo de implementação: Módulo árvore **********/
+
+/********** Fim do módulo de implementação: Módulo matriz quadrada **********/
 
