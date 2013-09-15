@@ -1,5 +1,5 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: TLIS Teste lista de símbolos
+*  $MCI Módulo de implementação: TLIS Teste lista de caracteres
 *
 *  Arquivo gerado:              TESTLIS.c
 *  Letras identificadoras:      TLIS
