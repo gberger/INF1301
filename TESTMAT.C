@@ -69,10 +69,9 @@ MAT_tppMatriz * vtMatrizes[ DIM_VT_MATRIZES ];
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
-
 /***********************************************************************
 *
-*  $FC Função: TARV Efetuar operações de teste específicas para árvore
+*  $FC Função: TMAT Efetuar operações de teste específicas para matriz quadrada
 *
 *  $ED Descrição da função
 *     Efetua os diversos comandos de teste específicos para o módulo
@@ -111,7 +110,7 @@ MAT_tppMatriz * vtMatrizes[ DIM_VT_MATRIZES ];
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = MAT_CriarArvore( vtMatrizes[ indexMat ], dimMatriz ) ;
+            CondRetObtido = MAT_CriarMatriz( vtMatrizes[ indexMat ], dimMatriz ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                      "Condicao de retorno errada ao criar matriz." ) ;

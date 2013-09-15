@@ -1,7 +1,9 @@
-// Script:    TesteLista.script
-// Autor:     Arndt von Staa
-// Data:      02/abr/2008
-// Propósito: Testar superficialmente o módulo lista genérica duplamente encadeada.
+// Script:    TesteMatriz.script
+// Autores:   João Vicente
+//			  Felipe Luiz
+//			  Guilherme Berger
+// Data:      15/09/2013
+// Propósito: Testar superficialmente o módulo de matriz encadeada quadrada.
 //
 
 == Inicializar valores
