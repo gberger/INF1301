@@ -27,4 +27,16 @@
 =declararparm   DirecaoInv     int  2
 =declararparm   FaltouMemoria  int  3
 
+
+== Criar a matriz0
+=criar    4x4     matriz0  OK        
+
+== Verificar obtem valor de no nulo
+=obter    matriz0  NULO
+
+== Inserir elemento em no da matriz
+=inslis   matriz0   OK
+=obter    matriz0   OK
+
+
 // fim
