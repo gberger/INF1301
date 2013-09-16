@@ -70,7 +70,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 *     =esvaziarlista                inxLista
 *     =inselemantes                 inxLista  char  CondRetEsp
 *     =inselemapos                  inxLista  char  CondRetEsp
-*     =obtervalorelem               inxLista  char  CondretPonteiro
+*     =obtervalorelem               inxLista  char
 *     =excluirelem                  inxLista  CondRetEsp
 *     =irinicio                     inxLista
 *     =irfinal                      inxLista
