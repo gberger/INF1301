@@ -1,50 +1,49 @@
 /***************************************************************************
 *  $MCI Módulo de implementação: Módulo de teste específico
 *
-*  Arquivo gerado:              TESTARV.C
-*  Letras identificadoras:      TARV
+*  Arquivo gerado:              TESTMAT.C
+*  Letras identificadoras:      TMAT
 *
-*  Nome da base de software:    Exemplo de teste automatizado
-*  Arquivo da base de software: D:\AUTOTEST\PROJETOS\SIMPLES.BSW
-*
-*  Projeto: Disciplinas INF 1628 / 1301
-*  Gestor:  DI/PUC-Rio
-*  Autores: avs - Arndt von Staa
-*
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*       3.00   avs   28/02/2003 Uniformização da interface das funções e
-*                               de todas as condições de retorno.
-*       2.00   avs   03/08/2002 Eliminação de código duplicado, reestruturação
-*       1.00   avs   15/08/2001 Início do desenvolvimento
+*  Projeto: T1 INF1301 2013.2
+*  Autores: gb - Guilherme Berger
+*           fl - Felipe Luiz
+*           jv - João Vicente
 *
 *  $ED Descrição do módulo
-*     Este mÇodulo contém as funções específicas para o teste do
-*     módulo árvore. Ilustra como redigir um interpretador de comandos
-*     de teste específicos utilizando o arcabouço de teste para C.
+*     Este módulo contém as funções específicas para o teste do
+*     módulo matriz.
 *
 *  $EIU Interface com o usuário pessoa
-*     Comandos de teste específicos para testar o módulo árvore:
+*     Comandos de teste específicos para testar o módulo matriz
+*     Todos os comandos também recebem como último parâmetro a codição
+*     de retorno esperada.
 *
-*     =criar        - chama a função ARV_CriarArvore( )
-*     =insdir <Char>
-*                   - chama a função ARV_InserirDireita( <Char> )
-*                     Obs. notação: <Char>  é o valor do parâmetro
-*                     que se encontra no comando de teste.
+*     =criar  <int inx, int n>
+*                   - chama a função MAT_CriarMatriz
+*                     cria uma matriz no índice inx, de tamanho n x n
+*     =andar <int inx, int dir>
+*                   - chama a função MAT_AndarCorrente
+*                     anda com a matriz inx na direção dir
+*     =atrlis <int inx, str valor>
+*                   - chama a função MAT_AtribuirValorCorrente
+*                     cria uma nova lista representando a string
+*                     atribui a lista a celula corrente da matriz inx
+*     =obterlis <int inx, str valor>
+*                   - chama a função MAT_ObterValorCorrente
+*                     compara a representação em string da lista obtida
+*                     com a lista passada
+*     =destruir <int inx>
+*                   - chama a função MAT_DestruirMatriz
+*                     destrui a matirz inx
+*     =esvaziar <int inx>
+*                   - chama a função MAT_EsvaziarMatriz
+*                   - esvazia a matriz inx
 *
-*     "=insesq" <Char>
-*                   - chama a função ARV_InserirEsquerda( <Char> )
-*     "=irpai"      - chama a função ARV_IrPai( )
-*     "=iresq"      - chama a função ARV_IrEsquerda( )
-*     "=irdir"      - chama a função ARV_IrDireita( )
-*     "=obter" <Char>
-*                   - chama a função ARV_ObterValorCorr( ) e compara
-*                     o valor retornado com o valor <Char>
-*     "=destroi"    - chama a função ARV_DestruirArvore( )
 *
 ***************************************************************************/
 
 #include    <string.h>
+#include    <malloc.h>
 #include    <stdio.h>
 
 #include    "TST_ESPC.H"
@@ -58,15 +57,20 @@
 /* Tabela dos nomes dos comandos de teste específicos */
 
 #define     CRIAR_MAT_CMD       "=criar"
-#define     ANDAR_DIR           "=andar"      
-#define     INS_LIS_CMD         "=inslis"
-#define     OBTER_VAL_CMD       "=obter"
+#define     ANDAR_DIR_CMD       "=andar"
+#define     ATRIBUIR_LIS_CMD    "=atrlis"
+#define     OBTER_LIS_CMD       "=obterlis"
 #define     DESTROI_CMD         "=destruir"
+#define     ESVAZIA_CMD         "=esvaziar"
 
-#define DIM_VI_MATRIZES 10
+#define DIM_VT_MATRIZES 10
+#define DIM_STR 128
 
-MAT_tppMatriz * vtMatrizes[ DIM_VT_MATRIZES ];
+MAT_tppMatriz vtMatrizes[ DIM_VT_MATRIZES ] = {0};
 
+/***** Protótipos das funções encapuladas no módulo *****/
+      LIS_tppLista criarListaAPartirDeString( char * str );
+	  char * obterStringAPartirDeLista( LIS_tppLista lista );
 /*****  Código das funções exportadas pelo módulo  *****/
 
 
@@ -95,6 +99,9 @@ MAT_tppMatriz * vtMatrizes[ DIM_VT_MATRIZES ];
            CondRetEsperada = -1,
            direcao = -1 ;
 
+	  char stringDada [ DIM_STR ] = {0};
+	  char *stringObtida;
+
       LIS_tppLista listaAuxiliar ;     
 
       TST_tpCondRet CondRetObtido ;
@@ -105,13 +112,13 @@ MAT_tppMatriz * vtMatrizes[ DIM_VT_MATRIZES ];
          {
 
             numLidos = LER_LerParametros( "iii" ,
-                               &dimMatriz, &indexMat, &CondRetEsperada ) ;
+                               &indexMat, &dimMatriz, &CondRetEsperada ) ;
             if ( numLidos != 3 )
             {
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = MAT_CriarArvore( vtMatrizes[ indexMat ], dimMatriz ) ;
+            CondRetObtido = MAT_CriarMatriz( &(vtMatrizes[ indexMat ]), dimMatriz ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                      "Condicao de retorno errada ao criar matriz." ) ;
@@ -120,7 +127,7 @@ MAT_tppMatriz * vtMatrizes[ DIM_VT_MATRIZES ];
 
       /* Testar MAT andar na matriz */
 
-         else if ( strcmp( ComandoTeste , ANDAR_DIR ) == 0 )
+         else if ( strcmp( ComandoTeste , ANDAR_DIR_CMD ) == 0 )
          {
 
             numLidos = LER_LerParametros( "iii" ,
@@ -130,49 +137,61 @@ MAT_tppMatriz * vtMatrizes[ DIM_VT_MATRIZES ];
                return TST_CondRetParm ;
             } /* if */
 
-            CondRetObtido = MAT_MoverCorrente( vtMatrizes[indexMat], direcao ) ;
+            CondRetObtido = MAT_AndarCorrente( vtMatrizes[indexMat], (MAT_tpDirecao) direcao ) ;
 
             return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao percorrer a matriz." );
 
          } /* fim ativa: Testar MAT andar na matriz */
 
-      /* Testar MAT inserir lista na posição */
+      /* Testar MAT atribuir lista a célula corrente */
 
-         else if ( strcmp( ComandoTeste , INS_LIS_CMD ) == 0 )
+         else if ( strcmp( ComandoTeste , ATRIBUIR_LIS_CMD ) == 0 )
          {
-
-            numLidos = LER_LerParametros( "ii" ,
-                              &indexMat, &CondRetEsperada ) ;
-            if ( numLidos != 2 )
+            numLidos = LER_LerParametros( "isi" ,
+                              &indexMat, stringDada, &CondRetEsperada ) ;
+            if ( numLidos != 3 )
             {
                return TST_CondRetParm ;
             } /* if */
+			
+			listaAuxiliar = criarListaAPartirDeString(stringDada);
 
-            CondRetObtido = MAT_AtribuirValorCorrente( vtMatrizes[ indexMat ], LIS_CriarLista() ) ;
+            CondRetObtido = MAT_AtribuirValorCorrente( vtMatrizes[ indexMat ], listaAuxiliar ) ;
+			
+			return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+                                "Retorno errado ao inserir lista no elemento corrente." );
+	     } /* fim ativa: Testar MAT atribuir lista a célula corrente */
 
-            return TST_CompararInt( CondRetEsperada , CondRetObtido ,
-                                    "Retorno errado ao inserir lista no elemento corrente." );
-
-         } /* fim ativa: Testar MAT inserir lista na posição */
-
-      /* Testar MAT obeter valor no elemento corrente */  
-         else if ( strcmp( ComandoTeste , OBTER_VAL_CMD ) == 0 )
+      /* Testar MAT obter valor da célula corrente */  
+         else if ( strcmp( ComandoTeste , OBTER_LIS_CMD ) == 0 )
          {
-
-            numLidos = LER_LerParametros( "ii" ,
-                              &indexMat, &CondRetEsperada ) ;
-            if ( numLidos != 2 )
+			int pEsp;
+			numLidos = LER_LerParametros( "isii" ,
+                              &indexMat, stringDada, &pEsp, &CondRetEsperada ) ;
+            if ( numLidos != 4 )
             {
                return TST_CondRetParm ;
             } /* if */
 
             CondRetObtido = MAT_ObterValorCorrente( vtMatrizes[ indexMat ], &listaAuxiliar ) ;
-
-            return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+			
+			if( CondRetObtido != CondRetEsperada || CondRetObtido == MAT_CondRetPonteiroNulo ){
+				return TST_CompararInt( CondRetEsperada , CondRetObtido ,
                                     "Retorno errado ao obter lista no elemento corrente." );
+			}
 
-         } /* fim ativa: Testar MAT obeter valor no elemento corrente */
+			if ( pEsp == 0 )
+            {
+               return TST_CompararPonteiroNulo( 0 , listaAuxiliar ,
+                         "Valor não deveria existir." ) ;
+            } /* if */
+
+			stringObtida = obterStringAPartirDeLista( listaAuxiliar );
+
+			return TST_CompararString(stringDada, stringObtida, 
+									"Representação em string da lista obtida diferente do esperado."); 
+         } /* fim ativa: Testar MAT obeter valor da célula corrente */
 
       /* Testar MAT destruir matriz */  
          else if ( strcmp( ComandoTeste , DESTROI_CMD ) == 0 )
@@ -193,7 +212,7 @@ MAT_tppMatriz * vtMatrizes[ DIM_VT_MATRIZES ];
          } /* fim ativa: Testar MAT destruir matriz */
 
       /* Testar MAT esvaziar matriz */  
-         else if ( strcmp( ComandoTeste , DESTROI_CMD ) == 0 )
+         else if ( strcmp( ComandoTeste , ESVAZIA_CMD ) == 0 )
          {
 
             numLidos = LER_LerParametros( "ii" ,
@@ -213,6 +232,38 @@ MAT_tppMatriz * vtMatrizes[ DIM_VT_MATRIZES ];
       return TST_CondRetNaoConhec ;
 
    } /* Fim função: TARV Efetuar operações de teste específicas para árvore */
+
+/*****  Código das funções encapsuladas no módulo *****/
+   LIS_tppLista criarListaAPartirDeString( char * str ){
+	   int i, len = strlen(str);
+	   LIS_tppLista lista = LIS_CriarLista();
+
+	   for( i = 0 ; i <= len ; i++) {
+		   LIS_InserirElementoApos( lista, str[i] );
+		   LIS_IrFinalLista( lista );
+	   }
+	   
+	   return lista;
+   }
+
+   char * obterStringAPartirDeLista( LIS_tppLista lista ){
+	   int numElementos = LIS_ObterNumElem( lista );
+	   char * str;
+	   int i = 0;
+	   
+	   if( numElementos <= 0 ){
+		   return "\0";
+       }
+
+	   LIS_IrInicioLista( lista );
+	   str = (char*)malloc(sizeof(char)*numElementos);
+	   
+	   do {
+		   str[i++] = LIS_ObterValor( lista );
+	   } while ( LIS_AvancarElementoCorrente(lista, 1) != LIS_CondRetFimLista );
+
+	   return str;
+   }
 
 /********** Fim do módulo de implementação: Módulo de teste específico **********/
 
