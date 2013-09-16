@@ -1,0 +1,14 @@
+Data	Horas Trabalhadas	Tipo Tarefa		Descrição da Tarefa Realizada
+15/08	0.5			estudar			download do arcabouço e leitura da documentação
+18/08	2			estudar			leitura do paper do Arndt: ftp://ftp.inf.puc-rio.br/pub/docs/techreports/03_09_staa.pdf
+18/08	1			estudar			estudo dos exemplos
+19/08	0.5			estudar 		compilar e rodar exemplos
+03/09   1.5			especificar os módulos	estudo e especificação do módulo de lista de caracteres
+03/09	1.5			codificar módulo	fazer as alterações necessárias no módulo LISTA
+04/09	1.5			especificar os módulos	estudo e especificação do módulo de matriz
+04/09	0.5			revisar especificações	revisão da API da matriz com a ajuda do professor
+04/09	1.5			codificar módulo	codificar módulo de listas
+05/09	2			codificar módulo	codificar módulo de matriz
+15/09	2			codificar módulo	codificar módulo de teste de matriz
+15/09	1			redigir script de teste	script de teste de matriz
+15/09	1			realizar os testes	realizar testes e corrigir eventuais problemas

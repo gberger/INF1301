@@ -1,0 +1,155 @@
+// Script:    TesteLista.script
+// Autores: gb - Guilherme Berger
+//          fl - Felipe Luiz
+//          jv - João Vicente
+// Data:      16/set/2013
+// Propósito: Testar o módulo de matriz encadeada quadrada.
+//
+
+== Inicializar valores
+=declararparm   matriz0  int 0
+=declararparm   matriz1  int 1
+=declararparm   matriz2  int 2
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+=declararparm   str0 string "abcde"
+=declararparm   str1 string "vwxyz"
+
+=declararparm   N   int 0
+=declararparm   NE  int 1
+=declararparm   L   int 2
+=declararparm   SE  int 3
+=declararparm   S   int 4
+=declararparm   SO  int 5
+=declararparm   O   int 6
+=declararparm   NO  int 7
+
+=declararparm   OK             int  0
+=declararparm   PonteiroNulo   int  1
+=declararparm   TamanhoInv     int  2
+=declararparm   DirecaoInv     int  3
+=declararparm   FaltouMemoria  int  4
+
+== Testes de ponteiro nulo para andar
+=andar matriz0 N PonteiroNulo
+== Testes de ponteiro nulo para atrlis
+=atrlis matriz0 str0 PonteiroNulo
+== Testes de ponteiro nulo para obterlis
+=obterlis matriz0 str0 -1 PonteiroNulo
+== Testes de ponteiro nulo para destruir
+=destruir matriz0 PonteiroNulo
+== Testes de ponteiro nulo para esvaziar
+=esvaziar matriz0 PonteiroNulo
+
+== Criar a matriz0
+=criar matriz0 3 OK        
+
+== Testes de movimentação na célula 0,0
+=andar matriz0 NO DirecaoInv
+=andar matriz0 N  DirecaoInv
+=andar matriz0 NE DirecaoInv
+=andar matriz0 O  DirecaoInv
+=andar matriz0 SO DirecaoInv
+
+== Testes de movimentação na célula 1,0
+=andar matriz0 S OK
+=andar matriz0 NO DirecaoInv
+=andar matriz0 O  DirecaoInv
+=andar matriz0 SO DirecaoInv
+
+== Testes de movimentação na célula 2,0
+=andar matriz0 S OK
+=andar matriz0 NO DirecaoInv
+=andar matriz0 O  DirecaoInv
+=andar matriz0 SO DirecaoInv
+=andar matriz0 S  DirecaoInv
+=andar matriz0 SE DirecaoInv
+
+== Testes de movimentação na célula 2,1
+=andar matriz0 L OK
+=andar matriz0 SO DirecaoInv
+=andar matriz0 S  DirecaoInv
+=andar matriz0 SE DirecaoInv
+
+== Testes de movimentação na célula 2,2
+=andar matriz0 L OK
+=andar matriz0 SO DirecaoInv
+=andar matriz0 S  DirecaoInv
+=andar matriz0 NE DirecaoInv
+=andar matriz0 L  DirecaoInv
+=andar matriz0 SE DirecaoInv
+
+== Testes de movimentação na célula 1,2
+=andar matriz0 N OK
+=andar matriz0 NE DirecaoInv
+=andar matriz0 L  DirecaoInv
+=andar matriz0 SE DirecaoInv
+
+== Testes de movimentação na célula 0,2
+=andar matriz0 N OK
+=andar matriz0 NO DirecaoInv
+=andar matriz0 N  DirecaoInv
+=andar matriz0 NE DirecaoInv
+=andar matriz0 L  DirecaoInv
+=andar matriz0 SE DirecaoInv
+
+== Testes de movimentação na célula 0,1
+=andar matriz0 O OK
+=andar matriz0 NO DirecaoInv
+=andar matriz0 N  DirecaoInv
+=andar matriz0 NE DirecaoInv
+
+== Testes de movimentação na célula 1,1
+=andar matriz0 S OK
+=andar matriz0 N OK
+=andar matriz0 S OK
+=andar matriz0 NE OK
+=andar matriz0 SO OK
+=andar matriz0 L OK
+=andar matriz0 O OK
+=andar matriz0 SE OK
+=andar matriz0 NO OK
+=andar matriz0 S OK
+=andar matriz0 N OK
+=andar matriz0 SO OK
+=andar matriz0 NE OK
+=andar matriz0 O OK
+=andar matriz0 L OK
+=andar matriz0 NO OK
+=andar matriz0 SE OK
+
+== Criar a matriz1
+=criar matriz1 4 OK
+
+== Atribuir e obter string sem se mover
+=atrlis matriz1 str0 OK
+=obterlis matriz1 str0 pNaoNULL OK
+
+== Andar, voltar e obter a mesma string
+=andar matriz1 S OK
+=andar matriz1 SE OK
+=andar matriz1 N OK
+=andar matriz1 NE OK
+=andar matriz1 O OK
+=andar matriz1 O OK
+=obterlis matriz1 str0 pNaoNULL OK
+
+== Atribuir e obter string em outras posições
+=andar matriz1 SE OK
+=atrlis matriz1 str1 OK
+=andar matriz1 NO OK
+=obterlis matriz1 str0 pNaoNULL OK
+=andar matriz1 SE OK
+=obterlis matriz1 str1 pNaoNULL OK
+
+== Esvaziar e verificar
+=esvaziar matriz1 OK
+=obterlis matriz1 "???" pNULL OK
+=andar matriz1 NO OK
+=obterlis matriz1 "???" pNULL OK
+
+== Destruir matriz
+=destruir matriz1 OK
+// fim
