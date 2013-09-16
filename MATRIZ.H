@@ -26,6 +26,8 @@
    #define MATRIZ_EXT extern
 #endif
 
+#include "LISTA.H"
+
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para uma matriz */
@@ -48,6 +50,9 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 
          MAT_CondRetPonteiroNulo ,
                /* Foi passado um ponteiro para NULL */
+
+		 MAT_CondRetTamanhoInvalido ,
+			   /* Foi passado um tamanho invalido */
 
          MAT_CondRetDirecaoInvalida ,
                /* A direção que se quer mover é inválida */
@@ -95,6 +100,7 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *
 *  $FV Valor retornado
 *     MAT_CondRetOK
+*     MAT_CondRetTamanhoInvalido
 *     MAT_CondRetFaltouMemoria
 *
 ***********************************************************************/
@@ -144,7 +150,7 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 
 /***********************************************************************
 *
-*  $FC Função: MAT Mover célula corrente.
+*  $FC Função: MAT Andar com a célula corrente.
 *
 *  $ED Descrição da função
 *     Move a célula corrente da matriz, de acordo com a direcao fornecida.
@@ -160,7 +166,7 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *
 ***********************************************************************/
 
-   MAT_tpCondRet MAT_MoverCorrente( MAT_tppMatriz pMatriz, MAT_tpDirecao direcao ) ;
+   MAT_tpCondRet MAT_AndarCorrente( MAT_tppMatriz pMatriz, MAT_tpDirecao direcao ) ;
 
 
 /***********************************************************************

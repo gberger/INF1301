@@ -14,8 +14,6 @@
 #include <malloc.h>
 #include <stdio.h>
 
-#include "LISTA.H"
-
 #define MATRIZ_OWN
 #include "MATRIZ.H"
 #undef MATRIZ_OWN
@@ -56,7 +54,7 @@
 
    typedef struct MAT_tagMatriz {
 
-         tpNoArvore * pCelulaCorr ;
+         tpCelulaMatriz * pCelulaCorr ;
                /* Ponteiro para a célula corrente da matriz */
 
    } MAT_tpMatriz ;
@@ -76,18 +74,22 @@
 
    MAT_tpCondRet MAT_CriarMatriz( MAT_tppMatriz * ppMatriz, int n )
    {
+	  tpCelulaMatriz **matrizAuxiliar, *elementoCorrente;
+      int linhaCorrente, colunaCorrente;
+
+	  if(n <= 0){
+		  return MAT_CondRetTamanhoInvalido;
+	  }
+
       /* Criar cabeça da matriz */
-      *ppMatriz = ( MAT_tagMatriz* ) malloc( sizeof(MAT_tagMatriz) );
+      *ppMatriz = ( MAT_tpMatriz* ) malloc( sizeof(MAT_tpMatriz) );
       if(*ppMatriz == NULL)
       {
          return MAT_CondRetFaltouMemoria;
       }
 
-      tpCelulaMatriz **matrizAuxiliar, *elementoCorrente;
-      int linhaCorrente, colunaCorrente;
-
       /* Criar estrutura da matriz a partir de um vetor bidimensional padrão */
-      matrizAuxiliar = ( MAT_tagMatriz** ) malloc( n * sizeof( MAT_tagMatriz* )) ;
+      matrizAuxiliar = ( tpCelulaMatriz** ) malloc( n * sizeof( tpCelulaMatriz* )) ;
       if( matrizAuxiliar == NULL)
       {
          free(*ppMatriz);
@@ -96,7 +98,7 @@
 
       for( linhaCorrente = 0; linhaCorrente < n; linhaCorrente++ )
       {
-         matrizAuxiliar[linhaCorrente] = ( MAT_tagMatriz* ) malloc( n * sizeof( MAT_tagMatriz )) ;
+         matrizAuxiliar[linhaCorrente] = ( tpCelulaMatriz* ) malloc( n * sizeof( tpCelulaMatriz )) ;
          if( matrizAuxiliar[linhaCorrente] == NULL)
          {
             linhaCorrente--;
@@ -117,20 +119,22 @@
          {
             elementoCorrente = &matrizAuxiliar[linhaCorrente][colunaCorrente];
 
+			elementoCorrente->pValor = NULL;
+
             elementoCorrente->vpVizinhos[ MAT_N ] = (linhaCorrente == 0) ? NULL : &matrizAuxiliar[ linhaCorrente - 1 ][ colunaCorrente ];
-            elementoCorrente->vpVizinhos[ MAT_S ] = (linhaCorrente == n) ? NULL : &matrizAuxiliar[ linhaCorrente + 1 ][ colunaCorrente ];
+            elementoCorrente->vpVizinhos[ MAT_S ] = (linhaCorrente == n-1) ? NULL : &matrizAuxiliar[ linhaCorrente + 1 ][ colunaCorrente ];
             elementoCorrente->vpVizinhos[ MAT_O ] = (colunaCorrente == 0) ? NULL : &matrizAuxiliar[ linhaCorrente ][ colunaCorrente-1 ];
-            elementoCorrente->vpVizinhos[ MAT_L ] = (colunaCorrente == n) ? NULL : &matrizAuxiliar[ linhaCorrente ][ colunaCorrente+1 ];
+            elementoCorrente->vpVizinhos[ MAT_L ] = (colunaCorrente == n-1) ? NULL : &matrizAuxiliar[ linhaCorrente ][ colunaCorrente+1 ];
 
             elementoCorrente->vpVizinhos[ MAT_NO ] = (colunaCorrente == 0 || linhaCorrente == 0) ? NULL : &matrizAuxiliar[ linhaCorrente - 1 ][ colunaCorrente - 1 ];
-            elementoCorrente->vpVizinhos[ MAT_SE ] = (colunaCorrente == n || linhaCorrente == n) ? NULL : &matrizAuxiliar[ linhaCorrente + 1 ][ colunaCorrente + 1 ];
-            elementoCorrente->vpVizinhos[ MAT_NE ] = (colunaCorrente == n || linhaCorrente == 0) ? NULL : &matrizAuxiliar[ linhaCorrente - 1 ][ colunaCorrente + 1 ];
-            elementoCorrente->vpVizinhos[ MAT_SO ] = (colunaCorrente == 0 || linhaCorrente == n) ? NULL : &matrizAuxiliar[ linhaCorrente + 1 ][ colunaCorrente - 1 ];
+            elementoCorrente->vpVizinhos[ MAT_SE ] = (colunaCorrente == n-1 || linhaCorrente == n-1) ? NULL : &matrizAuxiliar[ linhaCorrente + 1 ][ colunaCorrente + 1 ];
+            elementoCorrente->vpVizinhos[ MAT_NE ] = (colunaCorrente == n-1 || linhaCorrente == 0) ? NULL : &matrizAuxiliar[ linhaCorrente - 1 ][ colunaCorrente + 1 ];
+            elementoCorrente->vpVizinhos[ MAT_SO ] = (colunaCorrente == 0 || linhaCorrente == n-1) ? NULL : &matrizAuxiliar[ linhaCorrente + 1 ][ colunaCorrente - 1 ];
          } /* for */
       } /* for */
 
       /* Definir célula corrente inicial */
-      *ppMatriz->pCelulaCorr = &matrizAuxiliar[0][0];
+      (*ppMatriz)->pCelulaCorr = &matrizAuxiliar[0][0];
 
       /* Eliminar estrutura auxiliar */
       free(matrizAuxiliar);
@@ -146,12 +150,12 @@
 
    MAT_tpCondRet MAT_EsvaziarMatriz( MAT_tppMatriz pMatriz )
    {
+	  tpCelulaMatriz *elementoCorrente, *primeiroDaLinha;
+
       if(pMatriz == NULL)
       {
          return MAT_CondRetPonteiroNulo;
       } /* if */
-
-      tpCelulaMatriz *elementoCorrente, *primeiroDaLinha;
 
       elementoCorrente = obterPrimeiraCelula( pMatriz );
 
@@ -167,6 +171,7 @@
                LIS_DestruirLista(elementoCorrente->pValor);
                elementoCorrente->pValor = NULL;
             } /* if */
+			elementoCorrente = elementoCorrente->vpVizinhos[MAT_L];
          } /* while */
 
          primeiroDaLinha = primeiroDaLinha->vpVizinhos[MAT_S];
@@ -182,12 +187,12 @@
    
    MAT_tpCondRet MAT_DestruirMatriz( MAT_tppMatriz pMatriz )
    {
+	  tpCelulaMatriz *elementoCorrente, *elementoSeguinte;
+
       if(pMatriz == NULL)
       {
          return MAT_CondRetPonteiroNulo;
       } /* if */
-
-      tpCelulaMatriz *elementoCorrente;
 
       MAT_EsvaziarMatriz( pMatriz );
 
@@ -196,8 +201,9 @@
       /* Destruir linhas */
       while(elementoCorrente != NULL)
       {
-         elementoCorrente = elementoCorrente->vpVizinhos[MAT_S];
-         free(elementoCorrente->vpVizinhos[MAT_N]);
+         elementoSeguinte = elementoCorrente->vpVizinhos[MAT_S];
+         free(elementoCorrente);
+		 elementoCorrente = elementoSeguinte;
       } /* while */
 
       /* Destruir cabeça da matriz */
@@ -209,10 +215,10 @@
 
 /***********************************************************************
 *
-*  $FC Função: MAT Mover célula corrente
+*  $FC Função: MAT Andar com a célula corrente
 *  ****/
 
-   MAT_tpCondRet MAT_MoverCorrente( MAT_tppMatriz pMatriz, MAT_tpDirecao direcao )
+   MAT_tpCondRet MAT_AndarCorrente( MAT_tppMatriz pMatriz, MAT_tpDirecao direcao )
    {
       if(pMatriz == NULL)
       {
@@ -229,7 +235,7 @@
          return MAT_CondRetOK;
       } /* else */
 
-   } /* Fim Função: MAT Mover célula corrente */
+   } /* Fim Função: MAT Andar com a célula corrente */
 
 /***********************************************************************
 *
