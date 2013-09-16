@@ -212,7 +212,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *
 ***********************************************************************/
 
-   void IrInicioLista( LIS_tppLista pLista ) ;
+   void LIS_IrInicioLista( LIS_tppLista pLista ) ;
 
 
 /***********************************************************************
@@ -228,7 +228,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *
 ***********************************************************************/
 
-   void IrFinalLista( LIS_tppLista pLista ) ;
+   void LIS_IrFinalLista( LIS_tppLista pLista ) ;
 
 
 /***********************************************************************
@@ -284,6 +284,26 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 ***********************************************************************/
 
    LIS_tpCondRet LIS_ProcurarValor( LIS_tppLista pLista , char valor ) ;
+
+
+/***********************************************************************
+*
+*  $FC Função: LIS  &Obter numero de elementos
+*
+*  $ED Descrição da função
+*     Obtem o numero de elementos da lista.
+*
+*  $EP Parâmetros
+*     pLista  - ponteiro para a lista
+*
+*  $FV Valor retornado
+*     -1           - ponteiro para lista é NULL
+*     inteiro >= 0 - caso contrário
+*
+*
+***********************************************************************/
+
+   int LIS_ObterNumElem( LIS_tppLista pLista ) ;
 
 #undef LISTA_EXT
 

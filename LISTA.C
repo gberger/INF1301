@@ -317,7 +317,7 @@
 *  Função: LIS  &Ir para o elemento inicial
 *  ****/
 
-   void IrInicioLista( LIS_tppLista pLista )
+   void LIS_IrInicioLista( LIS_tppLista pLista )
    {
 
       #ifdef _DEBUG
@@ -333,7 +333,7 @@
 *  Função: LIS  &Ir para o elemento final
 *  ****/
 
-   void IrFinalLista( LIS_tppLista pLista )
+   void LIS_IrFinalLista( LIS_tppLista pLista )
    {
 
       #ifdef _DEBUG
@@ -461,6 +461,18 @@
       return LIS_CondRetNaoAchou ;
 
    } /* Fim função: LIS  &Procurar elemento contendo valor */
+   
+/***************************************************************************
+*
+*  Função: LIS  &Obter numero de elementos
+*  ****/
+   
+   int LIS_ObterNumElem( LIS_tppLista pLista ) {
+	   if ( pLista == NULL ){
+		   return -1;
+	   }
+	   return pLista->numElem;
+   }
 
 
 /*****  Código das funções encapsuladas no módulo  *****/
