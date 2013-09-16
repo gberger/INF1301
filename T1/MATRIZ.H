@@ -51,7 +51,7 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
          MAT_CondRetPonteiroNulo ,
                /* Foi passado um ponteiro para NULL */
 
-		 MAT_CondRetTamanhoInvalido ,
+		   MAT_CondRetTamanhoInvalido ,
 			   /* Foi passado um tamanho invalido */
 
          MAT_CondRetDirecaoInvalida ,
