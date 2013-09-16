@@ -2,7 +2,7 @@ REM executa os testes da lista e da matriz
 
 del StatsTudo.estat
 
-Lista\testeLista /sLISTA\TesteLista /aStatsTudo
-Matriz\testeMatriz /sMATRIZ\TesteMatriz /aStatsTudo
+TRAB1-1\TRAB1-1.exe /sLISTA\TesteLista /aStatsTudo
+TRAB1-2\TRAB1-2.exe /sMATRIZ\TesteMatriz /aStatsTudo
 
 exbestat /estatsTudo
