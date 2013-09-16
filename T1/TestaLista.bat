@@ -2,6 +2,6 @@ REM executa os testes da lista
 
 del StatsLista.estat
 
-testeLista /sTesteLista /aStatsLista
+TRAB1-1.exe /sTesteLista.script /aStatsLista
 
 ..\exbestat /eStatsLista
