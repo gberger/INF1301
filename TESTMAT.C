@@ -73,10 +73,9 @@ MAT_tppMatriz vtMatrizes[ DIM_VT_MATRIZES ] = {0};
 	  char * obterStringAPartirDeLista( LIS_tppLista lista );
 /*****  Código das funções exportadas pelo módulo  *****/
 
-
 /***********************************************************************
 *
-*  $FC Função: TARV Efetuar operações de teste específicas para árvore
+*  $FC Função: TMAT Efetuar operações de teste específicas para matriz quadrada
 *
 *  $ED Descrição da função
 *     Efetua os diversos comandos de teste específicos para o módulo
