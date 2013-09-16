@@ -1,0 +1,3 @@
+Properties/Configuration Properties
+-> C/C++ -> Code Generation -> Runtime Library: /MT
+-> Linker -> System -> Subsystem: /SUBSYSTEM:CONSOLE
