@@ -35,6 +35,7 @@ static const char EXC_ELEM_CMD            [ ] = "=excluirelem"    ;
 static const char IR_INICIO_CMD           [ ] = "=irinicio"       ;
 static const char IR_FIM_CMD              [ ] = "=irfinal"        ;
 static const char AVANCAR_ELEM_CMD        [ ] = "=avancarelem"    ;
+static const char OBTER_NUM_ELEM_CMD      [ ] = "=obternumelem"   ;
 
 
 #define TRUE  1
@@ -75,6 +76,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 *     =irinicio                     inxLista
 *     =irfinal                      inxLista
 *     =avancarelem                  inxLista  numElem CondRetEsp
+*     =obternumelem                 inxLista  numEsp
 *
 ***********************************************************************/
 
@@ -94,8 +96,6 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
       int i ;
 
       int numElem = -1 ;
-
-      //StringDado[ 0 ] = 0 ;
 
       /* Efetuar reset de teste de lista */
 
@@ -313,6 +313,27 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
                       "Condicao de retorno errada ao avancar" ) ;
 
          } /* fim ativa: LIS  &Avançar elemento */
+		 
+      /* Testar obter numero de elementos */
+
+         else if ( strcmp( ComandoTeste , OBTER_NUM_ELEM_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "ii" ,
+                       &inxLista , &ValEsp ) ;
+
+            if ( ( numLidos != 2 )
+              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+			return TST_CompararInt( ValEsp,
+					LIS_ObterNumElem( vtListas[ inxLista ] ),
+					"Numero de elementos da lista esta errado." );
+
+         } /* fim ativa: Testar obter numero de elementos */
+     
 
       return TST_CondRetNaoConhec ;
 
