@@ -1,0 +1,54 @@
+!!!  Modo de uso do programa
+  TestAXXX   /s<ArqScript> {/l<ArqLog>} {/a<ArqAcum>} {/? | /h }
+
+  <ArqScript>   - nome do arquivo contendo o script de teste.
+                  Parâmetro obrigatório, exceto se solicitado auxílio.
+  <ArqLog>      - nome do arquivo contendo o script de teste.
+                  Parâmetro opcional. Se não fornecido exibe
+                  o resultado do teste na tela (stdout)
+  <ArqAcum>     - nome do arquivo acumulador.
+                  Parâmetro opcional. Se fornecido as
+                  estatísticas do teste serão acumuladas
+                  no arquivo ArqAcum. Caso não exista,
+                  será criado.
+  /? ou /h      - Solicitação de auxílio.
+
+
+!!!  Comandos do script de teste de LISTA
+
+*     =resetteste
+*           - anula o vetor de listas. Provoca vazamento de memória
+*     =criarlista                   inxLista
+*     =destruirlista                inxLista
+*     =esvaziarlista                inxLista
+*     =inselemantes                 inxLista  char  CondRetEsp
+*     =inselemapos                  inxLista  char  CondRetEsp
+*     =obtervalorelem               inxLista  char
+*     =excluirelem                  inxLista  CondRetEsp
+*     =irinicio                     inxLista
+*     =irfinal                      inxLista
+*     =avancarelem                  inxLista  numElem CondRetEsp
+*     =obternumelem                 inxLista  numEsp
+
+!!!  Comandos do script de teste de MATRIZ
+
+*     =criar  <int inx, int n>
+*                   - chama a função MAT_CriarMatriz
+*                     cria uma matriz no índice inx, de tamanho n x n
+*     =andar <int inx, int dir>
+*                   - chama a função MAT_AndarCorrente
+*                     anda com a matriz inx na direção dir
+*     =atrlis <int inx, str valor>
+*                   - chama a função MAT_AtribuirValorCorrente
+*                     cria uma nova lista representando a string
+*                     atribui a lista a celula corrente da matriz inx
+*     =obterlis <int inx, str valor>
+*                   - chama a função MAT_ObterValorCorrente
+*                     compara a representação em string da lista obtida
+*                     com a lista passada
+*     =destruir <int inx>
+*                   - chama a função MAT_DestruirMatriz
+*                     destrui a matirz inx
+*     =esvaziar <int inx>
+*                   - chama a função MAT_EsvaziarMatriz
+*                   - esvazia a matriz inx
