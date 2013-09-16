@@ -4,4 +4,4 @@ del StatsLista.estat
 
 testeLista /sTesteLista /aStatsLista
 
-exbestat /eStatsLista
+..\exbestat /eStatsLista

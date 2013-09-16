@@ -4,4 +4,4 @@ del StatsMatriz.estat
 
 testeMatriz /sTesteMatriz /aStatsMatriz
 
-exbestat /estatsMatriz
+..\exbestat /estatsMatriz
