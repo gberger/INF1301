@@ -74,12 +74,12 @@
 
    MAT_tpCondRet MAT_CriarMatriz( MAT_tppMatriz * ppMatriz, int n )
    {
-	  tpCelulaMatriz **matrizAuxiliar, *elementoCorrente;
+	   tpCelulaMatriz **matrizAuxiliar, *elementoCorrente;
       int linhaCorrente, colunaCorrente;
 
-	  if(n <= 0){
-		  return MAT_CondRetTamanhoInvalido;
-	  }
+	   if(n <= 0){
+		   return MAT_CondRetTamanhoInvalido;
+	   }
 
       /* Criar cabeça da matriz */
       *ppMatriz = ( MAT_tpMatriz* ) malloc( sizeof(MAT_tpMatriz) );
@@ -89,16 +89,20 @@
       }
 
       /* Criar estrutura da matriz a partir de um vetor bidimensional padrão */
+      /* A estrutura matrizAuxiliar armazena ponteiros para as linhas da matriz */
       matrizAuxiliar = ( tpCelulaMatriz** ) malloc( n * sizeof( tpCelulaMatriz* )) ;
+      /* Verifica se memória foi alocada */
       if( matrizAuxiliar == NULL)
       {
          free(*ppMatriz);
          return MAT_CondRetFaltouMemoria;
       } /* if */
 
+      /* Cria as linhas da matriz (cada malloc gera uma linha inteira) */
       for( linhaCorrente = 0; linhaCorrente < n; linhaCorrente++ )
       {
          matrizAuxiliar[linhaCorrente] = ( tpCelulaMatriz* ) malloc( n * sizeof( tpCelulaMatriz )) ;
+         /* Verifica se memória foi alocada */
          if( matrizAuxiliar[linhaCorrente] == NULL)
          {
             linhaCorrente--;
@@ -112,14 +116,14 @@
          } /* if */
       } /* for */
 
-      /* Encadear células da matriz criada e criar lista em cada célula */
+      /* Encadear células da matriz criada e inicializar ponteiro para lista em cada célula */
       for( linhaCorrente = 0; linhaCorrente < n; linhaCorrente++ )
       {
          for( colunaCorrente = 0; colunaCorrente < n; colunaCorrente++ )
          {
             elementoCorrente = &matrizAuxiliar[linhaCorrente][colunaCorrente];
 
-			elementoCorrente->pValor = NULL;
+			   elementoCorrente->pValor = NULL;
 
             elementoCorrente->vpVizinhos[ MAT_N ] = (linhaCorrente == 0) ? NULL : &matrizAuxiliar[ linhaCorrente - 1 ][ colunaCorrente ];
             elementoCorrente->vpVizinhos[ MAT_S ] = (linhaCorrente == n-1) ? NULL : &matrizAuxiliar[ linhaCorrente + 1 ][ colunaCorrente ];
@@ -136,7 +140,7 @@
       /* Definir célula corrente inicial */
       (*ppMatriz)->pCelulaCorr = &matrizAuxiliar[0][0];
 
-      /* Eliminar estrutura auxiliar */
+      /* Eliminar estrutura auxiliar que armazenava ponteiros para as linhas */
       free(matrizAuxiliar);
 
       return MAT_CondRetOK;
@@ -202,6 +206,7 @@
       while(elementoCorrente != NULL)
       {
          elementoSeguinte = elementoCorrente->vpVizinhos[MAT_S];
+         /* Como cada malloc alocou uma linha inteira da matriz, cada free libera uma linha inteira */
          free(elementoCorrente);
 		 elementoCorrente = elementoSeguinte;
       } /* while */
@@ -249,6 +254,7 @@
          return MAT_CondRetPonteiroNulo;
       } /* if */
 
+      /* Destroi lista pré-existente, caso exista */
       if(pMatriz->pCelulaCorr->pValor != NULL)
       {
          LIS_DestruirLista( pMatriz->pCelulaCorr->pValor );
@@ -290,7 +296,7 @@
 *     pMatriz != NULL
 *
 *  $FV Valor retornado
-*     Ponteiro para a primeira célula da matriz.
+*     Ponteiro para a primeira célula da matriz (índice 0, 0).
 *
 ***********************************************************************/
 
