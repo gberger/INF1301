@@ -28,29 +28,38 @@
 == Verificar ObterValor relativo a lista vazia
 =obtervalorelem  lista0   cNULL
 
+== Verificar numero de elementos em lista vazia
+=obternumelem lista0 0
+
 == Inserir elemento em lista vazia
 =inselemantes    lista0   char0   OK
 =obtervalorelem  lista0   char0
+=obternumelem lista0 1
 
 == Inserir elemento após primeiro
 =inselemapos     lista0   char1   OK
 =obtervalorelem  lista0   char1
+=obternumelem lista0 2
 
 == Inserir elemento antes do último
 =inselemantes    lista0   char2   OK
 =obtervalorelem  lista0   char2
+=obternumelem lista0 3
 
 == Excluir elemento do meio
 =obtervalorelem  lista0   char2
 =excluirelem     lista0             OK
+=obternumelem lista0 2
 
 == Excluir elemento do início
 =obtervalorelem  lista0   char0
 =excluirelem     lista0             OK
+=obternumelem lista0 1
 
 == Excluir elemento final, único 
 =obtervalorelem  lista0   char1
 =excluirelem     lista0             OK
+=obternumelem lista0 0
 
 == Ver se a lista ficou vazia
 =obtervalorelem  lista0   cNULL
@@ -62,10 +71,12 @@
 =criarlista      lista1 
 =inselemapos     lista1   char0   OK
 =inselemapos     lista1   char1   OK
+=obternumelem lista1 2
 
 == Esvaziar a lista e ver se ficou vazia
 =esvaziarlista   lista1
 =obtervalorelem  lista1   cNULL
+=obternumelem lista1 0
 
 == Destruir a lista
 =destruirlista   lista1
@@ -76,6 +87,7 @@
 =inselemapos     lista2   char1   OK
 =inselemapos     lista2   char2   OK
 =inselemapos     lista2   char3   OK
+=obternumelem lista2 4
 
 == Verificar a lista de trás para diante
 =obtervalorelem  lista2   char3
@@ -104,6 +116,7 @@
 == Verificar a lista andando demais de frente para trás
 =avancarelem     lista2   10     FimLista
 =obtervalorelem  lista2   char3
+=obternumelem lista2 4
 
 == Destruir a lista
 =destruirlista   lista2
