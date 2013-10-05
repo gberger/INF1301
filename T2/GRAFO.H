@@ -52,6 +52,9 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 
 		 GRA_CondRetVerticeInvalido ,
 			   /* Vertice que deseja ir não existe ou não é acessível */
+			   
+		 GRA_CondRetErroVertice ,
+			   /* Operação no vértice resultou em erro */
 
          GRA_CondRetPonteiroNulo ,
                /* Foi passado um ponteiro para NULL */
@@ -151,7 +154,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para a grafo.
-*     $P pVertice - ponteiro para um valor de vertice
+*     $P pValor - ponteiro para um valor de vertice
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
@@ -159,7 +162,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_AlterarValorCorrente( GRA_tppGrafo pGrafo, VER_tppVertice * ppVertice ) ;
+   GRA_tpCondRet GRA_AlterarValorCorrente( GRA_tppGrafo pGrafo, VER_tppVertice pValor ) ;
 
 
 /***********************************************************************
@@ -167,7 +170,8 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FC Função: GRA Ir para vertice
 *
 *  $ED Descrição da função
-*     O vértice corrente torna-se o vértice cujo valor é o dado.
+*     O vértice corrente torna-se o vértice cujo valor é o dado, se
+*		existir tal vértice no grafo.
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para a grafo.
