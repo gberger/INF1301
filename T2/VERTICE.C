@@ -27,7 +27,7 @@
 
    typedef struct VER_tagVertice {
 
-         char * conteudo ;
+         void * conteudo ;
                /* Conteúdo do vértice */
 
    } VER_tpVertice ;
@@ -45,12 +45,12 @@
          return VER_CondRetPonteiroNulo;
       }
 
-      *ppVertice = (VER_tppVertice *) malloc( sizeof(VER_tpVertice) );
+      *ppVertice = (VER_tppVertice) malloc( sizeof(VER_tpVertice) );
       if(*ppVertice == NULL) {
          return VER_CondRetFaltouMemoria;
       }
 
-      *ppVertice->conteudo = NULL;
+      (*ppVertice)->conteudo = NULL;
 
       return VER_CondRetOK;
 
@@ -91,14 +91,14 @@
 *  Função: VER  &Atribuir valor
 *  ****/
 
-   VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, char * valor )
+   VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, void * valor )
    {
-      pVertice->conteudo = (char *) malloc( (strlen(valor) + 1) * sizeof(char) );
+      pVertice->conteudo = malloc( (strlen((char*)valor) + 1) * sizeof(char) );
       if(pVertice->conteudo == NULL) {
          return VER_CondRetFaltouMemoria;
       }
 
-      strcpy(valor, pVertice->counteudo);
+      strcpy((char*)valor, (char*)pVertice->conteudo);
 
       return VER_CondRetOK;
 
@@ -109,13 +109,13 @@
 *  Função: VER  &Obter valor
 *  ****/
 
-   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, char ** pValor )
+   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, void ** pValor )
    {
       if(pVertice->conteudo == NULL) {
          return VER_CondRetVerticeVazio;
       }
 
-      *pValor = pVertice->conteudo;
+      *pValor = (void*)pVertice->conteudo;
 
       return VER_CondRetOK;
       

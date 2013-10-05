@@ -135,7 +135,7 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, char * valor ) ;
+   VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, void * valor ) ;
 
 /***********************************************************************
 *
@@ -154,7 +154,7 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, char ** pValor ) ;
+   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, void ** pValor ) ;
 
 
 #undef VERTICE_EXT
