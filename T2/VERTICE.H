@@ -48,6 +48,9 @@ typedef struct VER_tagVertice * VER_tppVertice ;
          VER_CondRetOK ,
                /* Concluiu corretamente */
 
+         VER_CondRetVerticeVazio ,
+               /* Vértice não possui conteúdo */
+
          VER_CondRetPonteiroNulo ,
                /* Ponteiro fornecido é nulo */
 
@@ -117,10 +120,10 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 
 /***********************************************************************
 *
-*  $FC Função: VER  &Esvaziar vértice
+*  $FC Função: VER  &Atribuir valor
 *
 *  $ED Descrição da função
-*     Atribui uam cadeia de caracteres ao valor do vértice
+*     Atribui uma cadeia de caracteres ao valor do vértice
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
@@ -128,6 +131,7 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
+*     VER_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
@@ -135,10 +139,10 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 
 /***********************************************************************
 *
-*  $FC Função: VER  &Esvaziar vértice
+*  $FC Função: VER  &Obter valor
 *
 *  $ED Descrição da função
-*     Atribui uam cadeia de caracteres ao valor do vértice
+*     Obtem cadeia de caracteres armazenada no vértice
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
@@ -146,10 +150,11 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
+*     VER_CondRetVerticeVazio
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, char ** pValor ) ;
+   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, char ** pValor ) ;
 
 
 #undef VERTICE_EXT
