@@ -159,7 +159,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_ObterValorCorrente( GRA_tppGrafo pGrafo, VER_tppVertice * ppVertice ) ;
+   GRA_tpCondRet GRA_AlterarValorCorrente( GRA_tppGrafo pGrafo, VER_tppVertice * ppVertice ) ;
 
 
 /***********************************************************************
@@ -223,7 +223,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_InserirVertice( GRA_tppGrafo ppGrafo, VER_tppVertice pVertice ) ;
+   GRA_tpCondRet GRA_InserirVertice( GRA_tppGrafo pGrafo, VER_tppVertice pVertice ) ;
 
    
 /***********************************************************************
@@ -242,7 +242,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_ExcluirVerticeCorrente( GRA_tppGrafo ppGrafo ) ;
+   GRA_tpCondRet GRA_ExcluirVerticeCorrente( GRA_tppGrafo pGrafo ) ;
 
    
 /***********************************************************************
@@ -264,7 +264,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_InserirAresta( GRA_tppGrafo ppGrafo, VER_tppVertice pVertice ) ;
+   GRA_tpCondRet GRA_InserirAresta( GRA_tppGrafo pGrafo, VER_tppVertice pVertice ) ;
    
 
 /***********************************************************************
@@ -286,7 +286,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_ExcluirAresta( GRA_tppGrafo ppGrafo, VER_tppVertice pVertice ) ;
+   GRA_tpCondRet GRA_ExcluirAresta( GRA_tppGrafo pGrafo, VER_tppVertice pVertice ) ;
    
 
 #undef Grafo_EXT
