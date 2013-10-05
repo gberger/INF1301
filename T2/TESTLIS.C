@@ -4,10 +4,19 @@
 *  Arquivo gerado:              TestLIS.c
 *  Letras identificadoras:      TLIS
 *
-*  Projeto: T2 INF1301 2013.2
-*  Autores: gb - Guilherme Berger
-*           fl - Felipe Luiz
-*           jv - João Vicente
+*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Arquivo da base de software: D:\AUTOTEST\PROJETOS\LISTA.BSW
+*
+*  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
+*  Gestor:  LES/DI/PUC-Rio
+*  Autores: avs
+*
+*  $HA Histórico de evolução:
+*     Versão  Autor    Data     Observações
+*     4       avs   01/fev/2006 criar linguagem script simbólica
+*     3       avs   08/dez/2004 uniformização dos exemplos
+*     2       avs   07/jul/2003 unificação de todos os módulos em um só projeto
+*     1       avs   16/abr/2003 início desenvolvimento
 *
 ***************************************************************************/
 
@@ -313,7 +322,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
                return TST_CondRetParm ;
             } /* if */
 
-            IrInicioLista( vtListas[ inxLista ] ) ;
+            LIS_IrInicioLista( vtListas[ inxLista ] ) ;
 
             return TST_CondRetOK ;
 
@@ -332,7 +341,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
                return TST_CondRetParm ;
             } /* if */
 
-            IrFinalLista( vtListas[ inxLista ] ) ;
+            LIS_IrFinalLista( vtListas[ inxLista ] ) ;
 
             return TST_CondRetOK ;
 
