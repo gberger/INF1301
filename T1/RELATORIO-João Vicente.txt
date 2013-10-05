@@ -1,8 +1,0 @@
-Data    Horas Trabalhadas   Tipo Tarefa                 Descrição da Tarefa Realizada
-20/08   1                   estudar                     Download, leitura de doc e instalação do arcabouço de testes
-21/08   0.5                 estudar                     Estudo das funções do arcabouço
-09/09   2                   estudar                     Leitura do artigo do Arndt
-15/09   1.5                 revisar código do módulo    Revisão do módulo de matriz e lista
-15/09   2                   codificar módulo            Codificação do módulo de testes da matriz 
-15/09   0.25                redigir script de teste     Dar início a escrita do script de testes da matriz
-15/09   0.25                revisar script de teste     Revisar metodologia dos testes da matriz
