@@ -1,5 +1,5 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: VER  Vértice de grafo com conteúdo genérico
+*  $MCI Módulo de implementação: VER  Vértice de grafo contendo string
 *
 *  Arquivo gerado:              VERTICE.c
 *  Letras identificadoras:      VER
@@ -45,7 +45,7 @@
          return VER_CondRetFaltouMemoria;
       }
 
-      *ppVertice = NULL;
+      **ppVertice = NULL;
 
       return VER_CondRetOK;
 
@@ -58,9 +58,11 @@
 
    VER_tpCondRet VER_DestruirVertice( VER_tppVertice pVertice )
    {
-      free( pVertice );
+	   VER_EsvaziarVertice( pVertice );
 
-      return VER_CondRetOK;
+	   free( pVertice );
+
+	   return VER_CondRetOK;
 
    } /* Fim função: VER  &Destruir vértice */
 
@@ -71,10 +73,12 @@
 
    VER_tpCondRet VER_EsvaziarVertice( VER_tppVertice pVertice )
    {
+	   if(*pVertice != NULL) {
+		   free(*pVertice);
+		   *pVertice = NULL;
+	   }
 
-      *pVertice = NULL;
-
-      return VER_CondRetOK;
+	   return VER_CondRetOK;
 
    } /* Fim função: VER  &Esvaziar vértice */
 
@@ -85,10 +89,15 @@
 
    VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, void * valor )
    {
+	   *pVertice = malloc( strlen( (char *) valor) + 1 );
+	   if( *pVertice == NULL )
+	   {
+		   return VER_CondRetFaltouMemoria;
+	   }
 
-      *pVertice = valor;
+	   strcpy( (char *) *pVertice, (char *) valor);
 
-      return VER_CondRetOK;
+	   return VER_CondRetOK;
 
    } /* Fim função: VER  &Atribuir valor */
 
@@ -99,6 +108,10 @@
 
    VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, void ** pValor )
    {
+	   if(*pVertice == NULL)
+	   {
+		   return VER_CondRetVerticeVazio;
+	   }
 
       *pValor = *pVertice;
 
@@ -106,5 +119,5 @@
       
    } /* Fim função: VER  &Obter valor */
 
-/********** Fim do módulo de implementação: VER  Vértice de grafo com conteúdo genérico **********/
+/********** Fim do módulo de implementação: VER  Vértice de grafo contendo string **********/
 
