@@ -2,7 +2,7 @@
 #define VERTICE_
 /***************************************************************************
 *
-*  $MCD Módulo de definição: VER  Vértice de grafo contendo string
+*  $MCD Módulo de definição: VER  Vértice de grafo com conteúdo genérico
 *
 *  Arquivo gerado:              VERTICE.h
 *  Letras identificadoras:      VER
@@ -13,10 +13,8 @@
 *           jv - João Vicente
 *
 *  $ED Descrição do módulo
-*     Implementa vértices que armazenam strings.
-*     Podem existir n vértices em operação simultaneamente.
-*     Os vértices possuem uma cabeça encapsulando o seu estado.
-*     Cada elemento da lista é um char.
+*     Implementa vértices que armazenam conteúdo genérico.
+*     Cada elemento do vértice armazena uma referência para tipo genérico
 *
 ***************************************************************************/
  
@@ -30,7 +28,7 @@
 
 /* Tipo referência para um vértice */
 
-typedef struct VER_tagVertice * VER_tppVertice ;
+typedef void * VER_tppVertice ;
 
 
 /***********************************************************************
@@ -66,7 +64,7 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 *  $FC Função: VER  &Criar vértice
 *
 *  $ED Descrição da função
-*     Cria um vértice que armazena string.
+*     Cria um vértice que armazena conteúdo genérico.
 *
 *  $EP Parâmetros
 *     ppVertice - ponteiro para tipo referência para vértice
@@ -87,7 +85,8 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 *
 *  $ED Descrição da função
 *     Destrói o vértice fornecido.
-*     O parâmetro tipo referência para vértice não é modificado.
+*     O parâmetro tipo referência para vértice não é modificado,
+*     assim como o conteúdo não é destruído.
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
@@ -105,7 +104,8 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 *  $FC Função: VER  &Esvaziar vértice
 *
 *  $ED Descrição da função
-*     Elimina conteúdo string armazenado no vértice, atribuindo nulo
+*     Anula referência armazenada no vértice.
+*     O conteúdo em si não é destruido.
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
@@ -123,15 +123,14 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 *  $FC Função: VER  &Atribuir valor
 *
 *  $ED Descrição da função
-*     Atribui uma cadeia de caracteres ao valor do vértice
+*     Atribui referência genérica ao valor do vértice
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
-*     valor - ponteiro para cadeia de caracteres
+*     valor - ponteiro para conteúdo genérico
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
-*     VER_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
@@ -142,11 +141,11 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 *  $FC Função: VER  &Obter valor
 *
 *  $ED Descrição da função
-*     Obtem cadeia de caracteres armazenada no vértice
+*     Obtem referência para contúdo genérico armazenado no vértice.
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
-*     pValor - ponteiro de ponteiro para cadeia de caracteres
+*     pValor - ponteiro de ponteiro para conteúdo genérico
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
@@ -159,7 +158,7 @@ typedef struct VER_tagVertice * VER_tppVertice ;
 
 #undef VERTICE_EXT
 
-/********** Fim do módulo de definição: VER  Vértice de grafo contendo string **********/
+/********** Fim do módulo de definição: VER  Vértice de grafo com conteúdo genérico **********/
 
 #else
 #endif
