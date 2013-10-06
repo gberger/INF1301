@@ -1,5 +1,5 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: VER  Vértice de grafo contendo string
+*  $MCI Módulo de implementação: VER  Vértice de grafo com conteúdo genérico
 *
 *  Arquivo gerado:              VERTICE.c
 *  Letras identificadoras:      VER
@@ -25,12 +25,7 @@
 *
 ***********************************************************************/
 
-   typedef struct VER_tagVertice {
-
-         void * conteudo ;
-               /* Conteúdo do vértice */
-
-   } VER_tpVertice ;
+   typedef void * VER_tpVertice ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -50,7 +45,7 @@
          return VER_CondRetFaltouMemoria;
       }
 
-      (*ppVertice)->conteudo = NULL;
+      *ppVertice = NULL;
 
       return VER_CondRetOK;
 
@@ -63,8 +58,6 @@
 
    VER_tpCondRet VER_DestruirVertice( VER_tppVertice pVertice )
    {
-      VER_EsvaziarVertice( pVertice );
-
       free( pVertice );
 
       return VER_CondRetOK;
@@ -78,9 +71,8 @@
 
    VER_tpCondRet VER_EsvaziarVertice( VER_tppVertice pVertice )
    {
-      free(pVertice->conteudo);
 
-      pVertice->conteudo = NULL;
+      *pVertice = NULL;
 
       return VER_CondRetOK;
 
@@ -93,12 +85,8 @@
 
    VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, void * valor )
    {
-      pVertice->conteudo = malloc( (strlen((char*)valor) + 1) * sizeof(char) );
-      if(pVertice->conteudo == NULL) {
-         return VER_CondRetFaltouMemoria;
-      }
 
-      strcpy((char*)valor, (char*)pVertice->conteudo);
+      *pVertice = valor;
 
       return VER_CondRetOK;
 
@@ -111,15 +99,12 @@
 
    VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, void ** pValor )
    {
-      if(pVertice->conteudo == NULL) {
-         return VER_CondRetVerticeVazio;
-      }
 
-      *pValor = (void*)pVertice->conteudo;
+      *pValor = *pVertice;
 
       return VER_CondRetOK;
       
    } /* Fim função: VER  &Obter valor */
 
-/********** Fim do módulo de implementação: VER  Vértice de grafo contendo string **********/
+/********** Fim do módulo de implementação: VER  Vértice de grafo com conteúdo genérico **********/
 
