@@ -1,0 +1,63 @@
+// Script:    TesteLista.script
+// Autor:     Arndt von Staa
+// Data:      02/abr/2008
+// Propósito: Testar o módulo vértice de grafo contendo string
+//
+
+== Inicializar valores
+=declararparm   vertice0  int 0
+=declararparm   vertice1  int 1
+=declararparm   vertice2  int 2
+
+=declararparm   str0    string  "abcdefg"
+=declararparm   str1    string  "qwerty"
+=declararparm   str2    string  "xxx"
+
+=declararparm   OK             int  0
+=declararparm   VerticeVazio   int  1
+=declararparm   PonteiroNulo   int  2
+=declararparm   FaltouMemoria  int  3
+
+== Criar o vertice 0
+=criarvertice      vertice0 
+
+== Verificar ObterValor relativo a vertice vazio
+=obtervalor  vertice0   "???"      VerticeVazio
+
+== Inserir elemento em vertice vazio
+=atribuirvalor   vertice0   str0   OK
+=obtervalor      vertice0   str0   OK
+
+== Destruir o vertice
+=destruirvertice   vertice0
+
+== Criar o vertice 1
+=criarvertice      vertice1
+
+== Inserir elemento em vertice vazio
+=atribuirvalor   vertice1   str1   OK
+=obtervalor      vertice1   str1   OK
+
+== Esvaziar o vertice
+=esvaziarvertice vertice1
+
+== Verificar ObterValor relativo a vertice vazio
+=obtervalor  vertice1   "???"      VerticeVazio
+
+== Destruir o vertice
+=destruirvertice   vertice1
+
+== Criar o vertice 2
+=criarvertice      vertice2
+
+== Esvaziar o vertice
+=esvaziarvertice vertice2
+
+== Inserir elemento em vertice vazio
+=atribuirvalor   vertice2   str2   OK
+=obtervalor      vertice2   str2   OK
+
+== Destruir o vertice
+=destruirvertice   vertice2
+
+// fim
