@@ -28,7 +28,7 @@
 
 /* Tipo referência para um vértice */
 
-typedef void * VER_tppVertice ;
+typedef void ** VER_tppVertice ;
 
 
 /***********************************************************************
