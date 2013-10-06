@@ -2,7 +2,7 @@
 #define VERTICE_
 /***************************************************************************
 *
-*  $MCD Módulo de definição: VER  Vértice de grafo com conteúdo genérico
+*  $MCD Módulo de definição: VER  Vértice de grafo contendo string
 *
 *  Arquivo gerado:              VERTICE.h
 *  Letras identificadoras:      VER
@@ -14,7 +14,8 @@
 *
 *  $ED Descrição do módulo
 *     Implementa vértices que armazenam conteúdo genérico.
-*     Cada elemento do vértice armazena uma referência para tipo genérico
+*     Cada elemento do vértice armazena uma referência genérica para 
+*     umca cadeia de caracteres.
 *
 ***************************************************************************/
  
@@ -85,8 +86,7 @@ typedef void ** VER_tppVertice ;
 *
 *  $ED Descrição da função
 *     Destrói o vértice fornecido.
-*     O parâmetro tipo referência para vértice não é modificado,
-*     assim como o conteúdo não é destruído.
+*     O parâmetro tipo referência para vértice não é modificado.
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
@@ -104,8 +104,7 @@ typedef void ** VER_tppVertice ;
 *  $FC Função: VER  &Esvaziar vértice
 *
 *  $ED Descrição da função
-*     Anula referência armazenada no vértice.
-*     O conteúdo em si não é destruido.
+*     Destrói cadeia de caracteres armazenada no vértice, caso exista.
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
@@ -127,10 +126,11 @@ typedef void ** VER_tppVertice ;
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
-*     valor - ponteiro para conteúdo genérico
+*     valor - ponteiro genérico para cadeia de caracteres
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
+*	  VER_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
@@ -145,7 +145,7 @@ typedef void ** VER_tppVertice ;
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
-*     pValor - ponteiro de ponteiro para conteúdo genérico
+*     pValor - ponteiro de ponteiro para cadeia de caracteres
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
@@ -158,7 +158,7 @@ typedef void ** VER_tppVertice ;
 
 #undef VERTICE_EXT
 
-/********** Fim do módulo de definição: VER  Vértice de grafo com conteúdo genérico **********/
+/********** Fim do módulo de definição: VER  Vértice de grafo contendo string **********/
 
 #else
 #endif
