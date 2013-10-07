@@ -199,10 +199,15 @@
    GRA_tpCondRet GRA_EsvaziarGrafo( GRA_tppGrafo pGrafo ) {
 
 	   //ToDo
-	   // excluir todos os vértices
-	   // -> excluir listas dos vértices
-	   // esvaziar listas de origens e vértices
-	   // corrente = NULL
+	   LIS_IrInicioLista( pGrafo->pListaVertices );
+	   while (LIS_ObterValor( pGrafo->pListaVertices ) {
+	   	VER_EsvaziarVertice( LIS_ObterValor( pGrafo->pListaVertices ) );
+	   	VER_DestruirVertice( LIS_ObterValor( pGrafo->pListaVertices ) );
+	   	LIS_AvancarElementoCorrente(pGrafo->pListaVertices);
+	   }
+	   LIS_EsvaziarLista( pGrafo->pListaVertices );
+	   LIS_EsvaziarLista( pGrafo->pListaOrigens );
+	   pGrafo->pVerticeCorrente = NULL;
 
 	   return GRA_CondRetOK;
    }
