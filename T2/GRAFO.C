@@ -20,7 +20,7 @@
 
 /***********************************************************************
 *
-*  $TC Tipo de dados: GRA Descritor da célula da grafo
+*  $TC Tipo de dados: GRA Descritor da célula do grafo
 *
 *  $ED Descrição do tipo
 *     Descreve a organização da célula
@@ -37,7 +37,7 @@
 
 /***********************************************************************
 *
-*  $TC Tipo de dados: GRA Descritor da cabeça de uma grafo
+*  $TC Tipo de dados: GRA Descritor da cabeça de um grafo
 *
 *
 *  $ED Descrição do tipo
@@ -52,6 +52,22 @@
 	   LIS_tppLista pListaVertices;
 	   tppVerticeGrafo pVerticeCorrente;
    } GRA_tpGrafo ;
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: GRA Descritor da aresta de um grafo
+*
+*
+*  $ED Descrição do tipo
+*     A aresta do grafo é referenciada no valor do elemento da lista
+*     de sucessores de um vértice.
+*
+***********************************************************************/
+
+   typedef struct GRA_tagAresta {
+	   char * idAresta. 
+	   tppVerticeGrafo pVerticeApontado;
+   } GRA_tpAresta ;
 
 
 
