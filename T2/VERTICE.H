@@ -29,7 +29,7 @@
 
 /* Tipo referência para um vértice */
 
-typedef void ** VER_tppVertice ;
+typedef struct VER_tagVertice * VER_tppVertice;
 
 
 /***********************************************************************
@@ -126,7 +126,7 @@ typedef void ** VER_tppVertice ;
 *
 *  $EP Parâmetros
 *     pVertice - tipo referência para vértice
-*     valor - ponteiro genérico para cadeia de caracteres
+*     valor - ponteiro para cadeia de caracteres
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
@@ -134,7 +134,7 @@ typedef void ** VER_tppVertice ;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, void * valor ) ;
+   VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, char * valor ) ;
 
 /***********************************************************************
 *
@@ -153,7 +153,7 @@ typedef void ** VER_tppVertice ;
 *
 ***********************************************************************/
 
-   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, void ** pValor ) ;
+   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, char ** pValor ) ;
 
 
 #undef VERTICE_EXT
