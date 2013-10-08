@@ -82,7 +82,7 @@ VER_tppVertice   vtVertices[ DIM_VT_VERTICE ] ;
       TST_tpCondRet CondRet ;
 
       char   StringDado[  DIM_VALOR ] ;
-      void * pDado ;
+      char * pDado ;
 
       int i ;
 
