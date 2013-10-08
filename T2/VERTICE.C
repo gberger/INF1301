@@ -25,7 +25,9 @@
 *
 ***********************************************************************/
 
-   typedef void * VER_tpVertice ;
+   typedef struct VER_tagVertice {
+      char * conteudo;
+   } VER_tpVertice ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -45,7 +47,7 @@
          return VER_CondRetFaltouMemoria;
       }
 
-      **ppVertice = NULL;
+      (*ppVertice)->conteudo = NULL;
 
       return VER_CondRetOK;
 
@@ -73,9 +75,9 @@
 
    VER_tpCondRet VER_EsvaziarVertice( VER_tppVertice pVertice )
    {
-	   if(*pVertice != NULL) {
-		   free(*pVertice);
-		   *pVertice = NULL;
+	   if(pVertice->conteudo != NULL) {
+		   free(pVertice->conteudo);
+		   pVertice->conteudo = NULL;
 	   }
 
 	   return VER_CondRetOK;
@@ -87,15 +89,15 @@
 *  Função: VER  &Atribuir valor
 *  ****/
 
-   VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, void * valor )
+   VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, char * valor )
    {
-	   *pVertice = malloc( strlen( (char *) valor) + 1 );
-	   if( *pVertice == NULL )
+	   pVertice->conteudo = malloc( strlen( valor) + 1 );
+	   if( pVertice->conteudo == NULL )
 	   {
 		   return VER_CondRetFaltouMemoria;
 	   }
 
-	   strcpy( (char *) *pVertice, (char *) valor);
+	   strcpy( pVertice->conteudo, valor);
 
 	   return VER_CondRetOK;
 
@@ -106,14 +108,14 @@
 *  Função: VER  &Obter valor
 *  ****/
 
-   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, void ** pValor )
+   VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, char ** pValor )
    {
-	   if(*pVertice == NULL)
+	   if(pVertice->conteudo == NULL)
 	   {
 		   return VER_CondRetVerticeVazio;
 	   }
 
-      *pValor = *pVertice;
+      *pValor = pVertice->conteudo;
 
       return VER_CondRetOK;
       
