@@ -30,7 +30,8 @@
    typedef struct tagVerticeGrafo {
 	   LIS_tppLista pListaAnt;
 	   LIS_tppLista pListaSuc;
-	   VER_tppVertice pValor;
+	   char id;
+	   void * pValor;
    } tpVerticeGrafo ;
 
    typedef tpVerticeGrafo * tppVerticeGrafo;
@@ -51,6 +52,7 @@
 	   LIS_tppLista pListaOrigens;
 	   LIS_tppLista pListaVertices;
 	   tppVerticeGrafo pVerticeCorrente;
+	   void ( * ExcluirValor ) ( void * pValor ) ;
    } GRA_tpGrafo ;
 
 /***********************************************************************
@@ -65,7 +67,7 @@
 ***********************************************************************/
 
    typedef struct GRA_tagAresta {
-	   char * idAresta. 
+	   char idAresta[10];
 	   tppVerticeGrafo pVerticeApontado;
    } GRA_tpAresta ;
 
