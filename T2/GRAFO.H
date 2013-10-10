@@ -80,10 +80,11 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FV Valor retornado
 *     GRA_CondRetOK
 *     GRA_CondRetFaltouMemoria
+*     GRA_CondRetPonteiroNulo
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_CriarGrafo( GRA_tppGrafo * ppGrafo ) ;
+   GRA_tpCondRet GRA_CriarGrafo( GRA_tppGrafo * ppGrafo, void ( * ExcluirValor ) ( void * pDado ) ) ;
 
 
 /***********************************************************************
@@ -142,7 +143,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_ObterValorCorrente( GRA_tppGrafo pGrafo, VER_tppVertice * ppValor ) ;
+   GRA_tpCondRet GRA_ObterValorCorrente( GRA_tppGrafo pGrafo, void ** ppValor ) ;
 
    
 /***********************************************************************
@@ -162,7 +163,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_AlterarValorCorrente( GRA_tppGrafo pGrafo, VER_tppVertice pValor ) ;
+   GRA_tpCondRet GRA_AlterarValorCorrente( GRA_tppGrafo pGrafo, void * pValor ) ;
 
 
 /***********************************************************************
@@ -175,16 +176,16 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para a grafo.
-*     $P pVertice - ponteiro para o vertice que deseja ir
+*     $P idVertice - identificador do vértice
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
 *     GRA_CondRetPonteiroNulo
-*	  GRA_CondRetVerticeInvalido
+*	   GRA_CondRetVerticeInvalido
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_IrParaVertice( GRA_tppGrafo pGrafo, VER_tppVertice pVertice ) ;
+   GRA_tpCondRet GRA_IrParaVertice( GRA_tppGrafo pGrafo, char idVertice ) ;
 
 
 /***********************************************************************
@@ -197,16 +198,16 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para a grafo.
-*     $P pVertice - ponteiro para o vertice que deseja ir
+*     $P idVertice - identificador do vértice
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
 *     GRA_CondRetPonteiroNulo
-*	  GRA_CondRetVerticeInvalido
+*	   GRA_CondRetVerticeInvalido
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_AndarParaVertice( GRA_tppGrafo pGrafo, VER_tppVertice pVertice ) ;
+   GRA_tpCondRet GRA_AndarParaVertice( GRA_tppGrafo pGrafo, char idVertice ) ;
 
    
 /***********************************************************************
@@ -227,7 +228,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_InserirVertice( GRA_tppGrafo pGrafo, VER_tppVertice pVertice ) ;
+   GRA_tpCondRet GRA_InserirVertice( GRA_tppGrafo pGrafo, void * pVertice ) ;
 
    
 /***********************************************************************
@@ -254,12 +255,14 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FC Função: GRA Inserir aresta
 *
 *  $ED Descrição da função
-*     Insere uma aresta no vértice corrente, dirigida ao vértice cujo valor
-*		é igual ao dado, se este existir
+*     Insere uma aresta no grafo
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.
-*     $P pVertice - ponteiro para o vértice de destino da aresta
+*     $P idVerticeOrigem - identificador do vértice origem da aresta
+*     $P idVerticeDestino - identificador do vértice destino da aresta
+*     $P idAresta - identificador da aresta a ser criada, possui no
+*           máximo 9 caracteres válidos.
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
@@ -268,7 +271,33 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_InserirAresta( GRA_tppGrafo pGrafo, VER_tppVertice pVertice ) ;
+   GRA_tpCondRet GRA_InserirAresta( GRA_tppGrafo pGrafo, char idVerticeOrigem, char idVerticeDestino, char * idAresta ) ;
+
+
+/***********************************************************************
+*
+*  $FC Função: GRA Inserir aresta no corrente
+*
+*  $ED Descrição da função
+*     Insere uma aresta a partir do vértice corrente, dirigida
+*     ao vértice informado como destino
+*
+*  $EP Parâmetros
+*     $P pGrafo - ponteiro para o grafo.
+*     $P idVerticeOrigem - identificador do vértice origem da aresta
+*     $P idVerticeDestino - identificador do vértice destino da aresta
+*     $P idAresta - identificador da aresta a ser criada, possui no
+*           máximo 9 caracteres válidos.
+*
+*  $FV Valor retornado
+*     GRA_CondRetOK
+*    GRA_CondRetDirecaoInvalida
+*     GRA_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   GRA_tpCondRet GRA_InserirArestaNoCorrente( GRA_tppGrafo pGrafo, char idVerticeDestino, char * idAresta ) ;
+
    
 
 /***********************************************************************
@@ -281,7 +310,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.
-*     $P pVertice - ponteiro para o vértice de destino da aresta
+*     $P idAresta - identificador da aresta
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
@@ -290,7 +319,27 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_ExcluirAresta( GRA_tppGrafo pGrafo, VER_tppVertice pVertice ) ;
+   GRA_tpCondRet GRA_ExcluirAresta( GRA_tppGrafo pGrafo, char * idAresta ) ;
+
+
+/***********************************************************************
+*
+*  $FC Função: GRA Adicionar origem
+*
+*  $ED Descrição da função
+*     Inclui vértice na lista de origens do grafo.
+*
+*  $EP Parâmetros
+*     $P pGrafo - ponteiro para o grafo.
+*     $P idVertice - identificador da vértice a ser definido como origem
+*
+*  $FV Valor retornado
+*     GRA_CondRetOK
+*     GRA_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   GRA_tpCondRet GRA_AdicionarOrigem( GRA_tppGrafo pGrafo, char idVertice ) ;
    
 
 #undef Grafo_EXT
