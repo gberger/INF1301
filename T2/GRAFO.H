@@ -221,6 +221,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.
 *     $P pVertice - ponteiro para o conteúdo a ser inserido no novo vértice criado.
+*	  $P idVertice - identificador do vértice
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
@@ -228,7 +229,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_InserirVertice( GRA_tppGrafo pGrafo, void * pVertice ) ;
+   GRA_tpCondRet GRA_InserirVertice( GRA_tppGrafo pGrafo, void * pVertice, char idVertice ) ;
 
    
 /***********************************************************************
