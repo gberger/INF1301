@@ -296,7 +296,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_InserirArestaNoCorrente( GRA_tppGrafo pGrafo, char idVerticeDestino, char * idAresta ) ;
+   GRA_tpCondRet GRA_InserirArestaOrigemCorrente( GRA_tppGrafo pGrafo, char idVerticeDestino, char * idAresta ) ;
 
    
 
@@ -331,15 +331,35 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.
-*     $P idVertice - identificador da vértice a ser definido como origem
+*     $P idVertice - identificador do vértice a ser definido como origem
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
+*     GRA_CondRetVerticeInvalido
 *     GRA_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
    GRA_tpCondRet GRA_AdicionarOrigem( GRA_tppGrafo pGrafo, char idVertice ) ;
+
+/***********************************************************************
+*
+*  $FC Função: GRA Remover origem
+*
+*  $ED Descrição da função
+*     Remove vértice da lista de origens do grafo.
+*
+*  $EP Parâmetros
+*     $P pGrafo - ponteiro para o grafo.
+*     $P idVertice - identificador do vértice
+*
+*  $FV Valor retornado
+*     GRA_CondRetOK
+*     GRA_CondRetVerticeInvalido
+*
+***********************************************************************/
+
+   GRA_tpCondRet GRA_RemoverOrigem( GRA_tppGrafo pGrafo, char idVertice ) ;
    
 
 #undef Grafo_EXT
