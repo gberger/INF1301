@@ -59,8 +59,11 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
          GRA_CondRetPonteiroNulo ,
                /* Foi passado um ponteiro para NULL */
 
-         GRA_CondRetFaltouMemoria 
+         GRA_CondRetFaltouMemoria ,
                /* Faltou memória ao alocar dados */
+
+		 GRA_CondRetArestaJaExiste
+			   /* Já existe uma aresta com a mesma origem e destino */
 
    } GRA_tpCondRet ;
    
@@ -267,7 +270,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
-*	  GRA_CondRetDirecaoInvalida
+*	  GRA_CondRetArestaJaExiste
 *     GRA_CondRetFaltouMemoria
 *
 ***********************************************************************/
@@ -292,7 +295,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
-*    GRA_CondRetDirecaoInvalida
+*	  GRA_CondRetArestaJaExiste
 *     GRA_CondRetFaltouMemoria
 *
 ***********************************************************************/
