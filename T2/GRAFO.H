@@ -306,8 +306,8 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FC Função: GRA Excluir aresta
 *
 *  $ED Descrição da função
-*     Exclui a aresta do vértice corrente que o liga ao vértice cujo valor
-*		é igual ao dado, se este existir.
+*	  Exclui aresta que tem origem no vértice corrente e id igual
+*	  ao fornecido
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.
