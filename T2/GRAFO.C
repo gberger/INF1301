@@ -280,8 +280,8 @@
 	   //ToDo
 	   LIS_IrInicioLista( pGrafo->pListaVertices );
 	   while (LIS_ObterValor( pGrafo->pListaVertices ) ) {
-	   	RemoverVertice( (VER_tppVertice) LIS_ObterValor( pGrafo->pListaVertices ) );
-	   	LIS_AvancarElementoCorrente(pGrafo->pListaVertices);
+	   	RemoverVertice( (tppVerticeGrafo) LIS_ObterValor( pGrafo->pListaVertices ) );
+	   	LIS_AvancarElementoCorrente(pGrafo->pListaVertices, 1);
 	   }
 	   LIS_EsvaziarLista( pGrafo->pListaVertices );
 	   LIS_EsvaziarLista( pGrafo->pListaOrigens );
@@ -522,7 +522,7 @@
 
 	   // Busca idAresta em 
 	   while (LIS_ObterValor( pGrafo->pListaVertices ) ) {
-			pVertice = (VER_tppVertice) LIS_ObterValor( pGrafo->pListaVertices );
+			pVertice = (tppVerticeGrafo) LIS_ObterValor( pGrafo->pListaVertices );
 
 			while (LIS_ObterValor( pVertice->pListaSuc ) ) {
 				pAresta = (GRA_tpAresta *) LIS_ObterValor( pVertice->pListaSuc );
@@ -537,10 +537,10 @@
 					return GRA_CondRetOK;
 				}
 
-				LIS_AvancarElementoCorrente(pVertice->pListaSuc);
+				LIS_AvancarElementoCorrente(pVertice->pListaSuc, 1);
 			}
 
-	   		LIS_AvancarElementoCorrente(pGrafo->pListaVertices);
+	   		LIS_AvancarElementoCorrente(pGrafo->pListaVertices, 1);
 	   }
 	   
 	   return GRA_CondRetArestaInvalida;

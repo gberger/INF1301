@@ -387,7 +387,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     pGrafo deve ser ponteiro válido para um grafo do módulo
 *     idVerticeOrigem deve ser um identificador de vértice válido
 *     idVerticeDestino deve ser um identificador de vértice válido
-*     idAresta deve ser uma string de no máximo 9 caracteres
+*     idAresta deve ser uma string de no máximo 9 caracteres válidos
 *
 *  $EAE Assertivas de saída
 *     SE GRA_CondRetOk
@@ -433,7 +433,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     pGrafo != NULL
 *     pGrafo deve ser ponteiro válido para um grafo do módulo
 *     idVerticeDestino deve ser um identificador de vértice válido
-*     idAresta deve ser uma string de no máximo 9 caracteres
+*     idAresta deve ser uma string de no máximo 9 caracteres válidos
 *
 *  $EAE Assertivas de saída
 *     SE GRA_CondRetOk
