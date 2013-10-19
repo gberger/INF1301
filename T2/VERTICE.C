@@ -60,8 +60,11 @@
 
    VER_tpCondRet VER_DestruirVertice( VER_tppVertice pVertice )
    {
-	   VER_EsvaziarVertice( pVertice );
+      if(pVertice == NULL){
+         return VER_CondRetPonteiroNulo;
+      }
 
+	   VER_EsvaziarVertice( pVertice );
 	   free( pVertice );
 
 	   return VER_CondRetOK;
@@ -75,6 +78,10 @@
 
    VER_tpCondRet VER_EsvaziarVertice( VER_tppVertice pVertice )
    {
+      if(pVertice == NULL){
+         return VER_CondRetPonteiroNulo;
+      }
+
 	   if(pVertice->conteudo != NULL) {
 		   free(pVertice->conteudo);
 		   pVertice->conteudo = NULL;
@@ -91,6 +98,10 @@
 
    VER_tpCondRet VER_AtribuirValor( VER_tppVertice pVertice, char * valor )
    {
+      if(pVertice == NULL){
+         return VER_CondRetPonteiroNulo;
+      }
+
 	   pVertice->conteudo = malloc( strlen( valor) + 1 );
 	   if( pVertice->conteudo == NULL )
 	   {
@@ -110,6 +121,9 @@
 
    VER_tpCondRet VER_ObterValor( VER_tppVertice pVertice, char ** pValor )
    {
+      if(pVertice == NULL){
+         return VER_CondRetPonteiroNulo;
+      }
 	   if(pVertice->conteudo == NULL)
 	   {
 		   return VER_CondRetVerticeVazio;
