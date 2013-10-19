@@ -1,1 +1,7 @@
 ﻿Data    Horas Trabalhadas    Tipo Tarefa                  Descrição da Tarefa Realizada
+09/10   2h                   Estudar                      Entender e ajudar a  planejar a estutura do grafo.
+12/10   1h                   Projetar                     Revisar estrutura do grafo.
+14/10   2h                   Revisar código de Módulo     Revisar os códigos do módulo de implementação do grafo.
+15/10   3h                   Codificar Módulo             Codificar módulo de testes do grafo.
+16/10   1h                   Redigir Script de Testes     Redigir script de testes genérico do grafo.
+17/10   0,5                  Realizar os Testes           Ajudar nos processos de testes dos módulos.
