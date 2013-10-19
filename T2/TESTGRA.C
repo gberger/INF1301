@@ -31,6 +31,7 @@ static const char ESV_GRAFO_CMD           [ ] = "=esvaziargrafo"        ;
 static const char CORR_GRAFO_CMD          [ ] = "=obtercorrente"        ;
 static const char ALTCORR_GRAFO_CMD       [ ] = "=alterarcorrente"      ;
 static const char IRVER_GRAFO_CMD         [ ] = "=irparavertice"        ;
+static const char ANDARVER_GRAFO_CMD      [ ] = "=andarparavertice"     ;
 static const char INSVER_GRAFO_CMD        [ ] = "=inserirvertice"       ;
 static const char EXCCORR_GRAFO_CMD       [ ] = "=excluircorrente"      ;
 static const char INSAR_GRAFO_CMD         [ ] = "=inseriraresta"        ;
@@ -79,71 +80,123 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
       int inxGrafo  = -1 ,
           numLidos   = -1 ,
+          CondRetEsp = -1  ;
+
+      char idVertice;    
+
+      TST_tpCondRet CondRet ;
 
       void * pDado ;
 
-         if ( strcmp( ComandoTeste , CRAIR_GRAFO_CMD  ) == 0 ) {
+        if ( strcmp( ComandoTeste , CRAIR_GRAFO_CMD  ) == 0 ) {
 
-            numLidos = LER_LerParametros( "i" , &inxGrafo ) ;
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
 
-            if ( ( numLidos != 1 ) || ( ValidarInxVertice( inxGrafo , NAO_VAZIO ) ) )
+            if ( ( numLidos != 2 ) || ( ValidarInxVertice( inxGrafo , NAO_VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
            
-            return GRA_CriarGrafo( vtGRAFO[ inxGrafo ] );
+            CondRet = GRA_CriarGrafo( vtGRAFO[ inxGrafo ] );
 
-         } /* fim ativa: Testar criação de Grafo */
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao criar grafo."  ) ;
 
-         else if ( strcmp( ComandoTeste , DESTRUIR_GRAFO_CMD  ) == 0 ) {
+        } /* fim ativa: Testar criação de Grafo */
 
-            numLidos = LER_LerParametros( "i" , &inxGrafo ) ;
+        else if ( strcmp( ComandoTeste , DESTRUIR_GRAFO_CMD  ) == 0 ) {
 
-            if ( ( numLidos != 1 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
            
-            return GRA_DestruirGrafo( vtGRAFO[ inxGrafo ] );
+            CondRet = GRA_DestruirGrafo( vtGRAFO[ inxGrafo ] );
 
-         } /* fim ativa: Testar criação de Grafo */
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao destruir grafo."  ) ;
 
-         else if ( strcmp( ComandoTeste , ESV_GRAFO_CMD  ) == 0 ) {
+        } /* fim ativa: Testar criação de Grafo */
 
-            numLidos = LER_LerParametros( "i" , &inxGrafo ) ;
+        else if ( strcmp( ComandoTeste , ESV_GRAFO_CMD  ) == 0 ) {
 
-            if ( ( numLidos != 1 ) || (ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
+
+            if ( ( numLidos != 2 ) || (ValidarInxVertice( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
            
-            return GRA_EsvaziarGrafo( vtGRAFO[ inxGrafo ] );
+            CondRet = GRA_EsvaziarGrafo( vtGRAFO[ inxGrafo ] );
 
-         } /* fim ativa: Testar criação de Grafo */
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao esvaziar grafo."  ) ;
 
-         else if ( strcmp( ComandoTeste , CORR_GRAFO_CMD  ) == 0 ) {
+        } /* fim ativa: Testar criação de Grafo */
 
-            numLidos = LER_LerParametros( "i" , &inxGrafo ) ;
+        else if ( strcmp( ComandoTeste , CORR_GRAFO_CMD  ) == 0 ) {
 
-            if ( ( numLidos != 1 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
            
-            return GRA_ObterValorCorrente( vtGRAFO[ inxGrafo ], &pDado );
+            CondRet = GRA_ObterValorCorrente( vtGRAFO[ inxGrafo ], &pDado );
 
-         } /* fim ativa: Testar criação de Grafo */
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao obter corrente."  ) ;
+
+        } /* fim ativa: Testar criação de Grafo */
 
         else if ( strcmp( ComandoTeste , ALTCORR_GRAFO_CMD  ) == 0 ) {
 
-            numLidos = LER_LerParametros( "i" , &inxGrafo ) ;
+            numLidos = LER_LerParametros( "ii" , &inxGrafo,  &CondRetEsp ) ;
 
-            if ( ( numLidos != 1 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 2 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
            
-            return GRA_ObterValorCorrente( vtGRAFO[ inxGrafo ], &pDado );
+            CondRet = GRA_AlterarValorCorrente( vtGRAFO[ inxGrafo ], &pDado );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao alterar corrente."  ) ;
+
+        } /* fim ativa: Testar criação de Grafo */
+
+        else if ( strcmp( ComandoTeste , IRVER_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "iic" , &inxGrafo,  &CondRetEsp, &idVertice ) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_IrParaVertice( vtGRAFO[ inxGrafo ], idVertice );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao ir para vertice."  ) ;
+
+        } /* fim ativa: Testar criação de Grafo */
+
+        else if ( strcmp( ComandoTeste , ANDARVER_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "iic" , &inxGrafo,  &CondRetEsp, &idVertice ) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_AndarParaVertice( vtGRAFO[ inxGrafo ], idVertice );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao andar para vertice."  ) ;
 
         } /* fim ativa: Testar criação de Grafo */
 
