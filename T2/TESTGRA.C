@@ -251,6 +251,22 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar criação de Grafo */
 
+        else if ( strcmp( ComandoTeste , INSARO_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "iics" , &inxGrafo,  &CondRetEsp, &idVertice, StringDado) ;
+
+            if ( ( numLidos != 4 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_InserirArestaOrigemCorrente( vtGRAFO[ inxGrafo ], idVertice, StringDado );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao inserir aresta na origem corrente."  ) ;
+
+        } /* fim ativa: Testar criação de Grafo */
+
    } /* Fim função: TLIS &Testar vertice */
 
 
