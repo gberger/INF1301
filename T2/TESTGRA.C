@@ -26,7 +26,7 @@
 #include    "Grafo.h"
 #include    "Vertice.h"
 
-static const char CRAIR_GRAFO_CMD         [ ] = "=criargrafo"           ;
+static const char CRIAR_GRAFO_CMD         [ ] = "=criargrafo"           ;
 static const char DESTRUIR_GRAFO_CMD      [ ] = "=destruirgrafo"        ;
 static const char ESV_GRAFO_CMD           [ ] = "=esvaziargrafo"        ;
 static const char CORR_GRAFO_CMD          [ ] = "=obtercorrente"        ;
@@ -54,12 +54,16 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
+	static int ValidarInxGrafo( int inxGrafo , int Modo ) ;
+
+	static void DestruirValor( void * pValor ) ;
+
 /***********************************************************************
 *
 *  $FC Função: TLIS &Testar vértices
 *
 *  $ED Descrição da função
-*     Podem ser criadas até 10 gráficos, identificadas pelos índices 0 a 10
+*     Podem ser criadas até 10 grafos, identificados pelos índices 0 a 9
 *
 *     Comandos disponíveis:
 *
@@ -97,7 +101,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
       void * pDado ;
 
       /* Testar criar Grafo */
-        if ( strcmp( ComandoTeste , CRAIR_GRAFO_CMD  ) == 0 ) {
+        if ( strcmp( ComandoTeste , CRIAR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
 
@@ -106,7 +110,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
                return TST_CondRetParm ;
             } /* if */
            
-            CondRet = GRA_CriarGrafo( vtGRAFO[ inxGrafo ], VER_EsvaziarVertice );
+            CondRet = GRA_CriarGrafo( &vtGRAFO[ inxGrafo ], DestruirValor );
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao criar grafo."  ) ;
@@ -184,7 +188,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
       /* Testar ir para vertice em Grafo */ 
         else if ( strcmp( ComandoTeste , IRVER_GRAFO_CMD  ) == 0 ) {
 
-            numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp, ) ;
+            numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp ) ;
 
             if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
@@ -341,11 +345,11 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
 /***********************************************************************
 *
-*  $FC Função: TLIS -Validar indice de grafo
+*  $FC Função: TGRA -Validar indice de grafo
 *
 ***********************************************************************/
 
-   int ValidarInxGrafo( int inxGrafo , int Modo ) {
+   static int ValidarInxGrafo( int inxGrafo , int Modo ) {
 
       if ( ( inxGrafo <  0 )
         || ( inxGrafo >= DIM_VT_GRAFO ))
@@ -369,7 +373,17 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
          
       return TRUE ;
 
-   } /* Fim função: TLIS -Validar indice de grafo */
+   } /* Fim função: TGRA -Validar indice de grafo */
+
+/***********************************************************************
+*
+*  $FC Função: TGRA -Esvaziar valor vertice
+*
+***********************************************************************/
+
+   static void DestruirValor( void * pValor) {
+	   VER_EsvaziarVertice( (VER_tppVertice) pValor);
+   }
 
 
 /********** Fim do módulo de implementação: TGRA Teste de grafo genérico **********/
