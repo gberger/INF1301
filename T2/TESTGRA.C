@@ -1,7 +1,7 @@
 /***************************************************************************
 *  $MCI Módulo de implementação: TGRA Teste de grafo genérico
 *
-*  Arquivo gerado:              TestGRA.c
+*  Arquivo gerado:              TESTGRA.c
 *  Letras identificadoras:      TGRA
 *
 *  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
@@ -24,13 +24,15 @@
 #include    "LerParm.h"
 
 #include    "Grafo.h"
+#include    "Vertice.h"
 
-static const char CRAIR_GRAFO_CMD         [ ] = "=criargrafo"           ;
+static const char CRIAR_GRAFO_CMD         [ ] = "=criargrafo"           ;
 static const char DESTRUIR_GRAFO_CMD      [ ] = "=destruirgrafo"        ;
 static const char ESV_GRAFO_CMD           [ ] = "=esvaziargrafo"        ;
 static const char CORR_GRAFO_CMD          [ ] = "=obtercorrente"        ;
 static const char ALTCORR_GRAFO_CMD       [ ] = "=alterarcorrente"      ;
 static const char IRVER_GRAFO_CMD         [ ] = "=irparavertice"        ;
+static const char ANDARVER_GRAFO_CMD      [ ] = "=andarparavertice"     ;
 static const char INSVER_GRAFO_CMD        [ ] = "=inserirvertice"       ;
 static const char EXCCORR_GRAFO_CMD       [ ] = "=excluircorrente"      ;
 static const char INSAR_GRAFO_CMD         [ ] = "=inseriraresta"        ;
@@ -50,207 +52,320 @@ static const char RMVOR_GRAFO_CMD         [ ] = "=removerorigem"        ;
 
 GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
-/***** Protótipos das funções encapuladas no módulo *****/
-
 /*****  Código das funções exportadas pelo módulo  *****/
 
+	static int ValidarInxGrafo( int inxGrafo , int Modo ) ;
+
+	static void DestruirValor( void * pValor ) ;
 
 /***********************************************************************
 *
 *  $FC Função: TLIS &Testar vértices
 *
 *  $ED Descrição da função
-*     Podem ser criadas até 10 vértices, identificadas pelos índices 0 a 10
+*     Podem ser criadas até 10 grafos, identificados pelos índices 0 a 9
 *
 *     Comandos disponíveis:
 *
-*     =resetteste
-*           - anula o vetor de vértices. Provoca vazamento de memória
-*     =criarvertice               inxVertice
-*     =destruirvertice            inxVertice
-*     =esvaziarvertice            inxVertice
-*     =atribuirvalor              inxVertice  string  CondRetEsp
-*     =obtervalor                 inxVertice  string  CondRetEsp
+* =criargrafo            inxGrafo 
+* =destruirgrafo         inxGrafo
+* =esvaziargrafo         inxGrafo
+* =obtercorrente         inxGrafo
+* =alterarcorrente       inxGrafo
+* =irparavertice         inxGrafo
+* =andarparavertice      inxGrafo
+* =inserirvertice        inxGrafo
+* =excluircorrente       inxGrafo
+* =inseriraresta         inxGrafo
+* =inserirarestaorigem   inxGrafo
+* =excluiraresta         inxGrafo
+* =adicionarorigem       inxGrafo
+* =removerorigem         inxGrafo
 *
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando( char * ComandoTeste )
    {
 
-      int inxVertice  = -1 ,
+      int inxGrafo  = -1 ,
           numLidos   = -1 ,
           CondRetEsp = -1  ;
 
+      char idVertice;
+      char idVertice2;
+
+      char StringDado[ DIM_VALOR ];    
+
       TST_tpCondRet CondRet ;
 
-      char   StringDado[  DIM_VALOR ] ;
-      char * pDado ;
+      void * pDado ;
 
-      int i ;
+      /* Testar criar Grafo */
+        if ( strcmp( ComandoTeste , CRIAR_GRAFO_CMD  ) == 0 ) {
 
-      StringDado[ 0 ] = 0 ;
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
 
-      /* Efetuar reset de teste de vertice */
-
-         if ( strcmp( ComandoTeste , RESET_VERTICE_CMD ) == 0 )
-         {
-
-            for( i = 0 ; i < DIM_VT_VERTICE ; i++ )
-            {
-               vtVertices[ i ] = NULL ;
-            } /* for */
-
-            return TST_CondRetOK ;
-
-         } /* fim ativa: Efetuar reset de teste de vertice */
-
-      /* Testar CriarVertice */
-
-         else if ( strcmp( ComandoTeste , CRIAR_VERTICE_CMD ) == 0 )
-         {
-
-            numLidos = LER_LerParametros( "i" ,
-                       &inxVertice ) ;
-
-            if ( ( numLidos != 1 )
-              || ( ! ValidarInxVertice( inxVertice , VAZIO )))
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , NAO_VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
-
-			VER_CriarVertice( &vtVertices[ inxVertice ] ) ;
-
-            return TST_CompararPonteiroNulo( 1 , vtVertices[ inxVertice ] ,
-               "Erro em ponteiro de nova vertice."  ) ;
-
-         } /* fim ativa: Testar CriarVertice */
-
-      /* Testar Esvaziar vértice */
-
-         else if ( strcmp( ComandoTeste , ESVAZIAR_VERTICE_CMD ) == 0 )
-         {
-
-            numLidos = LER_LerParametros( "i" ,
-                               &inxVertice ) ;
-
-            if ( ( numLidos != 1 )
-              || ( ! ValidarInxVertice( inxVertice , NAO_VAZIO )))
-            {
-               return TST_CondRetParm ;
-            } /* if */
-
-            VER_EsvaziarVertice( vtVertices[ inxVertice ] ) ;
-
-            return TST_CondRetOK ;
-
-         } /* fim ativa: Testar Esvaziar vertice */
-
-      /* Testar Destruir vertice */
-
-         else if ( strcmp( ComandoTeste , DESTRUIR_VERTICE_CMD ) == 0 )
-         {
-
-            numLidos = LER_LerParametros( "i" ,
-                               &inxVertice ) ;
-
-            if ( ( numLidos != 1 )
-              || ( ! ValidarInxVertice( inxVertice , NAO_VAZIO )))
-            {
-               return TST_CondRetParm ;
-            } /* if */
-
-            VER_DestruirVertice( vtVertices[ inxVertice ] ) ;
-            vtVertices[ inxVertice ] = NULL ;
-
-            return TST_CondRetOK ;
-
-         } /* fim ativa: Testar Destruir vertice */
-
-      /* Testar atribuir valor */
-
-         else if ( strcmp( ComandoTeste , ATRIBUIR_VALOR_CMD ) == 0 )
-         {
-
-            numLidos = LER_LerParametros( "isi" ,
-                       &inxVertice , StringDado, &CondRetEsp ) ;
-
-            if ( ( numLidos != 3 )
-              || ( ! ValidarInxVertice( inxVertice , NAO_VAZIO )) )
-            {
-               return TST_CondRetParm ;
-            } /* if */
-
-            CondRet = VER_AtribuirValor( vtVertices[ inxVertice ] , (void *) StringDado ) ;
+           
+            CondRet = GRA_CriarGrafo( &vtGRAFO[ inxGrafo ], DestruirValor );
 
             return TST_CompararInt( CondRetEsp , CondRet ,
-                     "Condicao de retorno errada ao atribuir valor."  ) ;
+                     "Condicao de retorno errada ao criar grafo."  ) ;
 
-         } /* fim ativa: Testar atribuir valor */
+        } /* fim ativa: Testar criar Grafo */
 
-      /* Testar obter valor */
+      /* Testar destruir Grafo */      
+        else if ( strcmp( ComandoTeste , DESTRUIR_GRAFO_CMD  ) == 0 ) {
 
-         else if ( strcmp( ComandoTeste , OBTER_VALOR_CMD ) == 0 )
-         {
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
 
-            numLidos = LER_LerParametros( "isi" ,
-                       &inxVertice , StringDado , &CondRetEsp ) ;
-
-            if ( ( numLidos != 3 )
-              || ( ! ValidarInxVertice( inxVertice , NAO_VAZIO )) )
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
+           
+            CondRet = GRA_DestruirGrafo( vtGRAFO[ inxGrafo ] );
 
-            CondRet = VER_ObterValor( vtVertices[ inxVertice ] , &pDado ) ;
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao destruir grafo."  ) ;
 
-			if ( CondRetEsp != 0 )
+        } /* fim ativa: Testar destruir Grafo */
+
+      /* Testar esvaziar Grafo */      
+        else if ( strcmp( ComandoTeste , ESV_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
+
+            if ( ( numLidos != 2 ) || (ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
-               return TST_CompararInt( CondRetEsp , CondRet ,
-                     "Condicao de retorno errada ao obter valor."  ) ;
+               return TST_CondRetParm ;
             } /* if */
+           
+            CondRet = GRA_EsvaziarGrafo( vtGRAFO[ inxGrafo ] );
 
-            if ( pDado == NULL )
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao esvaziar grafo."  ) ;
+
+        } /* fim ativa: Testar esvaziar Grafo */
+
+      /* Testar obter vertice corrente em Grafo */
+        else if ( strcmp( ComandoTeste , CORR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
-               return TST_CompararPonteiroNulo( 1 , pDado ,
-                         "Dado tipo um deveria existir." ) ;
+               return TST_CondRetParm ;
             } /* if */
+           
+            CondRet = GRA_ObterValorCorrente( vtGRAFO[ inxGrafo ], &pDado );
 
-            return TST_CompararString( StringDado , (char *) pDado ,
-                         "Valor do elemento errado." ) ;
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao obter corrente."  ) ;
 
-         } /* fim ativa: Testar inserir elemento apos */
+        } /* fim ativa: Testar obter vertice corrente em Grafo */
 
-      return TST_CondRetNaoConhec ;
+      /* Testar alterar vertice corrente em Grafo */
+        else if ( strcmp( ComandoTeste , ALTCORR_GRAFO_CMD  ) == 0 ) {
 
-   } /* Fim função: TLIS &Testar vertice */
+            numLidos = LER_LerParametros( "ii" , &inxGrafo,  &CondRetEsp ) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_AlterarValorCorrente( vtGRAFO[ inxGrafo ], &pDado );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao alterar corrente."  ) ;
+
+        } /* fim ativa: Testar alterar vertice corrente em Grafo */
+
+      /* Testar ir para vertice em Grafo */ 
+        else if ( strcmp( ComandoTeste , IRVER_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp ) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_IrParaVertice( vtGRAFO[ inxGrafo ], idVertice );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao ir para vertice."  ) ;
+
+        } /* fim ativa: Testar ir para vertice em Grafo */
+
+      /* Testar andar para vertice em Grafo */
+        else if ( strcmp( ComandoTeste , ANDARVER_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp ) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_AndarParaVertice( vtGRAFO[ inxGrafo ], idVertice );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao andar para vertice."  ) ;
+
+        } /* fim ativa: Testar andar para vertice em Grafo */
+
+      /* Testar inserir vertice em Grafo */
+        else if ( strcmp( ComandoTeste , INSVER_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp ) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_InserirVertice( vtGRAFO[ inxGrafo ], pDado, idVertice );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao inserir vertice."  ) ;
+
+        } /* fim ativa: Testar inserir vertice em Grafo */
+
+      /* Testar excluir vertice corrente em Grafo */
+        else if ( strcmp( ComandoTeste , EXCCORR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ii" , &inxGrafo,  &CondRetEsp) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_ExcluirVerticeCorrente( vtGRAFO[ inxGrafo ] );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao excluir vertice corrente."  ) ;
+
+        } /* fim ativa: Testar excluir vertice corrente em Grafo */
+
+      /* Testar inserir aresta em Grafo */ 
+        else if ( strcmp( ComandoTeste , INSAR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "iccsi" , &inxGrafo, &idVertice, &idVertice2, StringDado, &CondRetEsp) ;
+
+            if ( ( numLidos != 5 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_InserirAresta( vtGRAFO[ inxGrafo ], idVertice, idVertice2, StringDado );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao inserir aresta."  ) ;
+
+        } /* fim ativa: Testar inserir aresta em Grafo */
+
+      /* Testar inserir aresta em origem no Grafo */
+        else if ( strcmp( ComandoTeste , INSARO_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "icsi" , &inxGrafo, &idVertice, StringDado, &CondRetEsp) ;
+
+            if ( ( numLidos != 4 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_InserirArestaOrigemCorrente( vtGRAFO[ inxGrafo ], idVertice, StringDado );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao inserir aresta na origem corrente."  ) ;
+
+        } /* fim ativa: Testar inserir aresta em origem no Grafo */
+
+      /* Testar excluir aresta em Grafo */
+        else if ( strcmp( ComandoTeste , EXCAR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "isi" , &inxGrafo, StringDado, &CondRetEsp) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_ExcluirAresta( vtGRAFO[ inxGrafo ], StringDado );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao excluir aresta."  ) ;
+
+        } /* fim ativa: Testar excluir aresta em Grafo */
+
+      /* Testar adicionar origem em Grafo */
+        else if ( strcmp( ComandoTeste , ADDOR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_AdicionarOrigem( vtGRAFO[ inxGrafo ], idVertice );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao adicionar origem."  ) ;
+
+        } /* fim ativa: Testar adicionar origem em Grafo */
+
+      /* Testar remover origem em Grafo */
+        else if ( strcmp( ComandoTeste , RMVOR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_RemoverOrigem( vtGRAFO[ inxGrafo ], idVertice );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao remover origem."  ) ;
+
+        } /* fim ativa: Testar remover origem em Grafo */
+
+   } /* Fim função: TLIS &Testar grafo */
 
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
 /***********************************************************************
 *
-*  $FC Função: TLIS -Validar indice de vértice
+*  $FC Função: TGRA -Validar indice de grafo
 *
 ***********************************************************************/
 
-   int ValidarInxVertice( int inxVertice , int Modo )
-   {
+   static int ValidarInxGrafo( int inxGrafo , int Modo ) {
 
-      if ( ( inxVertice <  0 )
-        || ( inxVertice >= DIM_VT_VERTICE ))
+      if ( ( inxGrafo <  0 )
+        || ( inxGrafo >= DIM_VT_GRAFO ))
       {
          return FALSE ;
       } /* if */
          
       if ( Modo == VAZIO )
       {
-         if ( vtVertices[ inxVertice ] != 0 )
+         if ( vtGRAFO[ inxGrafo ] != 0 )
          {
             return FALSE ;
          } /* if */
       } else
       {
-         if ( vtVertices[ inxVertice ] == 0 )
+         if ( vtGRAFO[ inxGrafo ] == 0 )
          {
             return FALSE ;
          } /* if */
@@ -258,7 +373,18 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
          
       return TRUE ;
 
-   } /* Fim função: TLIS -Validar indice de vértice */
+   } /* Fim função: TGRA -Validar indice de grafo */
 
-/********** Fim do módulo de implementação: TVER Teste vértice de grafo genérico **********/
+/***********************************************************************
+*
+*  $FC Função: TGRA -Esvaziar valor vertice
+*
+***********************************************************************/
+
+   static void DestruirValor( void * pValor) {
+	   VER_EsvaziarVertice( (VER_tppVertice) pValor);
+   }
+
+
+/********** Fim do módulo de implementação: TGRA Teste de grafo genérico **********/
 

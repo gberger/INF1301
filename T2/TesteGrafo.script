@@ -1,0 +1,29 @@
+// Script:    TesteGrafo.script
+// Autor:     Arndt von Staa
+// Data:      02/abr/2008
+// Propósito: Testar superficialmente o módulo de teste de grafo.
+//
+
+== Inicializar valores
+=declaraparm  grafo0 int 0
+=declaraparm  grafo1 int 1
+=declaraparm  grafo2 int 2
+
+=declaraparm  A char 'a'
+=declaraparm  B char 'b'
+=declaraparm  C char 'c'
+=declaraparm  D char 'd'
+
+=declararparm   OK               int  0
+=declararparm   GrafoVazio       int  1
+=declararparm   VerticeInvalido  int  2
+=declararparm   ErroVertice      int  3
+=declararparm   PonteiroNulo     int  4
+=declararparm	FaltouMemoria    int  5
+=declararparm	ArestaExiste     int  6
+=declararparm   ArestaInvalida   int  7
+
+== Cria grafo 0
+=criargrafo   grafo0  OK
+
+// fim
