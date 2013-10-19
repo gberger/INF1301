@@ -271,7 +271,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             numLidos = LER_LerParametros( "iis" , &inxGrafo, &CondRetEsp, StringDado) ;
 
-            if ( ( numLidos != 4 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
@@ -280,6 +280,22 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao excluir aresta."  ) ;
+
+        } /* fim ativa: Testar criação de Grafo */
+
+        else if ( strcmp( ComandoTeste , ADDOR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "iic" , &inxGrafo, &CondRetEsp, &idVertice) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_AdicionarOrigem( vtGRAFO[ inxGrafo ], idVertice );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao adicionar origem."  ) ;
 
         } /* fim ativa: Testar criação de Grafo */
 
