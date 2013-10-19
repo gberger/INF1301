@@ -1,11 +1,19 @@
 Data    Horas Trabalhadas	Tipo Tarefa					Descrição da Tarefa Realizada
+
 13/10	3					codificar módulo			Codificação do módulo VERTICE e seu teste
+
 13/10	0,5					redigir script de teste		Script para teste do módulo VERTICE
+
 13/10	0,5					realizar os testes			Testes do modulo VERTICE
+
 14/10	1					projetar					Melhoria da interface do módulo GRAFO
+
 14/10	1					especificar as funções		Melhorias no módulo de definição do GRAFO
+
 18/10	3					codificar módulo			Codificação do módulo GRAFO
+
 18/10	2					diagnosticar e corrigir os problemas encontrados	Teste do módulo GRAFO
+
 18/10	1					revisar projetos			Verificação dos arquivos de código do projeto
 
 

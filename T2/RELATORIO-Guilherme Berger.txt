@@ -1,7 +1,13 @@
 Data    Horas Trabalhadas    Tipo Tarefa                  Descrição da Tarefa Realizada
+
 05/10   1                    estudar                      estudo inicial e sanamento de dúvidas
+
 05/10   1                    especificar os módulos       esqueleto dos módulos
+
 05/10   3                    especificar as funções       redigir os arquivos .h
+
 06/10   3                    codificar módulo             codificar funções do grafo
+
 18/10   2                    projetar                     projetar o modelo
+
 18/10   3                    especificar as funções       redigir assertivas de entrada e saida para as funções
