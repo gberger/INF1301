@@ -9,6 +9,12 @@
 =declaraparm  grafo1 int 1
 =declaraparm  grafo2 int 2
 
+=declaraparm  a string 'a'
+=declaraparm  b string 'b'
+=declaraparm  c string 'c'
+=declaraparm  d string 'd'
+=declaraparm  e string 'e'
+
 =declaraparm  A char 'a'
 =declaraparm  B char 'b'
 =declaraparm  C char 'c'
@@ -20,10 +26,64 @@
 =declararparm   ErroVertice      int  3
 =declararparm   PonteiroNulo     int  4
 =declararparm	FaltouMemoria    int  5
-=declararparm	ArestaExiste     int  6
+=declararparm	ArestaJaExiste   int  6
 =declararparm   ArestaInvalida   int  7
 
-== Cria grafo 0
+== Cria grafos
 =criargrafo   grafo0  OK
+=criargrafo   grafo1  OK
+
+== Cria Vertices
+=inserirvertice   grafo0  A  OK
+=inserirvertice   grafo0  B  OK
+=inserirvertice   grafo0  C  OK
+
+=inserirvertice   grafo1  A  OK
+=inserirvertice   grafo1  B  OK
+=inserirvertice   grafo1  C  OK
+=inserirvertice   grafo1  D  OK
+
+== Cria Arestas
+=inseriraresta  grafo0 C B a OK
+=inseriraresta  grafo0 A C b OK
+=inseriraresta  grafo0 B A c OK
+
+=inseriraresta  grafo1 A B a OK
+=inseriraresta  grafo1 B C b OK
+=inseriraresta  grafo1 C D c OK
+=inseriraresta  grafo1 D A d OK
+
+== Define Origens
+=adicionarorigem grafo0 C OK
+=adicionarorigem grafo0 B OK
+=adicionarorigem grafo1 A OK
+
+== Vai a Vertices
+=irparavertice grafo0 C OK
+=irparavertice grafo1 A OK
+=irparavertice grafo0 D VerticeInvalido
+
+== Anda a Vertices
+=andarparavertice grafo0 B OK
+=andarparavertice grafo1 C VerticeInvalido
+
+== Adiciona Arestas no Corrente
+=inserirarestaorigem grafo0 C OK
+
+== Exclui Vertices
+=excluircorrente grafo1 OK
+
+== Exclui Arestas
+=excluiraresta grafo1 a OK
+=excluiraresta grafo0 b OK
+=excluiraresta grafo0 d ArestaInvalida
+
+== Esvazia Grafos
+=esvaziargrafo grafo0 OK
+=esvaziargrafo grafo1 OK
+
+== Destroi Grafos
+=destruirgrafo grafo0 OK
+=destruirgrafo grafo1 OK
 
 // fim
