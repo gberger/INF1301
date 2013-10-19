@@ -63,20 +63,20 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 *
 *     Comandos disponíveis:
 *
-* =criargrafo        
-* =destruirgrafo     
-* =esvaziargrafo     
-* =obtercorrente     
-* =alterarcorrente   
-* =irparavertice     
-* =andarparavertice  
-* =inserirvertice    
-* =excluircorrente   
-* =inseriraresta     
-* =inserirarestaorigem
-* =excluiraresta     
-* =adicionarorigem   
-* =removerorigem     
+* =criargrafo            inxGrafo 
+* =destruirgrafo         inxGrafo
+* =esvaziargrafo         inxGrafo
+* =obtercorrente         inxGrafo
+* =alterarcorrente       inxGrafo
+* =irparavertice         inxGrafo
+* =andarparavertice      inxGrafo
+* =inserirvertice        inxGrafo
+* =excluircorrente       inxGrafo
+* =inseriraresta         inxGrafo
+* =inserirarestaorigem   inxGrafo
+* =excluiraresta         inxGrafo
+* =adicionarorigem       inxGrafo
+* =removerorigem         inxGrafo
 *
 ***********************************************************************/
 
