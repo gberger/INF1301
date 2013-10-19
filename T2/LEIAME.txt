@@ -16,30 +16,44 @@
 
 !!! Comandos do script de teste de LISTA
 
-*     =resetteste
-*           - anula o vetor de listas. Provoca vazamento de memória
-*     =criarlista                   inxLista
-*     =destruirlista                inxLista
-*     =esvaziarlista                inxLista
-*     =inselemantes                 inxLista  char  CondRetEsp
-*     =inselemapos                  inxLista  char  CondRetEsp
-*     =obtervalorelem               inxLista  char
-*     =excluirelem                  inxLista  CondRetEsp
-*     =irinicio                     inxLista
-*     =irfinal                      inxLista
-*     =avancarelem                  inxLista  numElem CondRetEsp
+  =resetteste
+        - anula o vetor de listas. Provoca vazamento de memória
+  =criarlista            inxLista
+  =destruirlista         inxLista
+  =esvaziarlista         inxLista
+  =inselemantes          inxLista  char  CondRetEsp
+  =inselemapos           inxLista  char  CondRetEsp
+  =obtervalorelem        inxLista  char
+  =excluirelem           inxLista  CondRetEsp
+  =irinicio              inxLista
+  =irfinal               inxLista
+  =avancarelem           inxLista  numElem CondRetEsp
 
 
 !!! Comandos do script de teste de VERTICE
 
-*     =resetteste
-*           - anula o vetor de vértices. Provoca vazamento de memória
-*     =criarvertice               inxVertice
-*     =destruirvertice            inxVertice
-*     =esvaziarvertice            inxVertice
-*     =atribuirvalor              inxVertice  string  CondRetEsp
-*     =obtervalor                 inxVertice  string  CondRetEsp
+  =resetteste
+        - anula o vetor de vértices. Provoca vazamento de memória
+  =criarvertice          inxVertice
+  =destruirvertice       inxVertice
+  =esvaziarvertice       inxVertice
+  =atribuirvalor         inxVertice  string  CondRetEsp
+  =obtervalor            inxVertice  string  CondRetEsp
 
 
 !!! Comandos do script de teste de GRAFO
 
+  =criargrafo            inxGrafo CondRetEsp 
+  =destruirgrafo         inxGrafo CondRetEsp
+  =esvaziargrafo         inxGrafo CondRetEsp
+  =obtercorrente         inxGrafo CondRetEsp
+  =alterarcorrente       inxGrafo CondRetEsp
+  =irparavertice         inxGrafo idVertice CondRetEsp 
+  =andarparavertice      inxGrafo idVertice CondRetEsp
+  =inserirvertice        inxGrafo idVertice CondRetEsp
+  =excluircorrente       inxGrafo CondRetEsp
+  =inseriraresta         inxGrafo idVertice1 idVertice2 idAresta CondRetEsp
+  =inserirarestaorigem   inxGrafo idVertice idAresta CondRetEsp
+  =excluiraresta         inxGrafo idAresta CondRetEsp
+  =adicionarorigem       inxGrafo idVertice CondRetEsp
+  =removerorigem         inxGrafo idVertice CondRetEsp
