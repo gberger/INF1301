@@ -88,8 +88,8 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     GRA_CondRetFaltouMemoria
 *
 *  $EAE Assertivas de entrada
-*     ExcluirValor uma função que encarregue-se de excluir os valores
-*        que serão usados nos vértices do grafo
+*     ExcluirValor ponteiro para uma função que encarregue-se de excluir os
+*        valores que serão usados nos vértices do grafo
 *
 *  $EAE Assertivas de saída
 *     SE GRA_CondRetOk
