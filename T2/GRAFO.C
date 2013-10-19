@@ -73,7 +73,7 @@
 
 
 
-/***** Protótipos das funções encapuladas no módulo *****/
+/***** Código das funções encapuladas no módulo *****/
 
    // Dada uma lista e um valor, insere-o no final
     static GRA_tpCondRet InserirFinalLista(LIS_tppLista pLista , void* pValor){
@@ -86,11 +86,6 @@
 		   return GRA_CondRetFaltouMemoria;
 	   }
 	   return GRA_CondRetOK;
-   }
-
-   // Auxiliar para function pointer
-   static void DestruirConteudoListaDeVertice (void * pVertice) {
-	   
    }
 
    //
@@ -109,13 +104,13 @@
 
 	   pVertice->pValor = NULL;
 	   
-	   pVertice->pListaAnt = LIS_CriarLista( DestruirVertice ) ;
+	   pVertice->pListaAnt = LIS_CriarLista( NULL ) ;
 	   if (pVertice->pListaAnt == NULL){
 		   free(pVertice);
 		   return NULL;
 	   }
 
-	   pVertice->pListaSuc = LIS_CriarLista( DestruirVertice ) ;
+	   pVertice->pListaSuc = LIS_CriarLista( DestruirConteudoListaDeAresta ) ;
 	   if (pVertice->pListaSuc == NULL){
 		   LIS_DestruirLista(pVertice->pListaAnt);
 		   free(pVertice);
@@ -124,17 +119,6 @@
 
 	   return pVertice;
    }
-
-   // Adiciona o vértice do grafo à lista de origens
-   static GRA_tpCondRet AdicionarOrigem ( GRA_tppGrafo pGrafo, tppVerticeGrafo pVertice ){
-	   return InserirFinalLista(pGrafo->pListaOrigens, pVertice);
-   }
-
-   // Remove o vértice do grafo da lista de origens
-   static GRA_tpCondRet RemoverOrigem ( GRA_tppGrafo pGrafo, tppVerticeGrafo pVertice ){
-	   //ToDo
-	   return GRA_CondRetOK;
-   };
    
    // Adiciona o vértice do grafo à lista de vértices
    static GRA_tpCondRet AdicionarVertice ( GRA_tppGrafo pGrafo, tppVerticeGrafo pVertice ){
@@ -222,6 +206,8 @@
 	   if(CondRetLis == LIS_CondRetFaltouMemoria) {
 		   return GRA_CondRetFaltouMemoria;
 	   }
+
+	   return GRA_CondRetOK;
    }
 
 /*****  Código das funções exportadas pelo módulo  *****/
@@ -242,13 +228,13 @@
 
 	   pGrafo->pVerticeCorrente = NULL;
 	   
-	   pGrafo->pListaOrigens = LIS_CriarLista( DestruirConteudoListaDeVertice ) ;
+	   pGrafo->pListaOrigens = LIS_CriarLista( NULL ) ;
 	   if (pGrafo->pListaOrigens == NULL){
 		   free(pGrafo);
 		   return GRA_CondRetFaltouMemoria;
 	   }
 
-	   pGrafo->pListaVertices = LIS_CriarLista( DestruirConteudoListaDeVertice ) ;
+	   pGrafo->pListaVertices = LIS_CriarLista( NULL ) ;
 	   if (pGrafo->pListaVertices == NULL){
 		   LIS_DestruirLista(pGrafo->pListaOrigens);
 		   free(pGrafo);
@@ -451,6 +437,10 @@
 	   if(condRetLis == LIS_CondRetOK) {
 		   LIS_ExcluirElemento(pGrafo->pListaOrigens);
 	   }
+
+	   // Reinicia corrente para o primeiro elemento da lista de vértices
+	   LIS_IrInicioLista(pGrafo->pListaVertices);
+	   pGrafo->pVerticeCorrente = (tppVerticeGrafo)LIS_ObterValor(pGrafo->pListaVertices);
 	   
 	   return GRA_CondRetOK;
    }
@@ -468,9 +458,16 @@
 		   return GRA_CondRetPonteiroNulo;
 	   }
 
+	   if (pGrafo->pVerticeCorrente == NULL){
+		   return GRA_CondRetGrafoVazio;
+	   }
+
 	   pVerticeOrigem = PesquisaVertice(pGrafo->pListaVertices, idVerticeOrigem);
 	   if(pVerticeOrigem == NULL) {
 		   return GRA_CondRetVerticeInvalido;
+	   }
+	   if(PesquisaVerticeNaListaDeAresta(pVerticeOrigem->pListaSuc, idVerticeDestino) != NULL) {
+		   return GRA_CondRetArestaJaExiste;
 	   }
 
 	   pVerticeDestino = PesquisaVertice(pGrafo->pListaVertices, idVerticeDestino);
@@ -480,6 +477,34 @@
 
 	   return AdicionarAresta(pGrafo,pVerticeOrigem,pVerticeDestino,idAresta);
    }
+
+/***********************************************************************
+*
+*  $FC Função: GRA Inserir aresta no corrente
+*
+***********************************************************************/
+
+   GRA_tpCondRet GRA_InserirArestaOrigemCorrente( GRA_tppGrafo pGrafo, char idVerticeDestino, char * idAresta ) {
+	   tppVerticeGrafo pVerticeDestino;
+	   if (pGrafo == NULL){
+		   return GRA_CondRetPonteiroNulo;
+	   }
+
+	   if (pGrafo->pVerticeCorrente == NULL){
+		   return GRA_CondRetGrafoVazio;
+	   }
+
+	   if(PesquisaVerticeNaListaDeAresta(pGrafo->pVerticeCorrente->pListaSuc, idVerticeDestino) != NULL) {
+		   return GRA_CondRetArestaJaExiste;
+	   }
+
+	   pVerticeDestino = PesquisaVertice(pGrafo->pListaVertices, idVerticeDestino);
+	   if(pVerticeDestino == NULL) {
+		   return GRA_CondRetVerticeInvalido;
+	   }
+
+	   return AdicionarAresta(pGrafo,pGrafo->pVerticeCorrente,pVerticeDestino,idAresta);
+   }
    
 
 /***********************************************************************
@@ -488,23 +513,93 @@
 *
 ***********************************************************************/
 
-   GRA_tpCondRet GRA_ExcluirAresta( GRA_tppGrafo pGrafo, VER_tppVertice pVertice ) {
+   GRA_tpCondRet GRA_ExcluirAresta( GRA_tppGrafo pGrafo, char * idAresta ) {
+	   tppVerticeGrafo pVertice, pVerticeDestino;
+	   GRA_tpAresta * pAresta;
 	   if (pGrafo == NULL){
 		   return GRA_CondRetPonteiroNulo;
 	   }
 
-	   //ToDo
-	   // dest = achar na lista de vertices o que tem pValor == pVertice
-	   // remover dos sucessores do corrente o dest
-	   // remover dos antecessores do dest o corrente
+	   // Busca idAresta em 
+	   while (LIS_ObterValor( pGrafo->pListaVertices ) ) {
+			pVertice = (VER_tppVertice) LIS_ObterValor( pGrafo->pListaVertices );
+
+			while (LIS_ObterValor( pVertice->pListaSuc ) ) {
+				pAresta = (GRA_tpAresta *) LIS_ObterValor( pVertice->pListaSuc );
+
+				if(strcmp(idAresta, pAresta->idAresta) == 0) {
+					pVerticeDestino = pAresta->pVerticeApontado;
+
+					LIS_ExcluirElemento( pVertice->pListaSuc );
+
+					LIS_ProcurarValor( pVerticeDestino->pListaAnt, pVertice);
+					LIS_ExcluirElemento( pVerticeDestino->pListaAnt );
+					return GRA_CondRetOK;
+				}
+
+				LIS_AvancarElementoCorrente(pVertice->pListaSuc);
+			}
+
+	   		LIS_AvancarElementoCorrente(pGrafo->pListaVertices);
+	   }
 	   
-	   // balancear origens (PESQUISAR ALGORITMO DEPOIS)
-	   
+	   return GRA_CondRetArestaInvalida;
+   }
+
+
+/***********************************************************************
+*
+*  $FC Função: GRA Adicionar origem
+*
+***********************************************************************/
+
+   GRA_tpCondRet GRA_AdicionarOrigem( GRA_tppGrafo pGrafo, char idVertice ) {
+	   tppVerticeGrafo pVertice;
+	   LIS_tpCondRet condRetLis;
+	   if (pGrafo == NULL){
+		   return GRA_CondRetPonteiroNulo;
+	   }
+
+	   pVertice = PesquisaVertice(pGrafo->pListaVertices, idVertice);
+	   if(pVertice == NULL) {
+		   return GRA_CondRetVerticeInvalido;
+	   }
+
+	   LIS_IrFinalLista(pGrafo->pListaOrigens);
+	   condRetLis = LIS_InserirElementoApos(pGrafo->pListaOrigens, (void *) pVertice);
+	   if(condRetLis == LIS_CondRetFaltouMemoria) {
+	   		return GRA_CondRetFaltouMemoria;
+	   }
+
+	   return GRA_CondRetOK;
+
+   }
+
+
+/***********************************************************************
+*
+*  $FC Função: GRA Remover origem
+*
+***********************************************************************/
+
+   GRA_tpCondRet GRA_RemoverOrigem( GRA_tppGrafo pGrafo, char idVertice ) {
+	   tppVerticeGrafo pVertice;
+	   if (pGrafo == NULL){
+		   return GRA_CondRetPonteiroNulo;
+	   }
+
+	   pVertice = PesquisaVertice(pGrafo->pListaOrigens, idVertice);
+	   if(pVertice == NULL) {
+		   return GRA_CondRetVerticeInvalido;
+	   }
+
+	   LIS_ExcluirElemento( pGrafo->pListaOrigens );
+
 	   return GRA_CondRetOK;
    }
 
 
-/*****  Código das funções encapsuladas no módulo  *****/
+
 
 
 
