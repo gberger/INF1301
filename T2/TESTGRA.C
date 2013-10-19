@@ -200,6 +200,22 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar criação de Grafo */
 
+        else if ( strcmp( ComandoTeste , INSVER_GRAFO_CM  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "iic" , &inxGrafo,  &CondRetEsp, &idVertice ) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_InserirVertice( vtGRAFO[ inxGrafo ], pDado, idVertice );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao inserir vertice."  ) ;
+
+        } /* fim ativa: Testar criação de Grafo */
+
    } /* Fim função: TLIS &Testar vertice */
 
 
