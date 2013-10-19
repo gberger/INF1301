@@ -67,20 +67,20 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 *
 *     Comandos disponíveis:
 *
-* =criargrafo            inxGrafo 
-* =destruirgrafo         inxGrafo
-* =esvaziargrafo         inxGrafo
-* =obtercorrente         inxGrafo
-* =alterarcorrente       inxGrafo
-* =irparavertice         inxGrafo
-* =andarparavertice      inxGrafo
-* =inserirvertice        inxGrafo
-* =excluircorrente       inxGrafo
-* =inseriraresta         inxGrafo
-* =inserirarestaorigem   inxGrafo
-* =excluiraresta         inxGrafo
-* =adicionarorigem       inxGrafo
-* =removerorigem         inxGrafo
+* =criargrafo            inxGrafo CondRetEsp 
+* =destruirgrafo         inxGrafo CondRetEsp
+* =esvaziargrafo         inxGrafo CondRetEsp
+* =obtercorrente         inxGrafo CondRetEsp
+* =alterarcorrente       inxGrafo CondRetEsp
+* =irparavertice         inxGrafo idVertice CondRetEsp 
+* =andarparavertice      inxGrafo idVertice CondRetEsp
+* =inserirvertice        inxGrafo idVertice CondRetEsp
+* =excluircorrente       inxGrafo CondRetEsp
+* =inseriraresta         inxGrafo idVertice1 idVertice2 idAresta CondRetEsp
+* =inserirarestaorigem   inxGrafo idVertice idAresta CondRetEsp
+* =excluiraresta         inxGrafo idAresta CondRetEsp
+* =adicionarorigem       inxGrafo idVertice CondRetEsp
+* =removerorigem         inxGrafo idVertice CondRetEsp
 *
 ***********************************************************************/
 
@@ -178,7 +178,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
                return TST_CondRetParm ;
             } /* if */
            
-            CondRet = GRA_AlterarValorCorrente( vtGRAFO[ inxGrafo ], &pDado );
+            CondRet = GRA_AlterarValorCorrente( vtGRAFO[ inxGrafo ], pDado );
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao alterar corrente."  ) ;
