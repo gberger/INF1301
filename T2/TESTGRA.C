@@ -102,6 +102,8 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
       void * pDado ;
 
+      char ** pValor;
+
       /* Testar criar Grafo */
         if ( strcmp( ComandoTeste , CRIAR_GRAFO_CMD  ) == 0 ) {
 
@@ -163,12 +165,15 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
                return TST_CondRetParm ;
             } /* if */
             
+
             CondRet = GRA_ObterValorCorrente( vtGRAFO[ inxGrafo ], &novoVertice );
 
-            VER_ObterValor( novoVertice, char ** pValor );
+            pValor = (char**)malloc(sizeof(char));
 
-            return TST_CompararInt( CondRetEsp , CondRet ,
-                     "Condicao de retorno errada ao obter corrente."  ) ;
+            VER_ObterValor( novoVertice, pValor);
+
+            return TST_CompararString( StringDado , *pValor ,
+                     "Condicao de retorno errada ao obter corrente."  ) ;   
 
         } /* fim ativa: Testar obter vertice corrente em Grafo */
 
