@@ -1,4 +1,4 @@
-!!!  Modo de uso do programa
+!!! Modo de uso do programa
   TRAB2-X   /s<ArqScript> {/l<ArqLog>} {/a<ArqAcum>} {/? | /h }
 
   <ArqScript>   - nome do arquivo contendo o script de teste.
@@ -12,4 +12,34 @@
                   no arquivo ArqAcum. Caso não exista,
                   será criado.
   /? ou /h      - Solicitação de auxílio.
+
+
+!!! Comandos do script de teste de LISTA
+
+*     =resetteste
+*           - anula o vetor de listas. Provoca vazamento de memória
+*     =criarlista                   inxLista
+*     =destruirlista                inxLista
+*     =esvaziarlista                inxLista
+*     =inselemantes                 inxLista  char  CondRetEsp
+*     =inselemapos                  inxLista  char  CondRetEsp
+*     =obtervalorelem               inxLista  char
+*     =excluirelem                  inxLista  CondRetEsp
+*     =irinicio                     inxLista
+*     =irfinal                      inxLista
+*     =avancarelem                  inxLista  numElem CondRetEsp
+
+
+!!! Comandos do script de teste de VERTICE
+
+*     =resetteste
+*           - anula o vetor de vértices. Provoca vazamento de memória
+*     =criarvertice               inxVertice
+*     =destruirvertice            inxVertice
+*     =esvaziarvertice            inxVertice
+*     =atribuirvalor              inxVertice  string  CondRetEsp
+*     =obtervalor                 inxVertice  string  CondRetEsp
+
+
+!!! Comandos do script de teste de GRAFO
 
