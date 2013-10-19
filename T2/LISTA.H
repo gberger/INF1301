@@ -109,6 +109,15 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     a função retornará NULL.
 *     Não será dada mais informação quanto ao problema ocorrido.
 *
+*  $EAE Assertivas de entrada
+*     ExcluirValor ponteiro para umafunção que encarregue-se de excluir os
+*        valores que serão usados na lista
+*
+*  $EAE Assertivas de saída
+*     Retorna um ponteiro válido para a lista criada, caso tenha executado
+*       corretamente.
+*     Retorna NULL caso tenha ocorrido algum erro.
+*
 ***********************************************************************/
 
    LIS_tppLista LIS_CriarLista(
@@ -126,8 +135,13 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     estruturalmente incorreta.
 *     OBS. não existe previsão para possíveis falhas de execução.
 *
-*  $FV Valor retornado
-*     LIS_CondRetOK    - destruiu sem problemas
+*  $EAE Assertivas de entrada
+*     pLista != NULL
+*
+*  $EAE Assertivas de saída
+*     A lista encontra-se destruída.
+*     A memória de cada elemento é liberada.
+*     Em caso de erros, a lista pode ficar estruturalmente incorreta.
 *
 ***********************************************************************/
 
@@ -143,6 +157,13 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *
 *  $EP Parâmetros
 *     pLista - ponteiro para a lista a ser esvaziada
+*
+*  $EAE Assertivas de entrada
+*     pLista != NULL
+*
+*  $EAE Assertivas de saída
+*     A lista encontra-se esvaziada, com zero elementos.
+*     A memória de cada elemento é liberada.
 *
 ***********************************************************************/
 
@@ -166,6 +187,19 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     LIS_CondRetOK
 *     LIS_CondRetFaltouMemoria
 *
+*  $EAE Assertivas de entrada
+*     pLista != NULL
+*
+*  $EAE Assertivas de saída
+*     Se LIS_CondRetOK:
+*       Se a lista anteriormente estava vazia, agora contém um elemento,
+*         com valor pValor. O nó corrente torna-se este elemento.
+*       Do contrário, a lista agora contém um elemento a mais, sendo este
+*         inserido imediatamente antes do nó corrente. O nó corrente não
+*         é modificado.
+*     Se LIS_CondRetFaltouMemoria:
+*       A lista não é modificada.
+*
 ***********************************************************************/
 
    LIS_tpCondRet LIS_InserirElementoAntes( LIS_tppLista pLista ,
@@ -188,9 +222,21 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *           
 *
 *  $FV Valor retornado
-*     Valor retornado
-*        LIS_CondRetOK
-*        LIS_CondRetFaltouMemoria
+*     LIS_CondRetOK
+*     LIS_CondRetFaltouMemoria
+*
+*  $EAE Assertivas de entrada
+*     pLista != NULL
+*
+*  $EAE Assertivas de saída
+*     Se LIS_CondRetOK:
+*       Se a lista anteriormente estava vazia, agora contém um elemento,
+*         com valor pValor. O nó corrente torna-se este elemento.
+*       Do contrário, a lista agora contém um elemento a mais, sendo este
+*         inserido imediatamente após o nó corrente. O nó corrente não
+*         é modificado.
+*     Se LIS_CondRetFaltouMemoria:
+*       A lista não é modificada.
 *
 ***********************************************************************/
 
@@ -216,6 +262,19 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     LIS_CondRetOK
 *     LIS_CondRetListaVazia
 *
+*  $EAE Assertivas de entrada
+*     pLista != NULL
+*
+*  $EAE Assertivas de saída
+*     Se LIS_CondRetOK:
+*       A lista anteriormente não estava vazia, e agora contém um elemento a menos.
+*       O elemento corrente é excluído, e seu valor é liberado.
+*       Se existir o elemento a esquerda do antigo corrente, este será o novo corrente.
+*       Senão, se existir o elemento à direita, este se tornará corrente.
+*       Senão, a lista tornou-se vazia.
+*     Se LIS_CondRetListaVazia:
+*       A lista anteriormente estava vazia e não é modificada.
+*
 ***********************************************************************/
 
    LIS_tpCondRet LIS_ExcluirElemento( LIS_tppLista pLista ) ;
@@ -236,6 +295,16 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     NULL     - se a lista estiver vazia
 *                Pode retornar NULL se o valor inserido no elemento for NULL.
 *
+*  $EAE Assertivas de entrada
+*     pLista != NULL
+*
+*  $EAE Assertivas de saída
+*     Se o retorno for NULL:
+*       A lista está vazia, OU
+*       O elemento inserido no nó corrente é NULL
+*     Senão:
+*       A lista não está vazia, e o retono é o elemento inserido no nó corrente.
+*
 ***********************************************************************/
 
    void * LIS_ObterValor( LIS_tppLista pLista ) ;
@@ -252,6 +321,15 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *  $EP Parâmetros
 *     pLista - ponteiro para a lista a manipular
 *
+*  $EAE Assertivas de entrada
+*     pLista != NULL
+*
+*  $EAE Assertivas de saída
+*     Se a lista estiver vazia:
+*       A lista não é modificada.
+*     Senão:
+*       O nó corrente torna-se o primeiro nó.
+*
 ***********************************************************************/
 
    void LIS_IrInicioLista( LIS_tppLista pLista ) ;
@@ -267,6 +345,15 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *
 *  $EP Parâmetros
 *     pLista - ponteiro para a lista a manipular
+*
+*  $EAE Assertivas de entrada
+*     pLista != NULL
+*
+*  $EAE Assertivas de saída
+*     Se a lista estiver vazia:
+*       A lista não é modificada.
+*     Senão:
+*       O nó corrente torna-se o último nó.
 *
 ***********************************************************************/
 
@@ -290,10 +377,32 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     numElem - o número de elementos a andar
 *
 *  $FV Valor retornado
-*     CondRetOK         - se numElem elementos tiverem sido andados
-*     CondRetFimLista   - se encontrou o fim da lista antes de andar numElem
+*     LIS_CondRetOK         - se numElem elementos tiverem sido andados
+*     LIS_CondRetFimLista   - se encontrou o fim da lista antes de andar numElem
 *                         elementos
-*     CondRetListaVazia - se a lista está vazia
+*     LIS_CondRetListaVazia - se a lista está vazia
+*
+*  $EAE Assertivas de entrada
+*     pLista != NULL
+*
+*  $EAE Assertivas de saída
+*     Se LIS_CondRetOK:
+*       A lista não estava vazia.
+*       Se numElem == 0:
+*         A lista não é modificada.
+*       Se numElem > 0:
+*         Foram andados numElem elementos em direção ao final sem problemas.
+*       Se numElem < 0:
+*         Foram andados numElem elementos em direção ao início sem problemas.
+*     Se LIS_CondRetFimLista:
+*       Se numElem > 0:
+*         Foram andados um número menor de numElem elementos em direção ao final,
+*         e chegou-se ao final.
+*       Se numElem < 0:
+*         Foram andados um número menor de numElem elementos em direção ao início,
+*         e chegou-se ao início.
+*     Se LIS_CondRetListaVazia:
+*       A lista estava vazia e não é modificada.
 *
 ***********************************************************************/
 
@@ -323,6 +432,18 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *     LIS_CondRetNaoEncontrou - se o ponteiro não foi encontrado
 *                      O elemento corrente continua o mesmo
 *     LIS_CondRetListaVazia   - se a lista estiver vazia
+*
+*  $EAE Assertivas de entrada
+*     pLista != NULL
+*
+*  $EAE Assertivas de saída
+*     Se LIS_CondRetOK:
+*       O novo nó corrente é o primeiro nó a partir do antigo corrente 
+*       (inclusive) até o final da lista cujo valor é igual a pValor.
+*     Se LIS_CondRetNaoEncontrou:
+*       A lista não é modificada.
+*     Se LIS_CondRetListaVazia:
+*       A lista estava vazia e não é modificada.
 *
 ***********************************************************************/
 
