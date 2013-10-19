@@ -70,11 +70,11 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 * =criargrafo            inxGrafo CondRetEsp 
 * =destruirgrafo         inxGrafo CondRetEsp
 * =esvaziargrafo         inxGrafo CondRetEsp
-* =obtercorrente         inxGrafo CondRetEsp
-* =alterarcorrente       inxGrafo CondRetEsp
+* =obtercorrente         inxGrafo ValorComparado CondRetEsp
+* =alterarcorrente       inxGrafo ValorDoVertice CondRetEsp
 * =irparavertice         inxGrafo idVertice CondRetEsp 
 * =andarparavertice      inxGrafo idVertice CondRetEsp
-* =inserirvertice        inxGrafo idVertice CondRetEsp
+* =inserirvertice        inxGrafo ValorDoVertice idVertice CondRetEsp
 * =excluircorrente       inxGrafo CondRetEsp
 * =inseriraresta         inxGrafo idVertice1 idVertice2 idAresta CondRetEsp
 * =inserirarestaorigem   inxGrafo idVertice idAresta CondRetEsp
@@ -95,6 +95,8 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
       char idVertice2;
 
       char StringDado[ DIM_VALOR ];    
+
+      VER_tppVertice novoVertice;
 
       TST_tpCondRet CondRet ;
 
@@ -154,14 +156,16 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
       /* Testar obter vertice corrente em Grafo */
         else if ( strcmp( ComandoTeste , CORR_GRAFO_CMD  ) == 0 ) {
 
-            numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
+            numLidos = LER_LerParametros( "isi" , &inxGrafo, StringDado, &CondRetEsp ) ;
 
-            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
-           
-            CondRet = GRA_ObterValorCorrente( vtGRAFO[ inxGrafo ], &pDado );
+            
+            CondRet = GRA_ObterValorCorrente( vtGRAFO[ inxGrafo ], &novoVertice );
+
+            VER_ObterValor( novoVertice, char ** pValor );
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao obter corrente."  ) ;
@@ -171,14 +175,18 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
       /* Testar alterar vertice corrente em Grafo */
         else if ( strcmp( ComandoTeste , ALTCORR_GRAFO_CMD  ) == 0 ) {
 
-            numLidos = LER_LerParametros( "ii" , &inxGrafo,  &CondRetEsp ) ;
+            numLidos = LER_LerParametros( "isi" , &inxGrafo, StringDado, &CondRetEsp ) ;
 
-            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
            
-            CondRet = GRA_AlterarValorCorrente( vtGRAFO[ inxGrafo ], pDado );
+            VER_CriarVertice( &novoVertice );
+
+            VER_AtribuirValor( novoVertice, StringDado ) ;
+            
+            CondRet = GRA_AlterarValorCorrente( vtGRAFO[ inxGrafo ], novoVertice );
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao alterar corrente."  ) ;
@@ -222,14 +230,18 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
       /* Testar inserir vertice em Grafo */
         else if ( strcmp( ComandoTeste , INSVER_GRAFO_CMD  ) == 0 ) {
 
-            numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp ) ;
+            numLidos = LER_LerParametros( "isci" , &inxGrafo, StringDado, &idVertice, &CondRetEsp ) ;
 
-            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 4 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
            
-            CondRet = GRA_InserirVertice( vtGRAFO[ inxGrafo ], pDado, idVertice );
+            VER_CriarVertice( &novoVertice );
+
+            VER_AtribuirValor( novoVertice, StringDado ) ;
+            
+            CondRet = GRA_InserirVertic( vtGRAFO[ inxGrafo ], novoVertice );   
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao inserir vertice."  ) ;
