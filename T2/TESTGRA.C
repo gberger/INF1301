@@ -96,6 +96,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
       void * pDado ;
 
+      /* Testar criar Grafo */
         if ( strcmp( ComandoTeste , CRAIR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
@@ -112,6 +113,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar criar Grafo */
 
+      /* Testar destruir Grafo */      
         else if ( strcmp( ComandoTeste , DESTRUIR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
@@ -128,6 +130,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar destruir Grafo */
 
+      /* Testar esvaziar Grafo */      
         else if ( strcmp( ComandoTeste , ESV_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
@@ -142,8 +145,9 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao esvaziar grafo."  ) ;
 
-        } /* fim ativa: esvaziar Grafo */
+        } /* fim ativa: Testar esvaziar Grafo */
 
+      /* Testar obter vertice corrente em Grafo */
         else if ( strcmp( ComandoTeste , CORR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
@@ -160,6 +164,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar obter vertice corrente em Grafo */
 
+      /* Testar alterar vertice corrente em Grafo */
         else if ( strcmp( ComandoTeste , ALTCORR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo,  &CondRetEsp ) ;
@@ -176,6 +181,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar alterar vertice corrente em Grafo */
 
+      /* Testar ir para vertice em Grafo */ 
         else if ( strcmp( ComandoTeste , IRVER_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp, ) ;
@@ -192,6 +198,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar ir para vertice em Grafo */
 
+      /* Testar andar para vertice em Grafo */
         else if ( strcmp( ComandoTeste , ANDARVER_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp ) ;
@@ -208,6 +215,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar andar para vertice em Grafo */
 
+      /* Testar inserir vertice em Grafo */
         else if ( strcmp( ComandoTeste , INSVER_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp ) ;
@@ -224,6 +232,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar inserir vertice em Grafo */
 
+      /* Testar excluir vertice corrente em Grafo */
         else if ( strcmp( ComandoTeste , EXCCORR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo,  &CondRetEsp) ;
@@ -240,6 +249,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar excluir vertice corrente em Grafo */
 
+      /* Testar inserir aresta em Grafo */ 
         else if ( strcmp( ComandoTeste , INSAR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "iccsi" , &inxGrafo, &idVertice, &idVertice2, StringDado, &CondRetEsp) ;
@@ -256,6 +266,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar inserir aresta em Grafo */
 
+      /* Testar inserir aresta em origem no Grafo */
         else if ( strcmp( ComandoTeste , INSARO_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "icsi" , &inxGrafo, &idVertice, StringDado, &CondRetEsp) ;
@@ -272,6 +283,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar inserir aresta em origem no Grafo */
 
+      /* Testar excluir aresta em Grafo */
         else if ( strcmp( ComandoTeste , EXCAR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "isi" , &inxGrafo, StringDado, &CondRetEsp) ;
@@ -288,6 +300,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar excluir aresta em Grafo */
 
+      /* Testar adicionar origem em Grafo */
         else if ( strcmp( ComandoTeste , ADDOR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp) ;
@@ -304,6 +317,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar adicionar origem em Grafo */
 
+      /* Testar remover origem em Grafo */
         else if ( strcmp( ComandoTeste , RMVOR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp) ;
