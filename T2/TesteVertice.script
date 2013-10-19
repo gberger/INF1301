@@ -1,6 +1,8 @@
-// Script:    TesteLista.script
-// Autor:     Arndt von Staa
-// Data:      02/abr/2008
+// Script:    TesteVertice.script
+// Autores: gb - Guilherme Berger
+//          fl - Felipe Luiz
+//          jv - João Vicente
+// Data:      19/out/2013
 // Propósito: Testar o módulo vértice de grafo contendo string
 //
 

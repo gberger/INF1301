@@ -4,9 +4,6 @@
 *  Arquivo gerado:              TestVER.c
 *  Letras identificadoras:      TVER
 *
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
-*  Arquivo da base de software: D:\AUTOTEST\PROJETOS\VERTICE.BSW
-*
 *  Projeto: T2 INF1301 2013.2
 *  Autores: gb - Guilherme Berger
 *           fl - Felipe Luiz
