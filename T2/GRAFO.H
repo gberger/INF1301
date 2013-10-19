@@ -44,26 +44,29 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 
    typedef enum {
 
-         GRA_CondRetOK ,
-               /* Executou corretamente */
+      GRA_CondRetOK ,
+         /* Executou corretamente */
 
-		 GRA_CondRetGrafoVazio ,
-			   /* Operação inválida pois o grafo está vazio */
+		GRA_CondRetGrafoVazio ,
+		   /* Operação inválida pois o grafo está vazio */
 
-		 GRA_CondRetVerticeInvalido ,
-			   /* Vertice que deseja ir não existe ou não é acessível */
+		GRA_CondRetVerticeInvalido ,
+			/* Vertice referenciado não existe ou não é acessível */
 			   
-		 GRA_CondRetErroVertice ,
-			   /* Operação no vértice resultou em erro */
+		GRA_CondRetErroVertice ,
+			/* Operação no vértice resultou em erro */
 
-         GRA_CondRetPonteiroNulo ,
-               /* Foi passado um ponteiro para NULL */
+      GRA_CondRetPonteiroNulo ,
+         /* Foi passado um ponteiro para NULL */
 
-         GRA_CondRetFaltouMemoria ,
-               /* Faltou memória ao alocar dados */
+      GRA_CondRetFaltouMemoria ,
+         /* Faltou memória ao alocar dados */
 
-		 GRA_CondRetArestaJaExiste
-			   /* Já existe uma aresta com a mesma origem e destino */
+		GRA_CondRetArestaJaExiste ,
+			/* Já existe uma aresta com a mesma origem e destino */
+
+      GRA_CondRetArestaInvalida
+         /* Não existe uma aresta com tal identificador */
 
    } GRA_tpCondRet ;
    
@@ -83,7 +86,16 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FV Valor retornado
 *     GRA_CondRetOK
 *     GRA_CondRetFaltouMemoria
-*     GRA_CondRetPonteiroNulo
+*
+*  $EAE Assertivas de entrada
+*     ExcluirValor uma função que encarregue-se de excluir os valores
+*        que serão usados nos vértices do grafo
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        ppGrafo conterá um ponteiro para um grafo
+*     SE GRA_CondRetFaltouMemoria
+*        ppGrafo não será modificado
 *
 ***********************************************************************/
 
@@ -105,6 +117,16 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     GRA_CondRetOK
 *     GRA_CondRetPonteiroNulo
 *
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        pGrafo terá sido liberado e será agora um ponteiro inválido
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
+*
 ***********************************************************************/
 
    GRA_tpCondRet GRA_DestruirGrafo( GRA_tppGrafo pGrafo ) ;
@@ -123,6 +145,18 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FV Valor retornado
 *     GRA_CondRetOK
 *     GRA_CondRetPonteiroNulo
+*
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        pGrafo terá sido esvaziado: todos os vértices, arestas e origens
+*           terão sido excluídos
+*        vértice corrente será NULL
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
 *
 ***********************************************************************/
 
@@ -144,6 +178,17 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     GRA_CondRetOK
 *     GRA_CondRetPonteiroNulo
 *
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*     ppValor != NULL
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        ppValor conterá ponteiro para o valor contido no vértice corrente
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL ou ppValor era NULL
+*
 ***********************************************************************/
 
    GRA_tpCondRet GRA_ObterValorCorrente( GRA_tppGrafo pGrafo, void ** ppValor ) ;
@@ -163,6 +208,16 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FV Valor retornado
 *     GRA_CondRetOK
 *     GRA_CondRetPonteiroNulo
+*
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        pGrafo terá em seu nó corrente o valor pValor
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
 *
 ***********************************************************************/
 
@@ -186,6 +241,19 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     GRA_CondRetPonteiroNulo
 *	   GRA_CondRetVerticeInvalido
 *
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*     idVertice deve ser um id de um vértice válido existente no grafo
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        pGrafo terá como vértice corrente o vértice cujo id é idVertice
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
+*     SE GRA_CondRetVerticeInvalido
+*        idVertice não era um id de um vértice válido existente no grafo
+*
 ***********************************************************************/
 
    GRA_tpCondRet GRA_IrParaVertice( GRA_tppGrafo pGrafo, char idVertice ) ;
@@ -208,6 +276,21 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     GRA_CondRetPonteiroNulo
 *	   GRA_CondRetVerticeInvalido
 *
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*     idVertice deve ser um id de um vértice válido existente no grafo,
+*       e tal vértice deve ser um dos sucessores do vértice corrente
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        pGrafo terá como vértice corrente o vértice cujo id é idVertice
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
+*     SE GRA_CondRetVerticeInvalido
+*        idVertice não era um id de um vértice válido existente no grafo
+*           OU era id válido mas não era sucessor do vértice corrente
+*
 ***********************************************************************/
 
    GRA_tpCondRet GRA_AndarParaVertice( GRA_tppGrafo pGrafo, char idVertice ) ;
@@ -224,11 +307,24 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.
 *     $P pVertice - ponteiro para o conteúdo a ser inserido no novo vértice criado.
-*	  $P idVertice - identificador do vértice
+*	   $P idVertice - identificador do vértice
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
 *     GRA_CondRetFaltouMemoria
+*     GRA_CondRetPonteiroNulo
+*
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        pGrafo terá um novo vértice com o valor e identificador dados
+*     SE GRA_CondRetFaltouMemoria
+*        pGrafo não será modificado
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
 *
 ***********************************************************************/
 
@@ -247,7 +343,19 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
-*	  GRA_CondRetGrafoVazio
+*	   GRA_CondRetGrafoVazio
+*
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        o antigo vértice corrente de pGrafo será excluído
+*        o novo vértice corrente será o primeiro da lista de vértices
+*        ou o novo vértice corrente será NULL, caso o grafo esteja vazio
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
 *
 ***********************************************************************/
 
@@ -265,13 +373,35 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     $P pGrafo - ponteiro para o grafo.
 *     $P idVerticeOrigem - identificador do vértice origem da aresta
 *     $P idVerticeDestino - identificador do vértice destino da aresta
-*     $P idAresta - identificador da aresta a ser criada, possui no
-*           máximo 9 caracteres válidos.
+*     $P idAresta - identificador da aresta a ser criada
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
-*	  GRA_CondRetArestaJaExiste
+*     GRA_CondRetPonteiroNulo
+*	   GRA_CondRetArestaJaExiste
+*     GRA_CondRetVerticeInvalido
 *     GRA_CondRetFaltouMemoria
+*
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*     idVerticeOrigem deve ser um identificador de vértice válido
+*     idVerticeDestino deve ser um identificador de vértice válido
+*     idAresta deve ser uma string de no máximo 9 caracteres
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        pGrafo terá uma nova aresta apontando do vértice origem 
+*           ao vértice destino
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
+*     SE GRA_CondRetArestaJaExiste
+*        já existia uma aresta ligando o vértice origem ao vértice destino
+*     SE GRA_CondRetVerticeInvalido
+*        idVerticeOrigem não é um identificador de vértice válido
+*        OU idVerticeDestino não é um identificador de vértice válido
+*     SE GRA_CondRetFaltouMemoria
+*        pGrafo não será modificado
 *
 ***********************************************************************/
 
@@ -288,22 +418,41 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.
-*     $P idVerticeOrigem - identificador do vértice origem da aresta
 *     $P idVerticeDestino - identificador do vértice destino da aresta
 *     $P idAresta - identificador da aresta a ser criada, possui no
 *           máximo 9 caracteres válidos.
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
-*	  GRA_CondRetArestaJaExiste
+*     GRA_CondRetPonteiroNulo
+*     GRA_CondRetArestaJaExiste
+*     GRA_CondRetVerticeInvalido
 *     GRA_CondRetFaltouMemoria
+*
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*     idVerticeDestino deve ser um identificador de vértice válido
+*     idAresta deve ser uma string de no máximo 9 caracteres
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        pGrafo terá uma nova aresta apontando do vértice corrente 
+*           ao vértice destino
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
+*     SE GRA_CondRetArestaJaExiste
+*        já existia uma aresta ligando o vértice corrente ao vértice destino
+*     SE GRA_CondRetVerticeInvalido
+*        idVerticeDestino não é um identificador de vértice válido
+*     SE GRA_CondRetFaltouMemoria
+*        pGrafo não será modificado
 *
 ***********************************************************************/
 
    GRA_tpCondRet GRA_InserirArestaOrigemCorrente( GRA_tppGrafo pGrafo, char idVerticeDestino, char * idAresta ) ;
 
    
-
 /***********************************************************************
 *
 *  $FC Função: GRA Excluir aresta
@@ -317,8 +466,23 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
-*	  GRA_CondRetDirecaoInvalida
-*     GRA_CondRetFaltouMemoria
+*     GRA_CondRetPonteiroNulo
+*     GRA_CondRetArestaInvalida
+*
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*     idAresta deve ser uma string de no máximo 9 caracteres
+*     idAresta deve ser um identificador válido de uma aresta existente
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        pGrafo terá uma nova aresta apontando do vértice corrente 
+*           ao vértice destino
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
+*     SE GRA_CondRetArestaInvalida
+*        idAresta não era um identificado válido de uma aresta existente
 *
 ***********************************************************************/
 
@@ -338,8 +502,25 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
+*     GRA_CondRetPonteiroNulo
 *     GRA_CondRetVerticeInvalido
 *     GRA_CondRetFaltouMemoria
+*
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*     idVértice deve ser um id válido de um vértice existente
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        pGrafo terá uma nova origem
+*        vértice cujo id é idVertice será uma origem
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
+*     SE GRA_CondRetVerticeInvalido
+*        idVertice não era um identificado válido de uma vértice existente
+*     SE GRA_CondRetFaltouMemoria
+*        pGrafo não será modificado
 *
 ***********************************************************************/
 
@@ -354,11 +535,25 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.
-*     $P idVertice - identificador do vértice
+*     $P idVertice - identificador do vértice a não ser mais origem
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
+*     GRA_CondRetPonteiroNulo
 *     GRA_CondRetVerticeInvalido
+*
+*  $EAE Assertivas de entrada
+*     pGrafo != NULL
+*     pGrafo deve ser ponteiro válido para um grafo do módulo
+*     idVértice deve ser um id válido de um vértice existente
+*
+*  $EAE Assertivas de saída
+*     SE GRA_CondRetOk
+*        vértice cujo id é idVertice não será mais uma origem
+*     SE GRA_CondRetPonteiroNulo
+*        pGrafo era NULL
+*     SE GRA_CondRetVerticeInvalido
+*        idVertice não era um identificado válido de uma vértice existente
 *
 ***********************************************************************/
 
