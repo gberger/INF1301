@@ -67,11 +67,11 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 *
 *     =resetteste
 *           - anula o vetor de vértices. Provoca vazamento de memória
-*     =criarvertice               inxVertice
-*     =destruirvertice            inxVertice
-*     =esvaziarvertice            inxVertice
-*     =atribuirvalor              inxVertice  string  CondRetEsp
-*     =obtervalor                 inxVertice  string  CondRetEsp
+*     =criarvertice               InxGrafo
+*     =destruirvertice            InxGrafo
+*     =esvaziarvertice            InxGrafo
+*     =atribuirvalor              InxGrafo  string  CondRetEsp
+*     =obtervalor                 InxGrafo  string  CondRetEsp
 *
 ***********************************************************************/
 
@@ -82,7 +82,10 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
           numLidos   = -1 ,
           CondRetEsp = -1  ;
 
-      char idVertice;    
+      char idVertice;
+      char idVertice2;
+
+      char StringDado[ DIM_VALOR ];    
 
       TST_tpCondRet CondRet ;
 
@@ -92,7 +95,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
 
-            if ( ( numLidos != 2 ) || ( ValidarInxVertice( inxGrafo , NAO_VAZIO ) ) )
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , NAO_VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
@@ -108,7 +111,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
 
-            if ( ( numLidos != 2 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
@@ -124,7 +127,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
 
-            if ( ( numLidos != 2 ) || (ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 2 ) || (ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
@@ -140,7 +143,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
 
-            if ( ( numLidos != 2 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
@@ -156,7 +159,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo,  &CondRetEsp ) ;
 
-            if ( ( numLidos != 2 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
@@ -172,7 +175,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             numLidos = LER_LerParametros( "iic" , &inxGrafo,  &CondRetEsp, &idVertice ) ;
 
-            if ( ( numLidos != 3 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
@@ -188,7 +191,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             numLidos = LER_LerParametros( "iic" , &inxGrafo,  &CondRetEsp, &idVertice ) ;
 
-            if ( ( numLidos != 3 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
@@ -200,11 +203,11 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar criação de Grafo */
 
-        else if ( strcmp( ComandoTeste , INSVER_GRAFO_CM  ) == 0 ) {
+        else if ( strcmp( ComandoTeste , INSVER_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "iic" , &inxGrafo,  &CondRetEsp, &idVertice ) ;
 
-            if ( ( numLidos != 3 ) || ( ValidarInxVertice( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
             {
                return TST_CondRetParm ;
             } /* if */
@@ -213,6 +216,38 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao inserir vertice."  ) ;
+
+        } /* fim ativa: Testar criação de Grafo */
+
+        else if ( strcmp( ComandoTeste , EXCCORR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ii" , &inxGrafo,  &CondRetEsp) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_ExcluirVerticeCorrente( vtGRAFO[ inxGrafo ] );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao excluir vertice corrente."  ) ;
+
+        } /* fim ativa: Testar criação de Grafo */
+
+        else if ( strcmp( ComandoTeste , INSAR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "iiccs" , &inxGrafo,  &CondRetEsp, &idVertice, &idVertice2, StringDado) ;
+
+            if ( ( numLidos != 5 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            CondRet = GRA_InserirAresta( vtGRAFO[ inxGrafo ], idVertice, idVertice2, StringDado );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao inserir aresta."  ) ;
 
         } /* fim ativa: Testar criação de Grafo */
 
