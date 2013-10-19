@@ -75,6 +75,17 @@ typedef struct VER_tagVertice * VER_tppVertice;
 *     VER_CondRetPonteiroNulo
 *     VER_CondRetFaltouMemoria
 *
+*  $EAE Assertivas de entrada
+*     ppVertice != NULL
+*
+*  $EAE Assertivas de saída
+*     SE VER_CondRetOK
+*        ppVertice conterá um ponteiro para um vértice
+*     SE VER_CondRetPonteiroNulo
+*        ppVertice era NULL
+*     SE VER_CondRetFaltouMemoria
+*        ppVertice não será modificado
+*
 ***********************************************************************/
 
    VER_tpCondRet VER_CriarVertice( VER_tppVertice * ppVertice ) ;
@@ -93,6 +104,17 @@ typedef struct VER_tagVertice * VER_tppVertice;
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
+*     VER_CondRetPonteiroNulo
+*
+*  $EAE Assertivas de entrada
+*     pVertice != NULL
+*     pVertice é ponteiro válido para vértice
+*
+*  $EAE Assertivas de saída
+*     SE VER_CondRetOK
+*        pVertice conterá um ponteiro para um vértice inválido (liberado)
+*     SE VER_CondRetPonteiroNulo
+*        pVertice era NULL
 *
 ***********************************************************************/
 
@@ -111,6 +133,17 @@ typedef struct VER_tagVertice * VER_tppVertice;
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
+*     VER_CondRetPonteiroNulo
+*
+*  $EAE Assertivas de entrada
+*     pVertice != NULL
+*     pVertice é ponteiro válido para vértice
+*
+*  $EAE Assertivas de saída
+*     SE VER_CondRetOK
+*        pVertice terá seu valor armazenado destruído, caso exista
+*     SE VER_CondRetPonteiroNulo
+*        pVertice era NULL
 *
 ***********************************************************************/
 
@@ -130,7 +163,21 @@ typedef struct VER_tagVertice * VER_tppVertice;
 *
 *  $FV Valor retornado
 *     VER_CondRetOK
-*	  VER_CondRetFaltouMemoria
+*	   VER_CondRetFaltouMemoria
+*     VER_CondRetPonteiroNulo
+*
+*  $EAE Assertivas de entrada
+*     pVertice != NULL
+*     pVertice é ponteiro válido para vértice
+*     valor é string
+*
+*  $EAE Assertivas de saída
+*     SE VER_CondRetOK
+*        pVertice terá seu novo valor dado por 'valor'
+*     SE VER_CondRetPonteiroNulo
+*        pVertice era NULL
+*     SE VER_CondRetFaltouMemoria
+*        pVertice não será modificado
 *
 ***********************************************************************/
 
@@ -150,6 +197,20 @@ typedef struct VER_tagVertice * VER_tppVertice;
 *  $FV Valor retornado
 *     VER_CondRetOK
 *     VER_CondRetVerticeVazio
+*     VER_CondRetPonteiroNulo
+*
+*  $EAE Assertivas de entrada
+*     pVertice != NULL
+*     pVertice é ponteiro válido para vértice
+*     pValor != NULL
+*
+*  $EAE Assertivas de saída
+*     SE VER_CondRetOK
+*        pValor conterá o endereço da string (valor do vértice)
+*     SE VER_CondRetPonteiroNulo
+*        pVertice era NULL
+*     SE VER_CondRetVerticeVazio
+*        pVertice não tinha um valor armazenado
 *
 ***********************************************************************/
 
