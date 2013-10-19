@@ -23,6 +23,7 @@
 =declararparm	ArestaExiste     int  6
 =declararparm   ArestaInvalida   int  7
 
-
+== Cria grafo 0
+=criargrafo   grafo0  OK
 
 // fim
