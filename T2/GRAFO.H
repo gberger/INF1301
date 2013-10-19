@@ -560,7 +560,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
    GRA_tpCondRet GRA_RemoverOrigem( GRA_tppGrafo pGrafo, char idVertice ) ;
    
 
-#undef Grafo_EXT
+#undef GRAFO_EXT
 
 /********** Fim do módulo de definição: Módulo grafo **********/
 

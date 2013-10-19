@@ -4,6 +4,9 @@
 *  Arquivo gerado:              TESTGRA.c
 *  Letras identificadoras:      TGRA
 *
+*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Arquivo da base de software: D:\AUTOTEST\PROJETOS\VERTICE.BSW
+*
 *  Projeto: T2 INF1301 2013.2
 *  Autores: gb - Guilherme Berger
 *           fl - Felipe Luiz
@@ -243,7 +246,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             VER_AtribuirValor( novoVertice, StringDado ) ;
             
-            CondRet = GRA_InserirVertic( vtGRAFO[ inxGrafo ], novoVertice );   
+            CondRet = GRA_InserirVertice( vtGRAFO[ inxGrafo ], novoVertice, idVertice );   
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao inserir vertice."  ) ;

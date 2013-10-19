@@ -7,28 +7,34 @@
 //
 
 == Inicializar valores
-=declaraparm  grafo0 int 0
-=declaraparm  grafo1 int 1
-=declaraparm  grafo2 int 2
+=declararparm  grafo0 int 0
+=declararparm  grafo1 int 1
+=declararparm  grafo2 int 2
 
-=declaraparm  a string 'a'
-=declaraparm  b string 'b'
-=declaraparm  c string 'c'
-=declaraparm  d string 'd'
-=declaraparm  e string 'e'
+=declararparm  a string "a"
+=declararparm  b string "b"
+=declararparm  c string "c"
+=declararparm  d string "d"
+=declararparm  e string "e"
 
-=declaraparm  A char 'a'
-=declaraparm  B char 'b'
-=declaraparm  C char 'c'
-=declaraparm  D char 'd'
+=declararparm  nome1 string "nome1"
+=declararparm  nome2 string "nome2"
+=declararparm  nome3 string "nome3"
+=declararparm  nome4 string "nome4"
+=declararparm  nome5 string "nome5"
+
+=declararparm  A char 'A'
+=declararparm  B char 'B'
+=declararparm  C char 'C'
+=declararparm  D char 'D'
 
 =declararparm   OK               int  0
 =declararparm   GrafoVazio       int  1
 =declararparm   VerticeInvalido  int  2
 =declararparm   ErroVertice      int  3
 =declararparm   PonteiroNulo     int  4
-=declararparm	FaltouMemoria    int  5
-=declararparm	ArestaJaExiste   int  6
+=declararparm FaltouMemoria    int  5
+=declararparm ArestaJaExiste   int  6
 =declararparm   ArestaInvalida   int  7
 
 == Cria grafos
@@ -36,14 +42,14 @@
 =criargrafo   grafo1  OK
 
 == Cria Vertices
-=inserirvertice   grafo0  A  OK
-=inserirvertice   grafo0  B  OK
-=inserirvertice   grafo0  C  OK
+=inserirvertice   grafo0 nome1 A  OK
+=inserirvertice   grafo0 nome5 B  OK
+=inserirvertice   grafo0 nome2 C  OK
 
-=inserirvertice   grafo1  A  OK
-=inserirvertice   grafo1  B  OK
-=inserirvertice   grafo1  C  OK
-=inserirvertice   grafo1  D  OK
+=inserirvertice   grafo1 nome1 A  OK
+=inserirvertice   grafo1 nome2 B  OK
+=inserirvertice   grafo1 nome3 C  OK
+=inserirvertice   grafo1 nome4 D  OK
 
 == Cria Arestas
 =inseriraresta  grafo0 C B a OK
@@ -65,20 +71,24 @@
 =irparavertice grafo1 A OK
 =irparavertice grafo0 D VerticeInvalido
 
+== Obtem Vertices
+=obtercorrente  grafo0 nome2 OK
+=obtercorrente  grafo1 nome1 OK
+
 == Anda a Vertices
 =andarparavertice grafo0 B OK
 =andarparavertice grafo1 C VerticeInvalido
 
 == Adiciona Arestas no Corrente
-=inserirarestaorigem grafo0 C OK
+=inserirarestaorigem grafo0 C d OK
 
 == Exclui Vertices
 =excluircorrente grafo1 OK
 
 == Exclui Arestas
-=excluiraresta grafo1 a OK
+=excluiraresta grafo1 a ArestaInvalida
 =excluiraresta grafo0 b OK
-=excluiraresta grafo0 d ArestaInvalida
+=excluiraresta grafo0 d OK
 
 == Esvazia Grafos
 =esvaziargrafo grafo0 OK
