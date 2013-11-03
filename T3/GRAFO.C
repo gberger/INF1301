@@ -683,7 +683,8 @@
 
 	   LIS_DestruirLista( pVertice->pListaAnt );
 
-	   pGrafo->ExcluirValor( pVertice->pValor );
+	   if(pGrafo->ExcluirValor != NULL && pVertice->pValor != NULL)
+			pGrafo->ExcluirValor( pVertice->pValor );
 
    }
 
