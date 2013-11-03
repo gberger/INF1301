@@ -96,6 +96,7 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *  $EP Parâmetros
 *     $P ppMatriz - ponteiro para o ponteiro de matriz.
 *     $P n        - tamanho da matriz
+*     $P ExcluirValor - ponteiro para a função de destruição do valor.
 *
 *  $FV Valor retornado
 *     MAT_CondRetOK
@@ -113,7 +114,7 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *
 *  $ED Descrição da função
 *     Destrói o corpo e a cabeça da matriz, liberando o espaço ocupado
-*     pela matriz e pelas listas.
+*     pela matriz.
 *
 *  $EP Parâmetros
 *     $P pMatriz - ponteiro para a matriz.
