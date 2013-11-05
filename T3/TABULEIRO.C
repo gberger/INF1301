@@ -1,10 +1,7 @@
-#if ! defined( TABULEIRO_ )
-#define TABULEIRO_
 /***************************************************************************
+*  $MCI Módulo de implementação: Módulo tabuleiro
 *
-*  $MCD Módulo de definição: Módulo tabuleiro de xadrez
-*
-*  Arquivo gerado:              TABULEIRO.H
+*  Arquivo gerado:              TABULEIRO.C
 *  Letras identificadoras:      TAB
 *
 *  Projeto: T3 INF1301 2013.2
@@ -12,22 +9,44 @@
 *           fl - Felipe Luiz
 *           jv - João Vicente
 *
-*  $ED Descrição do módulo
-*     Implementa funções para criar e manipular tabuleiros de xadrez.
-*     Podem existir inúmeros tabuleiros em operação simultaneamente.
-*     Os tabuleiros possuem uma cabeça encapsulando o seu estado.
-*     Cada posição do tabuleiro pode armazenar um valor genérico e possui
-*	  um valor inteiro secundário de uso livre (valor inicial é zero).
-*
 ***************************************************************************/
- 
-#if defined( TABULEIRO_OWN )
-   #define TABULEIRO_EXT
-#else
-   #define TABULEIRO_EXT extern
-#endif
 
-#include "MATRIZ.H"
+#include <malloc.h>
+#include <stdio.h>
+
+#define TABULEIRO_OWN
+#include "TABULEIRO.H"
+#undef TABULEIRO_OWN
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: TAB Descritor da cabeça de um tabuleiro
+*
+*
+*  $ED Descrição do tipo
+*     A cabeça do tabuleiro é o ponto de acesso para um determinado tabuleiro.
+*     Por intermédio da referência para uma matriz pode-se navegar
+*     pelo tabuleiro.
+*
+***********************************************************************/
+
+   typedef struct TAB_tagTabuleiro {
+
+        MAT_tppMatriz pMatriz ;
+               /* Ponteiro para a matriz utilizada */
+		char i;
+			   /* Coordenada vertical da posição corrente */
+		int j;
+			   /* Coordenada horizontal da posição corrente */
+		void ( * ExcluirValor ) ( void * pValor ) ;
+
+   } TAB_tpTabuleiro ;
+
+
+////////////////////////////////////////////////////////////
+/// Cru a partir daqui.
+/////////////////////////////////////////////////////////
+
 
 /***** Declarações exportadas pelo módulo *****/
 
@@ -247,7 +266,7 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 
 #undef TABULEIRO_EXT
 
-/********** Fim do módulo de definição: Módulo tabuleiro de xadrez **********/
+/********** Fim do módulo de definição: Módulo tabuleiro **********/
 
 #else
 #endif
