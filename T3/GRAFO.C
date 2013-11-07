@@ -412,6 +412,7 @@
 		   return GRA_CondRetGrafoVazio;
 	   }
 
+	   LIS_IrInicioLista( pGrafo->pVerticeCorrente->pListaSuc );
 	   while (LIS_ObterValor( pGrafo->pVerticeCorrente->pListaSuc ) ) {
 		   pAresta = (GRA_tpAresta *) LIS_ObterValor( pGrafo->pVerticeCorrente->pListaSuc );
 
