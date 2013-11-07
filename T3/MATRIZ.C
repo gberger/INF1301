@@ -87,25 +87,25 @@
       {
          for( colunaCorrente = 0; colunaCorrente < n; colunaCorrente++ )
          {
-			 if( linhaCorrente > 0 && GRA_InserirAresta( (*ppMatriz)->pGrafo, linhaCorrente*n + colunaCorrente, (linhaCorrente-1)*n + colunaCorrente, MAT_N) != GRA_CondRetOK) {
+			 if( linhaCorrente > 0 && GRA_InserirAresta( (*ppMatriz)->pGrafo, linhaCorrente*n + colunaCorrente, (linhaCorrente-1)*n + colunaCorrente, (int)MAT_N) != GRA_CondRetOK) {
 				 GRA_DestruirGrafo( (*ppMatriz)->pGrafo );
 				 free( *ppMatriz );
 				 return MAT_CondRetFaltouMemoria;
 			 }
 
-			 if( colunaCorrente > 0 && GRA_InserirAresta( (*ppMatriz)->pGrafo, linhaCorrente*n + colunaCorrente, linhaCorrente*n + colunaCorrente - 1, MAT_O) != GRA_CondRetOK) {
+			 if( colunaCorrente > 0 && GRA_InserirAresta( (*ppMatriz)->pGrafo, linhaCorrente*n + colunaCorrente, linhaCorrente*n + colunaCorrente - 1, (int)MAT_O) != GRA_CondRetOK) {
 				 GRA_DestruirGrafo( (*ppMatriz)->pGrafo );
 				 free( *ppMatriz );
 				 return MAT_CondRetFaltouMemoria;
 			 }
 			 
-			 if( linhaCorrente < n-1 && GRA_InserirAresta( (*ppMatriz)->pGrafo, linhaCorrente*n + colunaCorrente, (linhaCorrente+1)*n + colunaCorrente, MAT_S) != GRA_CondRetOK) {
+			 if( linhaCorrente < (n-1) && GRA_InserirAresta( (*ppMatriz)->pGrafo, linhaCorrente*n + colunaCorrente, (linhaCorrente+1)*n + colunaCorrente, (int)MAT_S) != GRA_CondRetOK) {
 				 GRA_DestruirGrafo( (*ppMatriz)->pGrafo );
 				 free( *ppMatriz );
 				 return MAT_CondRetFaltouMemoria;
 			 }
 
-			 if( colunaCorrente < n-1 && GRA_InserirAresta( (*ppMatriz)->pGrafo, linhaCorrente*n + colunaCorrente, linhaCorrente*n + colunaCorrente + 1, MAT_L) != GRA_CondRetOK) {
+			 if( colunaCorrente < (n-1) && GRA_InserirAresta( (*ppMatriz)->pGrafo, linhaCorrente*n + colunaCorrente, linhaCorrente*n + colunaCorrente + 1,(int) MAT_L) != GRA_CondRetOK) {
 				 GRA_DestruirGrafo( (*ppMatriz)->pGrafo );
 				 free( *ppMatriz );
 				 return MAT_CondRetFaltouMemoria;
@@ -153,7 +153,7 @@
          return MAT_CondRetPonteiroNulo;
       } /* if */
 
-	  if( GRA_PercorrerAresta( pMatriz->pGrafo, direcao ) != GRA_CondRetOK )
+	  if( GRA_PercorrerAresta( pMatriz->pGrafo, (int)direcao ) == GRA_CondRetArestaInvalida )
 	  {
 		  return MAT_CondRetDirecaoInvalida;
 	  }
@@ -177,7 +177,7 @@
          return MAT_CondRetPonteiroNulo;
       } /* if */
 
-	   if( GRA_IrParaVertice( pMatriz->pGrafo, i + (pMatriz->n)*j) != GRA_CondRetOK )
+	   if( GRA_IrParaVertice( pMatriz->pGrafo,(pMatriz->n)*i + j) == GRA_CondRetVerticeInvalido )
 	   {
 		   return MAT_CondRetPosicaoInvalida;
 	   }

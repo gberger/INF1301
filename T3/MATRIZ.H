@@ -79,7 +79,7 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
          MAT_N,
          MAT_L,
          MAT_S,
-         MAT_O,
+         MAT_O
 
    } MAT_tpDirecao ;
 
