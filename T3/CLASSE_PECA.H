@@ -24,7 +24,7 @@
    #define CLASSE_PECA_EXT extern
 #endif
 
-#include "LISA.H"
+#include "LISTA.H"
 
 /***** Declarações exportadas pelo módulo *****/
 
@@ -70,7 +70,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *     de ponteiro para classe de peça.
 *
 *  $EP Parâmetros
-*     $P ppClassePeca - ponteiro para ponteiro de classe de pela
+*     $P ppClassePeca - ponteiro para ponteiro de classe de peça
 *     $P nome - string contendo o nome da classe de peça (por exemplo, "Torre")
 *
 *  $FV Valor retornado
