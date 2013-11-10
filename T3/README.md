@@ -67,17 +67,16 @@ Menu
     02. Abrir
     03. Salvar
     
-    11. Configurar tamanho do tabuleiro
-    12. Configurar vez de jogador 
+    11. Listar tipos de peça
+    12. Criar tipo de peça
+    13. Alterar tipo de peça
+    14. Excluir tipo de peça
     
-    21. Listar tipos de peça
-    22. Criar tipo de peça
-    23. Alterar tipo de peça
-    24. Excluir tipo de peça
-    
-    31. Listar peças
-    32. Criar peça
-    33. Alterar peça
-    34. Excluir peça
+    21. Listar peças
+    22. Criar peça
+    23. Alterar peça
+    24. Excluir peça
+
+    31. Checa-Cheque
     
     99. Sair

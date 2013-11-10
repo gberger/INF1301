@@ -14,6 +14,11 @@
 #include <malloc.h>
 #include <string.h>
 
+#include "TABULEIRO.H"
+#include "LISTA.H"
+#include "CLASSE_PECA.H"
+#include "PECA.H"
+
 /***********************************************************************
 *
 *  $TC Tipo de dados: PRN Condicoes de retorno
@@ -30,6 +35,9 @@
 
          PRN_CondRetPonteiroNulo ,
                /* Foi passado um ponteiro para NULL */
+         
+         PRN_CondRetErroParm ,
+               /* Foram passados um ou mais parametros invalidos */
 
          PRN_CondRetFaltouMemoria 
                /* Faltou memória ao alocar dados */
@@ -39,93 +47,141 @@
 
 /***********************************************************************
 *
-*  $FC Função: TAB Criar tabuleiro
+*  $FC Função: PRN renderizar menu principal
 *
 *  $ED Descrição da função
-*     Cria um tabuleiro genérico de xadrez
-*     O ponteiro para o tabuleiro criado será fornecido no valor do ponteiro
-*     de ponteiro para tabuleiro. A posição corrente incial é 'A1'
-*
-*  $EP Parâmetros
-*     $P ppTabuleiro - ponteiro para o ponteiro de tabuleiro.
-*     $P ExcluirValor - ponteiro para a função de destruição do valor.
+*     Abre o menu principal na tela para o usuário mapear o tabuleiro e testar.
 *
 *  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetFaltouMemoria
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_CriarTabuleiro( TAB_tppTabuleiro * ppTabuleiro, void ( * ExcluirValor ) ( void * pDado ) ) ;
-
-/***** Protótipo das funções encapuladas no módulo *****/
-
-	static void DestruirConteudoListaDeAresta (void * pAresta) ;
-
-	static GRA_tppVerticeGrafo CriarVerticeGrafo (void) ;
-
-	static GRA_tpVerticeGrafo * PesquisaVertice( LIS_tppLista pLista, int idVertice ) ;
-
-	static GRA_tpVerticeGrafo * PesquisaVerticeNaListaDeAresta( LIS_tppLista pLista, int idVertice ) ;
-
-	static void RemoverVertice ( GRA_tppGrafo pGrafo, GRA_tppVerticeGrafo pVertice ) ;
-
-	static GRA_tpCondRet AdicionarAresta( GRA_tppVerticeGrafo pVerticeOrigem, GRA_tppVerticeGrafo pVerticeDestino, int idAresta) ;
-
-
-/*****  Código das funções exportadas pelo módulo  *****/
+   PRN_tpCondRet PRN_MenuPrincipal( );
 
 /***********************************************************************
 *
-*  $FC Função: GRA Criar grafo
-*
-***********************************************************************/
-
-   GRA_tpCondRet GRA_CriarGrafo( GRA_tppGrafo * ppGrafo, void ( * ExcluirValor ) ( void * pDado ) ) {
-	   GRA_tppGrafo pGrafo = NULL;
-	   
-	   pGrafo = (GRA_tppGrafo) malloc(sizeof(GRA_tpGrafo));
-	   if (pGrafo == NULL){
-		   return GRA_CondRetFaltouMemoria;
-	   }
-
-	   pGrafo->pVerticeCorrente = NULL;
-	   
-	   pGrafo->pListaOrigens = LIS_CriarLista( NULL ) ;
-	   if (pGrafo->pListaOrigens == NULL){
-		   free(pGrafo);
-		   return GRA_CondRetFaltouMemoria;
-	   }
-
-	   pGrafo->pListaVertices = LIS_CriarLista( NULL ) ;
-	   if (pGrafo->pListaVertices == NULL){
-		   LIS_DestruirLista(pGrafo->pListaOrigens);
-		   free(pGrafo);
-		   return GRA_CondRetFaltouMemoria;
-	   }
-
-	   pGrafo->ExcluirValor = ExcluirValor;
-
-	   *ppGrafo = pGrafo;
-
-	   return GRA_CondRetOK;
-   };
-
-/***** Código das funções encapuladas no módulo *****/
-
-
-/***********************************************************************
-*
-*  $FC Função: GRA - Destruir conteudo lista de aresta
+*  $FC Função: PRN criar novo tabuleiro
 *
 *  $ED Descrição da função
-*  Função auxiliar para ser passada durante a criaça da lista de
-*  sucessores
+*     Cria um tabuleiro e permite o usuario alocar as pecas onde ele achar necessario.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
-   static void DestruirConteudoListaDeAresta (void * pAresta) {
-	   free(pAresta);
-   }
+   PRN_tpCondRet PRN_NovoTabuleiro( );
+
+/***********************************************************************
+*
+*  $FC Função: PRN abrir tabuleiro
+*
+*  $ED Descrição da função
+*     Abre um tabuleiro com as configuracoes previamente salvas.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PRN_tpCondRet PRN_AbrirTabuleiro( );
+
+/***********************************************************************
+*
+*  $FC Função: PRN salvar tabuleiro
+*
+*  $ED Descrição da função
+*     Salva as configuracoes de um tabuleiro para ser utilizado mais tarde.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PRN_tpCondRet PRN_SalvarTabuleiro( );
+
+/***********************************************************************
+*
+*  $FC Função: PRN listar pecas
+*
+*  $ED Descrição da função
+*     Lista todas as possibilidades de pecas que podem ser inseridas no tabuleiro.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PRN_tpCondRet PRN_ListarPecas( );
+
+/***********************************************************************
+*
+*  $FC Função: PRN cria peca
+*
+*  $ED Descrição da função
+*     Abre o menu para criacao de uma peca pelo usuario.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PRN_tpCondRet PRN_CriarPeca( );
+
+/***********************************************************************
+*
+*  $FC Função: PRN alterar peca
+*
+*  $ED Descrição da função
+*     Abre o menu de alteracao, onde o usuario pode reconfigurar uma peca.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PRN_tpCondRet PRN_AlterarPeca( );
+
+/***********************************************************************
+*
+*  $FC Função: PRN exclusao de peca
+*
+*  $ED Descrição da função
+*     Exclui algum tipo de peca previamente definido pelo usuario.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PRN_tpCondRet PRN_ExcluirPeca( );
+
+/***********************************************************************
+*
+*  $FC Função: PRN funcao de saida
+*
+*  $ED Descrição da função
+*     Fecha o programa.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PRN_tpCondRet PRN_Sair( );
+
+/****** Codigo de implementacao das funcoes *********/
+
+/****** Funcao principal ********/
 
 /********** Fim do módulo de implementação: Módulo principal **********/
