@@ -146,7 +146,7 @@ typedef struct PEC_tagPeca * PEC_tppPeca ;
 *
 ***********************************************************************/
 
-   PEC_tpCondRet PEC_ObterClassePeca( PEC_tppPeca pPeca , PEC_tpJogador * pJogador ) ;
+   PEC_tpCondRet PEC_ObterJogador( PEC_tppPeca pPeca , PEC_tpJogador * pJogador ) ;
 
 
 #undef PECA_EXT
