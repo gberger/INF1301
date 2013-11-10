@@ -72,6 +72,7 @@
 
    VER_tpCondRet VER_VerificaCheque( TAB_tppTabuleiro pTabuleiro ) ;
 
+
 #undef VERIFICADOR_EXT
 
 /********** Fim do módulo de definição: Módulo verificador de cheque-mate **********/
