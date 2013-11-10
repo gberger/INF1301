@@ -64,7 +64,7 @@ typedef struct PEC_tagPeca * PEC_tppPeca ;
 
    typedef enum {
       JOGADOR_BRANCO ,
-      JOGADOR_PRETO ;
+      JOGADOR_PRETO 
    } PEC_tpJogador ;
 
 /***********************************************************************
