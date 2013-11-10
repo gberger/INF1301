@@ -177,6 +177,11 @@
          return MAT_CondRetPonteiroNulo;
       } /* if */
 
+	   if( i < 0 || i > (pMatriz->n - 1) ||  j < 0 || j > (pMatriz->n - 1) )
+	   {
+		   return MAT_CondRetPosicaoInvalida;
+	   }
+
 	   if( GRA_IrParaVertice( pMatriz->pGrafo,(pMatriz->n)*i + j) == GRA_CondRetVerticeInvalido )
 	   {
 		   return MAT_CondRetPosicaoInvalida;

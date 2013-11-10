@@ -38,235 +38,270 @@
 			   /* Coordenada vertical da posição corrente */
 		int j;
 			   /* Coordenada horizontal da posição corrente */
-		void ( * ExcluirValor ) ( void * pValor ) ;
 
    } TAB_tpTabuleiro ;
 
 
-////////////////////////////////////////////////////////////
-/// Cru a partir daqui.
-/////////////////////////////////////////////////////////
-
-
-/***** Declarações exportadas pelo módulo *****/
-
-/* Tipo referência para uma matriz */
-
-typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
-
 /***********************************************************************
 *
-*  $TC Tipo de dados: TAB Condicoes de retorno
+*  $TC Tipo de dados: TAB Descritor da casa de um tabuleiro
+*
 *
 *  $ED Descrição do tipo
-*     Condições de retorno das funções da matriz
+*     A casa do tabuleiro é o ponto de acesso para uma determinada casa.
+*	  Esta armazena uma referência para PECA e o valor secundário.
 *
 ***********************************************************************/
 
-   typedef enum {
+   typedef struct TAB_tagCasa {
 
-         TAB_CondRetOK ,
-               /* Executou corretamente */
+        PEC_tppPeca pPeca ;
+               /* Ponteiro para a peca que ocupa a casa */
+		int vSec;
+			   /* Valor secundário da casa */
 
-         TAB_CondRetPonteiroNulo ,
-               /* Foi passado um ponteiro para NULL */
+   } TAB_tpCasa ;
 
-         TAB_CondRetDirecaoInvalida ,
-               /* A direção que se quer mover é inválida */
 
-         TAB_CondRetPosicaoInvalida ,
-               /* A posição onde se quer ir é inválida */
+/***** Protótipo das funções encapuladas no módulo *****/
+   void ExcluirCasa( void * pValor );
 
-         TAB_CondRetFaltouMemoria 
-               /* Faltou memória ao alocar dados */
 
-   } TAB_tpCondRet ;
+/*****  Código das funções exportadas pelo módulo  *****/
 
 
 /***********************************************************************
 *
 *  $FC Função: TAB Criar tabuleiro
 *
-*  $ED Descrição da função
-*     Cria um tabuleiro genérico de xadrez
-*     O ponteiro para o tabuleiro criado será fornecido no valor do ponteiro
-*     de ponteiro para tabuleiro. A posição corrente incial é 'A1'
-*
-*  $EP Parâmetros
-*     $P ppTabuleiro - ponteiro para o ponteiro de tabuleiro.
-*     $P ExcluirValor - ponteiro para a função de destruição do valor.
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetFaltouMemoria
-*
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_CriarTabuleiro( TAB_tppTabuleiro * ppTabuleiro, void ( * ExcluirValor ) ( void * pDado ) ) ;
+   TAB_tpCondRet TAB_CriarTabuleiro( TAB_tppTabuleiro * ppTabuleiro ) {
+	   TAB_tppTabuleiro pTab;
+	   TAB_tpCasa *pCasa;
+	   int i, j;
+
+	   if(ppTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+
+	   pTab = (TAB_tpTabuleiro *)malloc(sizeof(TAB_tpTabuleiro));
+	   if(pTab == NULL || MAT_CriarMatriz(&(pTab->pMatriz), 8, ExcluirCasa) != MAT_CondRetOK) {
+		   return TAB_CondRetFaltouMemoria;
+	   }
+
+	   for( i = 0; i < 8; i++ ) {
+		   for( j = 0; j < 8; j++ ) {
+
+			   pCasa = (TAB_tpCasa *)malloc(sizeof(TAB_tpCasa));
+			   if(pCasa==NULL) {
+				   MAT_DestruirMatriz(pTab->pMatriz);
+				   free(pTab);
+				   return TAB_CondRetFaltouMemoria;
+			   }
+
+			   MAT_AtribuirValorCorrente(pTab->pMatriz, (void *)pCasa);
+
+		   }
+	   }
+
+	   pTab->i = 'A';
+	   pTab->j = 1;
+
+	   *ppTabuleiro = pTab;
+
+	   return TAB_CondRetOK;
+
+   }
 
 
 /***********************************************************************
 *
 *  $FC Função: TAB Destruir tabuleiro
 *
-*  $ED Descrição da função
-*     Destrói o corpo e a cabeça do tabuleiro, liberando o espaço ocupado.
-*
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
-*
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_DestruirTabuleiro( TAB_tppTabuleiro pTabuleiro ) ;
+   TAB_tpCondRet TAB_DestruirTabuleiro( TAB_tppTabuleiro pTabuleiro ) {
+
+	   if(pTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+
+	   MAT_DestruirMatriz( pTabuleiro->pMatriz );
+
+	   free( pTabuleiro );
+
+	   return TAB_CondRetOK;
+	   
+   }
 
 
 /***********************************************************************
 *
 *  $FC Função: TAB Definir posição corrente.
 *
-*  $ED Descrição da função
-*     Define a posição corrente do tabuleiro através de suas coordenadas.
-*
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P i - coordenada horizontal (valor entre 'A' e 'H').
-*     $P j - coordenada vertical (valor entre 1 e 8).
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
-*     TAB_CondRetPosicaoInvalida
-*
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_DefinirCorrente( TAB_tppTabuleiro pTabuleiro, char i, int j ) ;
+   TAB_tpCondRet TAB_DefinirCorrente( TAB_tppTabuleiro pTabuleiro, char i, int j )
+   {
+	   if(pTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+
+	   if(  i > 'H' || i < 'A' || j > 8 || j < 1 || MAT_DefinirCorrente( pTabuleiro->pMatriz, (int) (i-'A'), j - 1) == MAT_CondRetPosicaoInvalida )
+		   return TAB_CondRetPosicaoInvalida;
+
+	   pTabuleiro->i = i;
+	   pTabuleiro->j = j;
+
+	   return TAB_CondRetOK;
+   }
 
 
 /***********************************************************************
 *
 *  $FC Função: TAB Obter posição corrente.
 *
-*  $ED Descrição da função
-*     Obtem as coordenadas da posição corrente do tabuleiro.
-*
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P i - ponteiro que receberá a coord. horizontal
-*		(valor entre 'A' e 'H').
-*     $P j - coordenada que receberá a coord. vertical
-*		(valor entre 1 e 8).
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
-*
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_ObterCorrente( TAB_tppTabuleiro pTabuleiro, char *i, int *j ) ;
+   TAB_tpCondRet TAB_ObterCorrente( TAB_tppTabuleiro pTabuleiro, char *i, int *j )
+   {
+	   if(pTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+
+	   *i = pTabuleiro->i;
+	   *j = pTabuleiro->j;
+
+	   return TAB_CondRetOK;
+   }
 
 
 /***********************************************************************
 *
 *  $FC Função: TAB Atribuir valor
 *
-*  $ED Descrição da função
-*     Atribui valor à posição corrente do tabuleiro.
-*
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P pValor  - ponteiro genérico para o valor a ser atribuído
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
-*
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_AtribuirValorCorrente( TAB_tppTabuleiro pTabuleiro, void * pValor ) ;
+   TAB_tpCondRet TAB_AtribuirValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca pPeca ) {
+	   TAB_tpCasa *pCasa;
+
+	   if(pTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+
+	   MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)&pCasa);
+
+	   pCasa->pPeca = pPeca;
+
+	   return TAB_CondRetOK;
+   }
 
 
 /***********************************************************************
 *
 *  $FC Função: TAB Obter valor corrente
 *
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P ppValor - ponteiro para o ponteiro do valor a ser obtido
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
-*
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_ObterValorCorrente( TAB_tppTabuleiro pTabuleiro, void ** ppValor ) ;
+   TAB_tpCondRet TAB_ObterValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca ) {
+	   TAB_tpCasa *pCasa;
+	   if(pTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+
+	   MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)&pCasa);
+
+	   *ppPeca = pCasa->pPeca;
+
+	   return TAB_CondRetOK;
+   }
 
 
 /***********************************************************************
 *
 *  $FC Função: TAB Atribuir valor secundário
 *
-*  $ED Descrição da função
-*     Atribui valor fornecido ao valor secundário da posição corrente.
-*
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P valorSec  - valor a ser atribuído
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
-*
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_AtribuirValorSecundario( TAB_tppTabuleiro pTabuleiro, int valorSec ) ;
+   TAB_tpCondRet TAB_AtribuirValorSecundario( TAB_tppTabuleiro pTabuleiro, int valorSec ) {
+	   TAB_tpCasa *pCasa;
+
+	   if(pTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+
+	   MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)&pCasa);
+
+	   pCasa->vSec = valorSec;
+
+	   return TAB_CondRetOK;
+   }
+	   
 
 
 /***********************************************************************
 *
 *  $FC Função: TAB Obter valor secundário
 *
-*  $ED Descrição da função
-*     Obtem valor auxiliar da posição corrente.
-*
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P pValorSec - ponteiro para variável inteira que receberá o valor
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
-*
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_ObterValorSecundario( TAB_tppTabuleiro pTabuleiro, int * pValorSec ) ;
+   TAB_tpCondRet TAB_ObterValorSecundario( TAB_tppTabuleiro pTabuleiro, int * pValorSec ) {
+	   TAB_tpCasa *pCasa;
+	   if(pTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+
+	   MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)&pCasa);
+
+	   *pValorSec = pCasa->vSec;
+
+	   return TAB_CondRetOK;
+   }
 
 
 /***********************************************************************
 *
 *  $FC Função: TAB Zerar valores secundários
 *
+***********************************************************************/
+
+   TAB_tpCondRet TAB_ZerarValoresSecundarios( TAB_tppTabuleiro pTabuleiro ) {
+	   TAB_tpCasa *pCasa;
+	   int i, j;
+
+	   if(pTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+
+	   for( i = 0; i < 8; i++ ) {
+		   for( j = 0; j < 8; j++ ) {
+				MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)&pCasa);
+				pCasa->vSec = 0;
+		   }
+	   }
+
+	   return TAB_CondRetOK;
+   }
+
+/***** Código das funções encapuladas no módulo *****/
+
+/***********************************************************************
+*
+*  $FC Função: TAB - Excluir casa
+*
 *  $ED Descrição da função
-*     Atribui zero ao valor secundário de todas as posições do tabuleiro
-*
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
+*  Função auxiliar para destruir casa
 *
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_ZerarValoresSecundarios( TAB_tppTabuleiro pTabuleiro ) ;
-
-#undef TABULEIRO_EXT
+   void ExcluirCasa( void * pValor );
+   {
+	   if(pValor != NULL) {
+		   free( ( (TAB_tpCasa *)pValor )->pPeca);
+		   free( pValor );
+	   }
+   }
 
 /********** Fim do módulo de definição: Módulo tabuleiro **********/
 
-#else
-#endif

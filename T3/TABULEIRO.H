@@ -16,8 +16,9 @@
 *     Implementa funções para criar e manipular tabuleiros de xadrez.
 *     Podem existir inúmeros tabuleiros em operação simultaneamente.
 *     Os tabuleiros possuem uma cabeça encapsulando o seu estado.
-*     Cada posição do tabuleiro pode armazenar um valor genérico e possui
-*	   um valor inteiro secundário de uso livre (valor inicial é zero).
+*     Cada posição do tabuleiro pode armazenar uma variável tipo referência
+*	  para PECA e possui um valor inteiro secundário de uso livre (valor
+*	  inicial é zero).
 *
 ***************************************************************************/
  
@@ -28,6 +29,7 @@
 #endif
 
 #include "MATRIZ.H"
+#include "PECA.H"
 
 /***** Declarações exportadas pelo módulo *****/
 
@@ -69,7 +71,7 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *  $FC Função: TAB Criar tabuleiro
 *
 *  $ED Descrição da função
-*     Cria um tabuleiro genérico de xadrez
+*     Cria um tabuleiro de xadrez
 *     O ponteiro para o tabuleiro criado será fornecido no valor do ponteiro
 *     de ponteiro para tabuleiro. A posição corrente incial é 'A1'
 *
@@ -83,7 +85,7 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_CriarTabuleiro( TAB_tppTabuleiro * ppTabuleiro, void ( * ExcluirValor ) ( void * pDado ) ) ;
+   TAB_tpCondRet TAB_CriarTabuleiro( TAB_tppTabuleiro * ppTabuleiro ) ;
 
 
 /***********************************************************************
@@ -159,7 +161,7 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 *  $EP Parâmetros
 *     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P pValor  - ponteiro genérico para o valor a ser atribuído
+*     $P pValor  - ponteiro para o valor a ser atribuído
 *
 *  $FV Valor retornado
 *     TAB_CondRetOK
@@ -167,7 +169,7 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_AtribuirValorCorrente( TAB_tppTabuleiro pTabuleiro, void * pValor ) ;
+   TAB_tpCondRet TAB_AtribuirValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca pPeca ) ;
 
 
 /***********************************************************************
@@ -184,7 +186,7 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_ObterValorCorrente( TAB_tppTabuleiro pTabuleiro, void ** ppValor ) ;
+   TAB_tpCondRet TAB_ObterValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca ) ;
 
 
 /***********************************************************************
