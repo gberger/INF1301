@@ -450,6 +450,26 @@ typedef struct LIS_tagLista * LIS_tppLista ;
    LIS_tpCondRet LIS_ProcurarValor( LIS_tppLista pLista ,
                                     void * pValor        ) ;
 
+
+/***********************************************************************
+*
+*  $FC Função: LIS  &Obter numero de elementos
+*
+*  $ED Descrição da função
+*     Obtem o numero de elementos da lista.
+*
+*  $EP Parâmetros
+*     pLista  - ponteiro para a lista
+*
+*  $FV Valor retornado
+*     -1           - ponteiro para lista é NULL
+*     inteiro >= 0 - caso contrário
+*
+*
+***********************************************************************/
+
+   int LIS_ObterNumElem( LIS_tppLista pLista ) ;
+   
 #undef LISTA_EXT
 
 /********** Fim do módulo de definição: LIS  Lista duplamente encadeada **********/

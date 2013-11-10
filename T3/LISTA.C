@@ -547,5 +547,18 @@
 
    } /* Fim função: LIS  -Limpar a cabeça da lista */
 
+         
+/***************************************************************************
+*
+*  Função: LIS  &Obter numero de elementos
+*  ****/
+   
+   int LIS_ObterNumElem( LIS_tppLista pLista ) {
+      if ( pLista == NULL ){
+         return -1;
+      }
+      return pLista->numElem;
+   }
+
 /********** Fim do módulo de implementação: LIS  Lista duplamente encadeada **********/
 
