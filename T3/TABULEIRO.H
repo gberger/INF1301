@@ -17,7 +17,7 @@
 *     Podem existir inúmeros tabuleiros em operação simultaneamente.
 *     Os tabuleiros possuem uma cabeça encapsulando o seu estado.
 *     Cada posição do tabuleiro pode armazenar um valor genérico e possui
-*	  um valor inteiro secundário de uso livre (valor inicial é zero).
+*	   um valor inteiro secundário de uso livre (valor inicial é zero).
 *
 ***************************************************************************/
  
