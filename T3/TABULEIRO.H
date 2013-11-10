@@ -29,6 +29,7 @@
 #endif
 
 #include "MATRIZ.H"
+#include "PECA.H"
 
 /***** Declarações exportadas pelo módulo *****/
 
