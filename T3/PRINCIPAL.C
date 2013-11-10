@@ -11,6 +11,7 @@
 *
 ***************************************************************************/
 
+#include <stdio.h>
 #include <malloc.h>
 #include <string.h>
 
@@ -44,21 +45,65 @@
 
    } PRN_tpCondRet ;
 
+/***********************************************************************
+*
+*  $TC Tipo de dados: PRN Descritor da cabeça de uma simulação
+*
+*
+*  $ED Descrição do tipo
+*     Armazena referências para o tabuleiro e para as cabeças das
+*	  listas de peças e classes de peças.
+*
+***********************************************************************/
+
+   typedef struct PRN_tagSimulacao {
+
+        TAB_tppTabuleiro pTab;
+               /* Ponteiro para o tabuleiro corrente */
+		LIS_tppLista pListaPecas;
+			   /* Ponteiro para a lista de peças */
+		LIS_tppLista pListaClasses;
+			   /* Ponteiro para a lista de classes de peças */
+
+   } PRN_tpSimulacao ;
+
+
+/*****  Variável global que armazena a simulação corrente  *****/
+
+   PRN_tpSimulacao simulacao;
+
 
 /***********************************************************************
 *
 *  $FC Função: PRN renderizar menu principal
 *
 *  $ED Descrição da função
-*     Abre o menu principal na tela para o usuário mapear o tabuleiro e testar.
+*     Abre o menu principal na tela para o usuário, solicitando a escolha de uma opcao
 *
 *  $FV Valor retornado
 *     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_MenuPrincipal( );
+   PRN_tpCondRet PRN_MenuPrincipal( int * opcao )
+   {
+		
+		printf("01. Novo\n02. Abrir\n03. Salvar\n\n");
+		printf("11. Listar tipos de peça\n12. Criar tipo de peça\n13. Alterar tipo de peça\n14. Excluir tipo de peça\n\n");
+		printf("21. Listar peças\n22. Criar peça\n23. Alterar peça\n24. Excluir peça\n31. Checa-Cheque\n\n");
+		printf("99. Sair\n\nDigite o codigo da opcao desejada:");
+
+		scanf(" %d", opcao);
+
+		while( *opcao < 1 || (*opcao > 3 && *opcao < 11) || (*opcao > 14 && *opcao < 21) || (*opcao > 24 && *opcao != 31 && *opcao != 99) )
+		{
+			printf("Opcao invalida. Tente novamente:\n");
+			scanf(" %d", opcao);
+		}
+
+		return PRN_CondRetOK;
+   }
+		
 
 /***********************************************************************
 *
@@ -73,7 +118,21 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_NovoTabuleiro( );
+   PRN_tpCondRet PRN_NovoTabuleiro( void )
+   {
+	   TAB_DestruirTabuleiro( simulacao.pTab );
+
+	   if(TAB_CriarTabuleiro( &(simulacao.pTab) ) != TAB_CondRetOK) {
+		   LIS_DestruirLista( simulacao.pListaClasses );
+		   LIS_DestruirLista( simulacao.pListaPecas );
+		   return PRN_CondRetFaltouMemoria;
+	   }
+
+	   LIS_EsvaziarLista( simulacao.pListaClasses );
+	   LIS_EsvaziarLista( simulacao.pListaPecas );
+
+	   return PRN_CondRetOK;
+   }
 
 /***********************************************************************
 *
@@ -167,6 +226,40 @@
 
 /***********************************************************************
 *
+*  $FC Função: PRN funcao de inicialização
+*
+*  $ED Descrição da função
+*     Inicializa a variável global, criando as estruturas necessárias.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PRN_tpCondRet PRN_Inicializa( void )
+   {
+	   if( TAB_CriarTabuleiro( &(simulacao.pTab) ) != TAB_CondRetOK )
+		   return PRN_CondRetFaltouMemoria;
+
+	   simulacao.pListaClasses = LIS_CriarLista( DestruirClassePeca );
+	   if( simulacao.pListaClasses == NULL ) {
+		   TAB_DestruirTabuleiro( simulacao.pTab );
+		   return PRN_CondRetFaltouMemoria;
+	   }
+
+	   simulacao.pListaPecas = LIS_CriarLista( DestruirPeca );
+	   if( simulacao.pListaPecas == NULL ) {
+		   TAB_DestruirTabuleiro( simulacao.pTab );
+		   LIS_DestruirLista( simulacao.pListaClasses );
+		   return PRN_CondRetFaltouMemoria;
+	   }
+
+	   return PRN_CondRetOK;
+   }
+
+/***********************************************************************
+*
 *  $FC Função: PRN funcao de saida
 *
 *  $ED Descrição da função
@@ -180,8 +273,56 @@
 
    PRN_tpCondRet PRN_Sair( );
 
-/****** Codigo de implementacao das funcoes *********/
+/***********************************************************************
+*
+*  $FC Função: PRN main
+*
+*  $ED Descrição da função
+*     Coordena a excecução do programa.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
 
-/****** Funcao principal ********/
+   int main( void )
+   {
+	   int opcao;
+
+	   if( PRN_Inicializa( ) == PRN_CondRetFaltouMemoria)
+		   return PRN_CondRetFaltouMemoria;
+
+	   do {
+			PRN_MenuPrincipal( &opcao );
+			switch(opcao) {
+				case 1:
+					PRN_NovoTabuleiro( );
+				break;
+				case 2:
+					PRN_AbrirTabuleiro( );
+				break;
+				case 3:
+					PRN_SalvarTabuleiro( );
+				break;
+		   }
+	   } while( opcao != 99 );
+
+	   PRN_Sair( );
+
+	   return PRN_CondRetOK;
+   }
+
+	   
+	
+   void DestruirPeca( void * pValor )
+   {
+	   PEC_DestruirPeca( (PEC_tppPeca) pValor );
+   }
+
+   void DestruirClassePeca( void * pValor )
+   {
+	   CPC_DestruirClassePeca( (CPC_tppClassePeca) pValor );
+   }
 
 /********** Fim do módulo de implementação: Módulo principal **********/

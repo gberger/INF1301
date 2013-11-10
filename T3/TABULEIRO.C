@@ -295,7 +295,7 @@
 *
 ***********************************************************************/
 
-   void ExcluirCasa( void * pValor );
+   void ExcluirCasa( void * pValor )
    {
 	   if(pValor != NULL) {
 		   free( ( (TAB_tpCasa *)pValor )->pPeca);
