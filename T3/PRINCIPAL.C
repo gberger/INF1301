@@ -319,16 +319,13 @@
 *  $ED Descrição da função
 *     Mostra o menu principal na tela para o usuário, solicitando a escolha de uma opcao.
 *
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*
 ***********************************************************************/
 
    void PRN_MenuPrincipal( int * opcao )
    {
 		
 		printf("01. Novo\n02. Abrir\n03. Salvar\n\n");
-		printf("11. Listar tipos de peca\n12. Criar tipo de peca\n13. Alterar tipo de peca\n14. Excluir tipo de peca\n\n");
+		printf("11. Listar classes de peca\n12. Criar classe de peca\n13. Alterar classe de peca\n14. Excluir classe de peca\n\n");
 		printf("21. Listar pecas\n22. Criar peca\n23. Alterar peca\n24. Excluir peca\n\n");
 		printf("31. Checar cheque-mate\n\n");
 		printf("99. Sair\n\nDigite o codigo da opcao desejada:");
@@ -343,10 +340,6 @@
 *
 *  $ED Descrição da função
 *     Cria um tabuleiro e permite o usuario alocar as pecas onde ele achar necessario.
-*
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
@@ -373,10 +366,6 @@
 *  $ED Descrição da função
 *     Abre um tabuleiro com as configuracoes previamente salvas.
 *
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
-*
 ***********************************************************************/
 
    void PRN_AbrirTabuleiro( void )
@@ -398,10 +387,6 @@
 *
 *  $ED Descrição da função
 *     Salva as configuracoes de um tabuleiro para ser utilizado mais tarde.
-*
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
@@ -478,10 +463,6 @@
 *  $ED Descrição da função
 *     Lista todas as possibilidades de pecas que podem ser inseridas no tabuleiro.
 *
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
-*
 ***********************************************************************/
 
    void PRN_ListarClasses( void )
@@ -502,6 +483,14 @@
 				break;
 	   }
    }
+
+   void PRN_CriarClasse( void ){}
+
+   void PRN_AlterarClasse( void ){}
+
+   void PRN_ExcluirClasse( void ){}
+
+   void PRN_ListarPecas( void ){}
 
 /***********************************************************************
 *
@@ -572,6 +561,8 @@
 
    }
 
+   void PRN_AlterarPeca( void ){}
+
 /***********************************************************************
 *
 *  $FC Função: PRN exclusao de peca
@@ -620,18 +611,14 @@
 
 /***********************************************************************
 *
-*  $FC Função: PRN exclusao de peca
+*  $FC Função: PRN checar cheque-mate
 *
 *  $ED Descrição da função
-*     Exclui algum tipo de peca previamente definido pelo usuario.
-*
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
+*     Checa se a configuração do tabuleiro configura um cheque-mate
 *
 ***********************************************************************/
 
-   void PRN_ChecarCheque( ){
+   void PRN_ChecarChequeMate( ){
       PEC_tppPeca pecaCorrente, rei = ObterRei();
       char reiI; int reiJ;
       char i; int j;
@@ -715,13 +702,40 @@
 			switch(opcao) {
 				case 1:
 					PRN_NovoTabuleiro( );
-				break;
+					break;
 				case 2:
 					PRN_AbrirTabuleiro( );
-				break;
+					break;
 				case 3:
 					PRN_SalvarTabuleiro( );
-				break;
+					break;
+				case 11:
+					PRN_ListarClasses( );
+					break;
+				case 12:
+					PRN_CriarClasse( );
+					break;
+				case 13:
+					PRN_AlterarClasse( );
+					break;
+				case 14:
+					PRN_ExcluirClasse( );
+					break;
+				case 21:
+					PRN_ListarPecas( );
+					break;
+				case 22:
+					PRN_CriarPeca( );
+					break;
+				case 23:
+					PRN_AlterarPeca( );
+					break;
+				case 24:
+					PRN_ExcluirPeca( );
+					break;
+				case 31:
+					PRN_ChecarChequeMate( );
+					break;
 		   }
 	   } while( opcao != 99 );
 
