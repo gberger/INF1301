@@ -142,9 +142,17 @@ CPC_tppClassePeca PRN_ProcurarClasse (char *nomeProcurado) {
 *
 *  $FC Função: PRN - Le arquivo de configuracao
 *
+*  $ED Descrição da função
+*     Lê o arquivo de configuração no caminho dado, carregando seus dados
+*       no tabuleiro.
+*
+*  $FV Valor retornado
+*     1 se leu com sucesso
+*     0 caso contrário
+*
 ***********************************************************************/
 
-void PRN_CarregarArquivoXdz( char * path ) {
+int PRN_CarregarArquivoXdz( char * path ) {
     char auxString[200], jogador;
     int i, j;
     FILE *fp;
@@ -154,7 +162,7 @@ void PRN_CarregarArquivoXdz( char * path ) {
     fp = fopen(path, "r");
     if( !fp ) {
         printf("Path inválido.\n\n");
-        return;
+        return 0;
     }
 
     while( fscanf(fp, " %s", auxString) == 1 ) {
@@ -174,7 +182,7 @@ void PRN_CarregarArquivoXdz( char * path ) {
             }
 
         } else if( strcmp( auxString, "TABULEIRO") == 0 ) {
-            while( scanf( " %c %c %d %[^\n]", &jogador, &i, &j, auxString) == 4) {
+            while( fscanf( fp, " %c %c %d %[^\n]", &jogador, &i, &j, auxString) == 4) {
                 pClasse = PRN_ProcurarClasse( auxString );
                 if(!pClasse)
                     continue;
@@ -189,6 +197,7 @@ void PRN_CarregarArquivoXdz( char * path ) {
     }
 
     fclose(fp);
+    return 1;
 }
 
 
@@ -534,7 +543,9 @@ void PRN_AbrirTabuleiro( void ) {
 
     PRN_NovoTabuleiro( );
 
-    PRN_CarregarArquivoXdz( path );
+    if( PRN_CarregarArquivoXdz( path ) == 1) {
+        printf("\nFoi aberto o arquivo %s.",  path);
+    }
 }
 
 
