@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+#include <math.h>
 
 #include "TABULEIRO.H"
 #include "LISTA.H"
@@ -75,10 +76,176 @@
 
 /***********************************************************************
 *
+*  $FC Função: PRN procurar classe de peça
+*
+*  $ED Descrição da função
+*     A partir da string dada, procura na lista de classes de peças
+*        por uma classe com tal nome.
+*
+*  $FV Valor retornado
+*     Ponteiro para a classe da peça encontrado, ou NULL se não achar
+*
+***********************************************************************/
+
+   CPC_tppClassePeca PRN_ProcurarClasse (char *nomeProcurado)
+   {
+      LIS_tpCondRet lisCondRet;
+      CPC_tppClassePeca pClassePeca;
+      char *nomeObtido;
+
+      if(nome == NULL){
+         return NULL;
+      }
+
+      LIS_IrInicioLista(simulacao.pListaClasses);
+
+      do {
+
+         pClassePeca = LIS_ObterValor(simulacao.pListaClasses);
+
+         if(pClassePeca != NULL){
+            CPC_ObterNome(pClassePeca, &nomeObtido);
+
+            if(strcmp(nomeObtido, nomeProcudo) == 0){
+               return pClassePeca;
+            }
+         }
+
+         lisCondRet = LIS_AvancarElementoCorrente(simulacao.pListaClasses)
+      } while(lisCondRet != LIS_CondRetFimLista && lisCondRet != LIS_CondRetListaVazia)
+
+      return NULL;
+   }
+
+
+/***********************************************************************
+*
+*  $FC Função: PRN procurar peça no tabuleiro
+*
+*  $ED Descrição da função
+*     Procura a peça dada no tabuleiro corrente e bota nos ponteiros dados
+*
+*  $FV Valor retornado
+*     1 se conseguiu encontrar a peça
+*     0 se não conseguiu encontrar a peça
+*
+***********************************************************************/
+
+   int PRN_ProcurarPecaNoTabuleiro (PEC_tppPeca peca, char &i, int &j)
+   {
+      char ii, oldI;
+      int jj, oldJ;
+      PEC_tppPeca pecaObtida;
+
+      TAB_ObterCorrente(simulacao.pTab, &oldI, &oldJ);
+
+      for(ii = 'A'; ii <= 'H'; ii++){
+         for(jj = 1; jj <= 8; jj++){
+            TAB_DefinirCorrente(simulacao.pTab, ii, jj);
+            TAB_ObterValorCorrente(simulacao.pTab, &pecaObtida);
+            if(pecaObtida == peca){
+               TAB_AB_DefinirCorrente(simulacao.pTab, oldI, oldJ);
+               
+               *i = ii;
+               *j = jj;
+
+               return 1;
+            }
+         }
+      }
+
+      return 0;
+   }
+
+
+/***********************************************************************
+*
+*  $FC Função: PRN checa se movimento é do tipo pulo
+*
+*  $ED Descrição da função
+*     Checa se o movimento descrito pelos parâmetros é do tipo pulo ou não.
+*     Se for um movimento vertical, horizontal ou diagonal, não é de pulo.  
+*
+*  $FV Valor retornado
+*     1 se o movimento é pulo
+*     0 se o movimento não é pulo
+*
+***********************************************************************/
+
+   int PRN_ChecarMovimentoPulo (int movX, int movY){
+      movX = abs(movX);
+      movY = abs(movY);
+
+      return movX == movY ? 0 : 1
+   }
+
+
+/***********************************************************************
+*
+*  $FC Função: PRN checar legalidade de movimento
+*
+*  $ED Descrição da função
+*     Checa se um movimento é legal
+*
+*  $FV Valor retornado
+*     1 se o movimento é legal
+*     0 se o movimento é ilegal
+*
+***********************************************************************/
+
+   int PRN_ChecarLegalidade (char iOrigem, int jOrigem, char iDestino, int jDestino)
+   {
+      PEC_tppPeca atacante, obstaculo;
+      CPC_tppClassePeca classeAtacante;
+      PEC_tpJogador jogador;
+      int resposta;
+      int movX, movY;
+      char i; int j;
+
+      TAB_ObterValorDeCasa(simulacao.pTab, &atacante, iOrigem, jOrigem);
+      PEC_ObterClassePeca(atacante, &classeAtacante);
+      PEC_ObterJogador(atacante, &jogador);
+
+      movX = iDestino - iOrigem;
+      movY = jDestino - jOrigem;
+      
+      if(jogador == JOGADOR_PRETO){
+         movX *= -1;
+         movY *= -1;   
+      }
+
+      if(PRN_ChecarMovimentoPulo(movX, movY) == 0){
+         // if(movX == 0){
+         //    //horizontal
+         //    for(i = iOrigem+1; i < iDestino; i += ){
+         //       TAB_ObterValorDeCasa(simulacao.pTab, &obstaculo, )
+         //    }
+         // }
+         // else if(movY == 0){
+         //    //vertical
+         //    for(j = jOrigem+1; j < jDestino; j++){
+               
+         //    }
+         // } else {
+         //    //diagonal
+         //    for(i = iOrigem+1, j = jOrigem+1; i < iDestino, j < jDestino; i++, j++){
+
+         //    }
+         // }
+
+      }
+
+      CPC_ChecarMovimento(classeAtacante, movX, movY, &resposta);
+
+      return resposta;
+   }
+
+/***********************************************************************
+*
 *  $FC Função: PRN renderizar menu principal
 *
 *  $ED Descrição da função
-*     Abre o menu principal na tela para o usuário, solicitando a escolha de uma opcao
+*     Mostra o menu principal na tela para o usuário, solicitando a escolha de uma opcao.
 *
 *  $FV Valor retornado
 *     PRN_CondRetOK
@@ -223,6 +390,43 @@
 ***********************************************************************/
 
    PRN_tpCondRet PRN_ExcluirPeca( );
+
+/***********************************************************************
+*
+*  $FC Função: PRN exclusao de peca
+*
+*  $ED Descrição da função
+*     Exclui algum tipo de peca previamente definido pelo usuario.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PRN_tpCondRet PRN_ChecarCheque( ){
+      pPeca rei = ObterRei();
+      char reiI; int reiJ;
+      char i; int j;
+      pPeca pecaCorrente;
+      CPC_tppClassePeca classeCorrente;
+      LIS_tpCondRet lisCondRet;
+      PEC_tpJogador jogadorCorrente;
+
+      //achar posição do rei
+      if(PRN_ProcurarPecaNoTabuleiro(rei, &reiI, &reiJ) == 0){
+         printf("\n!! ERRO AO PROCURAR POSICAO DO REI !!\n")
+         PRN_Sair(1);
+      }
+
+      //para cada peça no tabuleiro
+      for(i = 'A'; i <= 'H'; i++){
+         for(j = 1; j <= 8; j++){
+            PRN_ChecarLegalidade(i, j, reiI, reiJ);
+         }
+      }
+   }
+
 
 /***********************************************************************
 *
