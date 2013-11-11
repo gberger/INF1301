@@ -177,6 +177,36 @@
       return CPC_CondRetOk;
    }
 
+/***********************************************************************
+*  $FC Função: CPC Checar movimento de classe de peça
+***********************************************************************/
+
+   CPC_tpCondRet CPC_ChecarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY , int * resposta ) {
+      int numMovimentos;
+      int i;
+      int movXObtido, movYObtido;
+
+      if(pClassePeca == NULL){
+         return CPC_CondRetPonteiroNulo;
+      }
+
+      if(movX > 7 || movY > 7 || movX < -7 || movY < -7){
+         *resposta = 0;
+      }
+
+      CPC_ObterNumeroMovimentos(pClassePeca, &numMovimentos);
+
+      for(i = 0; i < numMovimentos; i++){
+         CPC_ObterMovimento(pClassePeca, i, &movXObtido, &movYObtido);
+         if(movXObtido == movX && movYObtido == movY){
+            *resposta = 1;
+            return CPC_CondRetOk;      
+         }
+      }
+
+      return CPC_CondRetOk;      
+   }
+
 
 /***********************************************************************
 *  $FC Função: CPC Obter nome de classe de peça

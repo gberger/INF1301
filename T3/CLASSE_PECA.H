@@ -170,6 +170,29 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 
 /***********************************************************************
 *
+*  $FC Função: CPC Checar movimento de classe de peça
+*
+*  $ED Descrição da função
+*     Checa se certa classe de peça pode mover-se de certa maneira
+*
+*  $EP Parâmetros
+*     $P pClassePeca - ponteiro para a classe de peça
+*     $P movX - inteiro de -7 a 7 contendo o valor horizontal do movimento
+*     $P movY - inteiro de -7 a 7 contendo o valor vertical do movimento
+*     $P resposta - ponteiro para inteiro que conterá a resposta (1 ou 0)
+*
+*  $FV Valor retornado
+*     CPC_CondRetOK
+*     CPC_CondRetArgumentosInvalidos
+*     CPC_CondRetPonteiroNulo
+*
+***********************************************************************/
+
+   CPC_tpCondRet CPC_ChecarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY , int * resposta ) ;
+
+
+/***********************************************************************
+*
 *  $FC Função: CPC Obter nome de classe de peça
 *
 *  $ED Descrição da função
