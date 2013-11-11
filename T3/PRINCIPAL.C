@@ -154,6 +154,8 @@
 	   printf("Digite o path do arquivo:\n");
 	   scanf(" %[^\n]", path);
 
+	   PRN_NovoTabuleiro( );
+
 	   LerArquivo( path );
 
    }
