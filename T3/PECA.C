@@ -79,6 +79,20 @@
 
 
 /***********************************************************************
+*  $FC Função: PEC Atribuir classe da peça
+***********************************************************************/
+
+   PEC_tpCondRet PEC_AtribuirClassePeca( PEC_tppPeca pPeca , CPC_tppClassePeca pClassePeca ) {
+	  if(pPeca == NULL || pClassePeca == NULL){
+        return PEC_CondRetPonteiroNulo;
+      }
+
+      pPeca->pClassePeca = pClassePeca;
+
+      return PEC_CondRetOK;
+   }
+
+/***********************************************************************
 *  $FC Função: PEC Obter classe da peça
 ***********************************************************************/
 
@@ -108,4 +122,4 @@
    }
 
 
-/********** Fim do módulo de implementação: Módulo grafo dirigido **********/
+/********** Fim do módulo de implementação: Módulo peça **********/

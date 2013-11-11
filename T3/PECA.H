@@ -111,6 +111,26 @@ typedef struct PEC_tagPeca * PEC_tppPeca ;
 
 /***********************************************************************
 *
+*  $FC Função: PEC Atribuir classe da peça
+*
+*  $ED Descrição da função
+*     Atribui uma nova classe à peça
+*
+*  $EP Parâmetros
+*     $P pPeca - ponteiro para a peça
+*     $P pClassePeca - ponteiro que contem a nova classe da peça
+*
+*  $FV Valor retornado
+*     PEC_CondRetOK
+*     PEC_CondRetPonteiroNulo
+*
+***********************************************************************/
+
+   PEC_tpCondRet PEC_AtribuirClassePeca( PEC_tppPeca pPeca , CPC_tppClassePeca pClassePeca ) ;
+
+
+/***********************************************************************
+*
 *  $FC Função: PEC Obter classe da peça
 *
 *  $ED Descrição da função
