@@ -138,10 +138,8 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 *  $EP Parâmetros
 *     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P i - ponteiro que receberá a coord. horizontal
-*		(valor entre 'A' e 'H').
-*     $P j - coordenada que receberá a coord. vertical
-*		(valor entre 1 e 8).
+*     $P i - ponteiro que receberá a coord. horizontal (valor entre 'A' e 'H').
+*     $P j - coordenada que receberá a coord. vertical (valor entre 1 e 8).
 *
 *  $FV Valor retornado
 *     TAB_CondRetOK
@@ -187,6 +185,25 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 ***********************************************************************/
 
    TAB_tpCondRet TAB_ObterValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca ) ;
+
+
+/***********************************************************************
+*
+*  $FC Função: TAB Obter valor de casa
+*
+*  $EP Parâmetros
+*     $P pTabuleiro - ponteiro para o tabuleiro.
+*     $P ppValor - ponteiro para o ponteiro do valor a ser obtido
+*     $P i - coordenada horizontal (valor entre 'A' e 'H').
+*     $P j - coordenada vertical (valor entre 1 e 8).
+*
+*  $FV Valor retornado
+*     TAB_CondRetOK
+*     TAB_CondRetPonteiroNulo
+*
+***********************************************************************/
+
+   TAB_tpCondRet TAB_ObterValorDeCasa( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca , char i, int j ) ;
 
 
 /***********************************************************************

@@ -220,6 +220,27 @@
 
 /***********************************************************************
 *
+*  $FC Função: TAB Obter valor de casa
+*
+***********************************************************************/
+
+   TAB_tpCondRet TAB_ObterValorDeCasa( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca , char i, int j ) {
+   		char oldI;
+   		int oldJ;	   
+	   if(pTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+
+   		TAB_ObterCorrente(pTabuleiro, &oldI, &oldJ);
+   		TAB_DefinirCorrente(pTabuleiro, i, j);
+   		TAB_ObterValorCorrente(pTabuleiro, ppPeca);
+   		TAB_DefinirCorrente(pTabuleiro, oldI, oldJ);
+
+	   return TAB_CondRetOK;
+   }
+
+/***********************************************************************
+*
 *  $FC Função: TAB Atribuir valor secundário
 *
 ***********************************************************************/
