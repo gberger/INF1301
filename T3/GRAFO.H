@@ -46,14 +46,14 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
       GRA_CondRetOK ,
          /* Executou corretamente */
 
-		GRA_CondRetGrafoVazio ,
-		   /* Operação inválida pois o grafo está vazio */
+      GRA_CondRetGrafoVazio ,
+         /* Operação inválida pois o grafo está vazio */
 
-		GRA_CondRetVerticeInvalido ,
-			/* Vertice referenciado não existe ou não é acessível */
-			   
-		GRA_CondRetErroVertice ,
-			/* Operação no vértice resultou em erro */
+      GRA_CondRetVerticeInvalido ,
+         /* Vertice referenciado não existe ou não é acessível */
+            
+      GRA_CondRetErroVertice ,
+         /* Operação no vértice resultou em erro */
 
       GRA_CondRetPonteiroNulo ,
          /* Foi passado um ponteiro para NULL */
@@ -61,8 +61,8 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
       GRA_CondRetFaltouMemoria ,
          /* Faltou memória ao alocar dados */
 
-		GRA_CondRetArestaJaExiste ,
-			/* Já existe uma aresta com a mesma origem e destino */
+      GRA_CondRetArestaJaExiste ,
+         /* Já existe uma aresta com a mesma origem e destino */
 
       GRA_CondRetArestaInvalida
          /* Não existe uma aresta com tal identificador */
@@ -229,7 +229,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $ED Descrição da função
 *     O vértice corrente torna-se o vértice cujo valor é o dado, se
-*		existir tal vértice no grafo.
+*     existir tal vértice no grafo.
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para a grafo.
@@ -238,7 +238,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FV Valor retornado
 *     GRA_CondRetOK
 *     GRA_CondRetPonteiroNulo
-*	   GRA_CondRetVerticeInvalido
+*     GRA_CondRetVerticeInvalido
 *
 *  $EAE Assertivas de entrada
 *     pGrafo != NULL
@@ -264,7 +264,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $ED Descrição da função
 *     O vértice corrente torna-se o vértice cujo valor é o dado, desde
-*		que tal vértice seja um dos sucessores do corrente.
+*     que tal vértice seja um dos sucessores do corrente.
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para a grafo.
@@ -273,7 +273,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FV Valor retornado
 *     GRA_CondRetOK
 *     GRA_CondRetPonteiroNulo
-*	   GRA_CondRetVerticeInvalido
+*     GRA_CondRetVerticeInvalido
 *
 *  $EAE Assertivas de entrada
 *     pGrafo != NULL
@@ -301,12 +301,12 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $ED Descrição da função
 *     Cria um novo vértice a partir do valor dado.
-*	  O novo vértice não possui arestas.
+*    O novo vértice não possui arestas.
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.
 *     $P pVertice - ponteiro para o conteúdo a ser inserido no novo vértice criado.
-*	   $P idVertice - identificador do vértice
+*     $P idVertice - identificador do vértice
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
@@ -342,7 +342,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK
-*	   GRA_CondRetGrafoVazio
+*     GRA_CondRetGrafoVazio
 *
 *  $EAE Assertivas de entrada
 *     pGrafo != NULL
@@ -377,7 +377,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FV Valor retornado
 *     GRA_CondRetOK
 *     GRA_CondRetPonteiroNulo
-*	   GRA_CondRetArestaJaExiste
+*     GRA_CondRetArestaJaExiste
 *     GRA_CondRetVerticeInvalido
 *     GRA_CondRetFaltouMemoria
 *
@@ -456,8 +456,8 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FC Função: GRA Percorrer aresta
 *
 *  $ED Descrição da função
-*	  Muda corrente para o vértice apontado pela aresta identificada
-*	  por idAresta, que por sua vez tem como origem o corrente atual
+*    Muda corrente para o vértice apontado pela aresta identificada
+*    por idAresta, que por sua vez tem como origem o corrente atual
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.
@@ -478,7 +478,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *  $FC Função: GRA Excluir aresta
 *
 *  $ED Descrição da função
-*	  Exclui aresta que tem id igual ao fornecido
+*    Exclui aresta que tem id igual ao fornecido
 *
 *  $EP Parâmetros
 *     $P pGrafo - ponteiro para o grafo.

@@ -554,7 +554,7 @@
 *  ****/
    
    int LIS_ObterNumElem( LIS_tppLista pLista ) {
-      if ( pLista == NULL ){
+      if ( pLista == NULL ) {
          return -1;
       }
       return pLista->numElem;

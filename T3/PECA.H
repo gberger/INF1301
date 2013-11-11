@@ -40,18 +40,18 @@ typedef struct PEC_tagPeca * PEC_tppPeca ;
 *
 ***********************************************************************/
 
-   typedef enum {
+    typedef enum {
 
-         PEC_CondRetOK ,
-               /* Executou corretamente */
+        PEC_CondRetOK ,
+            /* Executou corretamente */
 
-         PEC_CondRetPonteiroNulo ,
-               /* Foi passado um ponteiro para NULL */
+        PEC_CondRetPonteiroNulo ,
+            /* Foi passado um ponteiro para NULL */
 
-         PEC_CondRetFaltouMemoria 
-               /* Faltou memória ao alocar dados */
+        PEC_CondRetFaltouMemoria 
+            /* Faltou memória ao alocar dados */
 
-   } PEC_tpCondRet ;
+    } PEC_tpCondRet ;
 
 /***********************************************************************
 *
@@ -62,10 +62,14 @@ typedef struct PEC_tagPeca * PEC_tppPeca ;
 *
 ***********************************************************************/
 
-   typedef enum {
-      JOGADOR_BRANCO ,
-      JOGADOR_PRETO 
-   } PEC_tpJogador ;
+    typedef enum {
+        JOGADOR_BRANCO ,
+            /* Jogador branco */
+
+        JOGADOR_PRETO 
+            /* Jogador preto  */
+
+    } PEC_tpJogador ;
 
 /***********************************************************************
 *
@@ -87,7 +91,7 @@ typedef struct PEC_tagPeca * PEC_tppPeca ;
 *
 ***********************************************************************/
 
-   PEC_tpCondRet PEC_CriarPeca( PEC_tppPeca * ppPeca , CPC_tppClassePeca pClassePeca , PEC_tpJogador jogador ) ;
+    PEC_tpCondRet PEC_CriarPeca( PEC_tppPeca * ppPeca , CPC_tppClassePeca pClassePeca , PEC_tpJogador jogador ) ;
 
 
 /***********************************************************************
@@ -106,7 +110,7 @@ typedef struct PEC_tagPeca * PEC_tppPeca ;
 *
 ***********************************************************************/
 
-   PEC_tpCondRet PEC_DestruirPeca( PEC_tppPeca pPeca ) ;
+    PEC_tpCondRet PEC_DestruirPeca( PEC_tppPeca pPeca ) ;
 
 
 /***********************************************************************
@@ -126,7 +130,7 @@ typedef struct PEC_tagPeca * PEC_tppPeca ;
 *
 ***********************************************************************/
 
-   PEC_tpCondRet PEC_AtribuirClassePeca( PEC_tppPeca pPeca , CPC_tppClassePeca pClassePeca ) ;
+    PEC_tpCondRet PEC_AtribuirClassePeca( PEC_tppPeca pPeca , CPC_tppClassePeca pClassePeca ) ;
 
 
 /***********************************************************************
@@ -146,7 +150,7 @@ typedef struct PEC_tagPeca * PEC_tppPeca ;
 *
 ***********************************************************************/
 
-   PEC_tpCondRet PEC_ObterClassePeca( PEC_tppPeca pPeca , CPC_tppClassePeca * ppClassePeca ) ;
+    PEC_tpCondRet PEC_ObterClassePeca( PEC_tppPeca pPeca , CPC_tppClassePeca * ppClassePeca ) ;
 
 
 /***********************************************************************
@@ -166,7 +170,7 @@ typedef struct PEC_tagPeca * PEC_tppPeca ;
 *
 ***********************************************************************/
 
-   PEC_tpCondRet PEC_ObterJogador( PEC_tppPeca pPeca , PEC_tpJogador * pJogador ) ;
+    PEC_tpCondRet PEC_ObterJogador( PEC_tppPeca pPeca , PEC_tpJogador * pJogador ) ;
 
 
 #undef PECA_EXT

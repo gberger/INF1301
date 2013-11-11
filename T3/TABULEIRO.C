@@ -30,184 +30,182 @@
 *
 ***********************************************************************/
 
-   typedef struct TAB_tagTabuleiro {
+typedef struct TAB_tagTabuleiro {
 
-        MAT_tppMatriz pMatriz ;
-               /* Ponteiro para a matriz utilizada */
-		char i;
-			   /* Coordenada vertical da posição corrente */
-		int j;
-			   /* Coordenada horizontal da posição corrente */
+    MAT_tppMatriz pMatriz ;
+        /* Ponteiro para a matriz utilizada */
+    char i;
+        /* Coordenada vertical da posição corrente */
+    int j;
+        /* Coordenada horizontal da posição corrente */
 
-   } TAB_tpTabuleiro ;
+} TAB_tpTabuleiro ;
 
 
 /***** Protótipo das funções encapuladas no módulo *****/
-   static void ExcluirCasa( void * pValor );
 
-   static TAB_tpCondRet ChecarPosicaoValida( char i, int j );
+static void ExcluirCasa( void * pValor );
+
+static TAB_tpCondRet ChecarPosicaoValida( char i, int j );
 
 
 /*****  Código das funções exportadas pelo módulo  *****/
-
 
 /***********************************************************************
 *  $FC Função: TAB Criar tabuleiro
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_CriarTabuleiro( TAB_tppTabuleiro * ppTabuleiro ) {
-	   TAB_tppTabuleiro pTab;
-	   int i, j;
+TAB_tpCondRet TAB_CriarTabuleiro( TAB_tppTabuleiro * ppTabuleiro ) {
+    TAB_tppTabuleiro pTab;
+    int i, j;
 
-	   if(ppTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
+    if(ppTabuleiro == NULL) {
+        return TAB_CondRetPonteiroNulo;
+    }
 
-	   pTab = (TAB_tpTabuleiro *)malloc(sizeof(TAB_tpTabuleiro));
-	   if(pTab == NULL || MAT_CriarMatriz(&(pTab->pMatriz), 8, ExcluirCasa) != MAT_CondRetOK) {
-		   return TAB_CondRetFaltouMemoria;
-	   }
+    pTab = (TAB_tpTabuleiro *)malloc(sizeof(TAB_tpTabuleiro));
+    if(pTab == NULL || MAT_CriarMatriz(&(pTab->pMatriz), 8, ExcluirCasa) != MAT_CondRetOK) {
+        return TAB_CondRetFaltouMemoria;
+    }
 
-	   pTab->i = 'A';
-	   pTab->j = 1;
+    pTab->i = 'A';
+    pTab->j = 1;
 
-	   *ppTabuleiro = pTab;
+    *ppTabuleiro = pTab;
 
-	   return TAB_CondRetOK;
+    return TAB_CondRetOK;
 
-   }
+}
 
 
 /***********************************************************************
 *  $FC Função: TAB Destruir tabuleiro
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_DestruirTabuleiro( TAB_tppTabuleiro pTabuleiro ) {
+TAB_tpCondRet TAB_DestruirTabuleiro( TAB_tppTabuleiro pTabuleiro ) {
 
-	   if(pTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
+    if(pTabuleiro == NULL) {
+        return TAB_CondRetPonteiroNulo;
+    }
 
-	   MAT_DestruirMatriz( pTabuleiro->pMatriz );
+    MAT_DestruirMatriz( pTabuleiro->pMatriz );
 
-	   free( pTabuleiro );
+    free( pTabuleiro );
 
-	   return TAB_CondRetOK;
-	   
-   }
+    return TAB_CondRetOK;
+
+}
 
 
 /***********************************************************************
 *  $FC Função: TAB Definir posição corrente.
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_DefinirCorrente( TAB_tppTabuleiro pTabuleiro, char i, int j )
-   {
-	   if(pTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
+TAB_tpCondRet TAB_DefinirCorrente( TAB_tppTabuleiro pTabuleiro, char i, int j ) {
+    if(pTabuleiro == NULL) {
+        return TAB_CondRetPonteiroNulo;
+    }
 
-	   if(ChecarPosicaoValida(i, j) == TAB_CondRetPosicaoInvalida || MAT_DefinirCorrente( pTabuleiro->pMatriz, (int) (i-'A'), j - 1) == MAT_CondRetPosicaoInvalida )
-		   return TAB_CondRetPosicaoInvalida;
+    if(ChecarPosicaoValida(i, j) == TAB_CondRetPosicaoInvalida || MAT_DefinirCorrente( pTabuleiro->pMatriz, (int) (i-'A'), j - 1) == MAT_CondRetPosicaoInvalida )
+        return TAB_CondRetPosicaoInvalida;
 
-	   pTabuleiro->i = i;
-	   pTabuleiro->j = j;
+    pTabuleiro->i = i;
+    pTabuleiro->j = j;
 
-	   return TAB_CondRetOK;
-   }
+    return TAB_CondRetOK;
+}
 
 
 /***********************************************************************
 *  $FC Função: TAB Obter posição corrente.
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_ObterCorrente( TAB_tppTabuleiro pTabuleiro, char *i, int *j )
-   {
-	   if(pTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
+TAB_tpCondRet TAB_ObterCorrente( TAB_tppTabuleiro pTabuleiro, char *i, int *j ) {
+    if(pTabuleiro == NULL) {
+        return TAB_CondRetPonteiroNulo;
+    }
 
-	   *i = pTabuleiro->i;
-	   *j = pTabuleiro->j;
+    *i = pTabuleiro->i;
+    *j = pTabuleiro->j;
 
-	   return TAB_CondRetOK;
-   }
+    return TAB_CondRetOK;
+}
 
 
 /***********************************************************************
 *  $FC Função: TAB Atribuir valor
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_AtribuirValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca pPeca ) {
+TAB_tpCondRet TAB_AtribuirValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca pPeca ) {
 
-	   if(pTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
+    if(pTabuleiro == NULL) {
+        return TAB_CondRetPonteiroNulo;
+    }
 
-	   MAT_AtribuirValorCorrente( pTabuleiro->pMatriz, (void *)pPeca);
+    MAT_AtribuirValorCorrente( pTabuleiro->pMatriz, (void *)pPeca);
 
-	   return TAB_CondRetOK;
-   }
+    return TAB_CondRetOK;
+}
 
 
 /***********************************************************************
 *  $FC Função: TAB Obter valor corrente
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_ObterValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca ) {
-	   if(pTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
+TAB_tpCondRet TAB_ObterValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca ) {
+    if(pTabuleiro == NULL) {
+        return TAB_CondRetPonteiroNulo;
+    }
 
-	   MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)ppPeca);
+    MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)ppPeca);
 
-	   return TAB_CondRetOK;
-   }
+    return TAB_CondRetOK;
+}
 
 
 /***********************************************************************
 *  $FC Função: TAB Obter valor de casa
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_ObterValorDeCasa( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca , char i, int j ) {
-   		char oldI;
-   		int oldJ;	   
-	   if(pTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
+TAB_tpCondRet TAB_ObterValorDeCasa( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca , char i, int j ) {
+    char oldI;
+    int oldJ;	   
+    if(pTabuleiro == NULL) {
+        return TAB_CondRetPonteiroNulo;
+    }
 
-   		TAB_ObterCorrente(pTabuleiro, &oldI, &oldJ);
-   		TAB_DefinirCorrente(pTabuleiro, i, j);
-   		TAB_ObterValorCorrente(pTabuleiro, ppPeca);
-   		TAB_DefinirCorrente(pTabuleiro, oldI, oldJ);
+    TAB_ObterCorrente(pTabuleiro, &oldI, &oldJ);
+    TAB_DefinirCorrente(pTabuleiro, i, j);
+    TAB_ObterValorCorrente(pTabuleiro, ppPeca);
+    TAB_DefinirCorrente(pTabuleiro, oldI, oldJ);
 
-	   return TAB_CondRetOK;
-   }
+    return TAB_CondRetOK;
+}
 
 /***********************************************************************
 *  $FC Função: TAB Mover valor de uma casa a outra
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest ) {
-	   PEC_tppPeca pPeca;
-	   TAB_tpCondRet ret;
-	   
-	   if(pTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
-	   
-	   if(ChecarPosicaoValida(iOrig, jOrig) == TAB_CondRetPosicaoInvalida || ChecarPosicaoValida(iDest, jDest) == TAB_CondRetPosicaoInvalida) {
-		   return TAB_CondRetPosicaoInvalida;
-	   }
+TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest ) {
+    PEC_tppPeca pPeca;
+    TAB_tpCondRet ret;
 
-	   TAB_DefinirCorrente(pTabuleiro, iOrig, jOrig);
-	   TAB_ObterValorCorrente(pTabuleiro, &pPeca);
-	   TAB_AtribuirValorCorrente(pTabuleiro, NULL);
-	   TAB_DefinirCorrente(pTabuleiro, iDest, jDest);
-	   TAB_AtribuirValorCorrente(pTabuleiro, pPeca);
+    if(pTabuleiro == NULL) {
+        return TAB_CondRetPonteiroNulo;
+    }
 
-	   return TAB_CondRetOK;
-   }
+    if(ChecarPosicaoValida(iOrig, jOrig) == TAB_CondRetPosicaoInvalida || ChecarPosicaoValida(iDest, jDest) == TAB_CondRetPosicaoInvalida) {
+        return TAB_CondRetPosicaoInvalida;
+    }
+
+    TAB_DefinirCorrente(pTabuleiro, iOrig, jOrig);
+    TAB_ObterValorCorrente(pTabuleiro, &pPeca);
+    TAB_AtribuirValorCorrente(pTabuleiro, NULL);
+    TAB_DefinirCorrente(pTabuleiro, iDest, jDest);
+    TAB_AtribuirValorCorrente(pTabuleiro, pPeca);
+
+    return TAB_CondRetOK;
+}
 
 
 /***** Código das funções encapuladas no módulo *****/
@@ -221,12 +219,11 @@
 *
 ***********************************************************************/
 
-   static void ExcluirCasa( void * pValor )
-   {
-	   if(pValor != NULL) {
-		   PEC_DestruirPeca( (PEC_tppPeca) pValor);
-	   }
-   }
+static void ExcluirCasa( void * pValor ) {
+    if(pValor != NULL) {
+        PEC_DestruirPeca( (PEC_tppPeca) pValor);
+    }
+}
 
 /***********************************************************************
 *
@@ -241,14 +238,13 @@
 *
 ***********************************************************************/
 
-   static TAB_tpCondRet ChecarPosicaoValida( char i, int j )
-   {
-	   if(i > 'H' || i < 'A' || j > 8 || j < 1){
-		   return TAB_CondRetPosicaoInvalida;
-	   }
+static TAB_tpCondRet ChecarPosicaoValida( char i, int j ) {
+    if(i > 'H' || i < 'A' || j > 8 || j < 1) {
+        return TAB_CondRetPosicaoInvalida;
+    }
 
-	   return TAB_CondRetOK;
-   }
+    return TAB_CondRetOK;
+}
 
 
 

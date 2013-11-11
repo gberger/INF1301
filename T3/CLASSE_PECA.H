@@ -41,23 +41,23 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-   typedef enum {
+    typedef enum {
 
-         CPC_CondRetOK ,
-               /* Executou corretamente */
+        CPC_CondRetOK ,
+            /* Executou corretamente */
 
-         CPC_CondRetPonteiroNulo ,
-               /* Foi passado um ponteiro para NULL */
+        CPC_CondRetPonteiroNulo ,
+            /* Foi passado um ponteiro para NULL */
 
-         CPC_CondRetArgumentosInvalidos ,
-               /* Foram passados valores inválidos para argumentos.
-                  Por exemplo, índice de movimento inválido ou movimento
-                  fora de -7 a 7. */
+        CPC_CondRetArgumentosInvalidos ,
+            /* Foram passados valores inválidos para argumentos.
+            Por exemplo, índice de movimento inválido ou movimento
+            fora de -7 a 7. */
 
-         CPC_CondRetFaltouMemoria 
-               /* Faltou memória ao alocar dados */
+        CPC_CondRetFaltouMemoria 
+            /* Faltou memória ao alocar dados */
 
-   } CPC_tpCondRet ;
+    } CPC_tpCondRet ;
 
 
 /***********************************************************************
@@ -79,7 +79,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-   CPC_tpCondRet CPC_CriarClassePeca( CPC_tppClassePeca * ppClassePeca , char * nome ) ;
+    CPC_tpCondRet CPC_CriarClassePeca( CPC_tppClassePeca * ppClassePeca , char * nome ) ;
 
 
 /***********************************************************************
@@ -98,7 +98,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-   CPC_tpCondRet CPC_DestruirClassePeca( CPC_tppClassePeca pClassePeca ) ;
+    CPC_tpCondRet CPC_DestruirClassePeca( CPC_tppClassePeca pClassePeca ) ;
 
 
 /***********************************************************************
@@ -121,7 +121,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-   CPC_tpCondRet CPC_AdicionarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY ) ;
+    CPC_tpCondRet CPC_AdicionarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY ) ;
 
 
 /***********************************************************************
@@ -142,7 +142,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-   CPC_tpCondRet CPC_ObterNumeroMovimentos( CPC_tppClassePeca pClassePeca , int * numMovimentos ) ;
+    CPC_tpCondRet CPC_ObterNumeroMovimentos( CPC_tppClassePeca pClassePeca , int * numMovimentos ) ;
 
 
 /***********************************************************************
@@ -165,7 +165,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-   CPC_tpCondRet CPC_ObterMovimento( CPC_tppClassePeca pClassePeca , int idxMovimento , int * pMovX , int * pMovY ) ;
+    CPC_tpCondRet CPC_ObterMovimento( CPC_tppClassePeca pClassePeca , int idxMovimento , int * pMovX , int * pMovY ) ;
 
 
 /***********************************************************************
@@ -188,7 +188,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-   CPC_tpCondRet CPC_ChecarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY , int * resposta ) ;
+    CPC_tpCondRet CPC_ChecarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY , int * resposta ) ;
 
 
 /***********************************************************************
@@ -208,7 +208,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-   CPC_tpCondRet CPC_ObterNome( CPC_tppClassePeca pClassePeca , char ** pNome ) ;
+    CPC_tpCondRet CPC_ObterNome( CPC_tppClassePeca pClassePeca , char ** pNome ) ;
 
 
 #undef CLASSE_PECA_EXT
