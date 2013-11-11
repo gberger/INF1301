@@ -69,6 +69,35 @@
    {
 	   exit( code );
    }
+   
+/***********************************************************************
+*
+*  $FC Função: Destruir Peça
+*
+*  $ED Descrição da função
+*     Função generalizadora de PEC_DestruirPeca
+*
+***********************************************************************/
+
+   void DestruirPeca( void * pValor )
+   {
+           PEC_DestruirPeca( (PEC_tppPeca) pValor );
+   }
+
+      
+/***********************************************************************
+*
+*  $FC Função: Destruir Classe Peça
+*
+*  $ED Descrição da função
+*     Função generalizadora de CPC_DestruirClassePeca
+*
+***********************************************************************/
+
+   void DestruirClassePeca( void * pValor )
+   {
+           CPC_DestruirClassePeca( (CPC_tppClassePeca) pValor );
+   }
 
 
 /***********************************************************************
@@ -120,11 +149,10 @@
 *
 ***********************************************************************/
 
-   PEC_tppPeca ObterRei ( void )
+   PEC_tppPeca ObterRei ( char * i, int * j )
    {
-	   return NULL;
+	   
    }
-
 
 
 /***********************************************************************
@@ -133,7 +161,7 @@
 *
 ***********************************************************************/
 
-   void LerArquivo( char * path )
+   void PRN_CarregarArquivoXdz( char * path )
    {
 	   char auxString[200], jogador;
 	   int i, j;
@@ -180,17 +208,7 @@
 
 	   fclose(fp);
    }
-	
-   void DestruirPeca( void * pValor )
-   {
-	   PEC_DestruirPeca( (PEC_tppPeca) pValor );
-   }
-
-   void DestruirClassePeca( void * pValor )
-   {
-	   CPC_DestruirClassePeca( (CPC_tppClassePeca) pValor );
-   }
-
+   
 
 /***********************************************************************
 *
@@ -327,7 +345,7 @@
    {
 		printf("\n=== MENU ===\n\n");
 		printf("01. Novo\n02. Abrir\n03. Salvar\n09. Mostra diretorio atual.\n\n");
-		printf("11. Listar classes de peca\n12. Criar classe de peca\n13. Alterar classe de peca\n14. Excluir classe de peca\n\n");
+		printf("11. Listar classes de peca\n12. Criar classe de peca\n\n");
 		printf("21. Listar pecas\n22. Criar peca\n23. Alterar peca\n24. Excluir peca\n\n");
 		printf("31. Exibir tabuleiro.\n32. Checar cheque-mate\n\n");
 		printf("99. Sair\n\nDigite o codigo da opcao desejada: \n> ");
@@ -390,7 +408,7 @@
 
 	   PRN_NovoTabuleiro( );
 
-	   LerArquivo( path );
+	   PRN_CarregarArquivoXdz( path );
    }
 
 
@@ -466,7 +484,7 @@
 
    void PRN_CarregaPadrao( void )
    {
-	   LerArquivo( "default.xdz" );
+	   PRN_CarregarArquivoXdz( "default.xdz" );
    }
 
 /***********************************************************************
@@ -482,14 +500,13 @@
    {
 	   CPC_tppClassePeca pClasse;
 	   char * nome;
-	   int i = 0, count, nMovs;
+	   int count, nMovs;
 	   int movX, movY;
 
 	   printf("Lista de classes criadas:\n");
 
 	   LIS_IrInicioLista( simulacao.pListaClasses );
 	   while (LIS_ObterValor( simulacao.pListaClasses ) ) {
-		   i++;
 		   pClasse = (CPC_tppClassePeca) LIS_ObterValor( simulacao.pListaClasses );
 			
 		   CPC_ObterNome(pClasse, &nome);
@@ -507,8 +524,18 @@
 			  break;
 	   }
 
-	printf("<fim>");
+		printf("<fim>");
    }
+   
+
+/***********************************************************************
+*
+*  $FC Função: PRN cria classe de peça
+*
+*  $ED Descrição da função
+*     Abre o menu para criar uma nova classe de peça.
+*
+***********************************************************************/
 
    void PRN_CriarClasse( void ){
 	   char nomeClasse[MAXNOME];
@@ -557,10 +584,16 @@
 		LIS_InserirElementoApos(simulacao.pListaClasses, pClassePeca);
 
    }
+      
 
-   void PRN_AlterarClasse( void ){}
-
-   void PRN_ExcluirClasse( void ){}
+/***********************************************************************
+*
+*  $FC Função: PRN lista peças
+*
+*  $ED Descrição da função
+*     Lista as peças inseridas no tabuleiro.
+*
+***********************************************************************/
 
    void PRN_ListarPecas( void ){
 	   CPC_tppClassePeca pClasse;
@@ -658,15 +691,92 @@
 	}
 
    }
-
-   void PRN_AlterarPeca( void ){}
+   
 
 /***********************************************************************
 *
-*  $FC Função: PRN exclusao de peca
+*  $FC Função: PRN altera peça
 *
 *  $ED Descrição da função
-*     Exclui algum tipo de peca previamente definido pelo usuario.
+*     Abre o menu para alterar uma peça.
+*
+***********************************************************************/
+
+   void PRN_AlterarPeca( void ){
+		
+		char coluna, coluna2;
+		int linha, linha2, opcao;
+		PEC_tppPeca pPeca, pPecaAux;
+		CPC_tppClassePeca pClassePeca;
+		char nomeClasse[MAXNOME];
+
+		printf("Digite as coordenadas do tabuleiro onde esta a peca que voce deseja alterar\n");
+		printf("Digite a coluna (A a H)\n> ");
+		scanf(" %c", &coluna);
+		printf("Digite a linha (1 a 8)\n> ");
+		scanf("%d", &linha);
+
+		if(TAB_DefinirCorrente( simulacao.pTab, coluna, linha ) == TAB_CondRetPosicaoInvalida) {
+			printf("Esta posicao nao existe!\n");
+			return;
+		}
+
+		TAB_ObterValorCorrente( simulacao.pTab, &pPeca );
+		   
+		if(pPeca == NULL) {
+		   printf("Esta posicao nao contem uma peca!\n");
+			return;
+		}
+
+		printf("O que voce deseja alterar?\n");
+		printf("1 - Posicao\n2 - Classe\n> ");
+		scanf(" %d", &opcao);
+
+		if(opcao == 1){
+			printf("Digite as novas coordenadas da peca\n");
+   			printf("Digite a coluna (A a H)\n> ");
+   			scanf(" %c", &coluna2);
+   			printf("Digite a linha (1 a 8)\n> ");
+   			scanf(" %d", &linha2);
+
+			if(TAB_DefinirCorrente( simulacao.pTab, coluna2, linha2 ) == TAB_CondRetPosicaoInvalida) {
+				printf("Esta posicao nao existe!\n");
+				return;
+			}
+
+			TAB_ObterValorCorrente( simulacao.pTab, &pPecaAux );
+
+			if(pPecaAux != NULL) {
+				printf("Ja existe uma peca nesta casa. Por favor, escolha outra.\n");
+				return;
+			}   	
+
+			TAB_MoverValor(simulacao.pTab, coluna, linha, coluna2, linha2);
+
+		} 
+		else if(opcao == 2){
+			printf("Digite o nome da nova classe da peca\n> ");
+
+   			scanf(" %" MAXNOME_S "[^ \n]",nomeClasse);
+
+   			pClassePeca = PRN_ProcurarClasse(nomeClasse);
+
+   			if(pClassePeca==NULL) { 
+   				printf("Classe inexistente\n");
+   				return;
+   			}
+
+			PEC_AtribuirClassePeca(pPeca, pClassePeca);
+		}
+
+   }
+
+/***********************************************************************
+*
+*  $FC Função: PRN exclui de peca
+*
+*  $ED Descrição da função
+*     Abre o menu para excluir uma peça do tabuleiro.
 *
 ***********************************************************************/
 
@@ -674,37 +784,36 @@
 
 		char coluna;
 		int linha;
-		PEC_tppPeca * ppPeca;
+		PEC_tppPeca pPeca;
 
 		printf("Digite as coordenadas do tabuleiro onde esta a peca que voce deseja deletar\n");
-		printf("Digite a coluna (A a H)\n");
-		scanf(" %1[A-H]",&coluna);
-		printf("Digite a linha (1 a 8)\n");
-		scanf("%d",&linha);
+		printf("Digite a coluna (A a H)\n> ");
+		scanf(" %c", &coluna);
+		printf("Digite a linha (1 a 8)\n> ");
+		scanf("%d", &linha);
 
-		if(TAB_DefinirCorrente( simulacao.pTab, coluna, linha )==TAB_CondRetPosicaoInvalida) {
+		if(TAB_DefinirCorrente( simulacao.pTab, coluna, linha ) == TAB_CondRetPosicaoInvalida) {
 			printf("Esta posicao nao existe!\n");
 			return;
 		}
 
-		TAB_ObterValorCorrente( simulacao.pTab, ppPeca );
+		TAB_ObterValorCorrente( simulacao.pTab, &pPeca );
 		   
-		if(ppPeca==NULL) {
+		if(pPeca == NULL) {
 		   printf("Esta posicao nao contem uma peca!\n");
 			return;
 		}
 
-		if(LIS_ProcurarValor( simulacao.pListaPecas, *ppPeca)==LIS_CondRetOK) {
+		if(LIS_ProcurarValor( simulacao.pListaPecas, pPeca) == LIS_CondRetOK) {
 			LIS_ExcluirElemento( simulacao.pListaPecas );
 		} else {
 			printf("Erro ao excluir peca da lista de pecas");
 			PRN_Sair( 1 );
 		}
 
-		PEC_DestruirPeca(*ppPeca);
+		PEC_DestruirPeca(pPeca);
 
 		printf("Peca destruida com sucesso!\n");
-
 	}
    
 
@@ -718,7 +827,37 @@
 ***********************************************************************/
 
    void PRN_ExibirTabuleiro( ){
-		return;
+		char i;
+		int j;
+		PEC_tppPeca pPeca;
+		PEC_tpJogador jogador;
+
+		printf("Uma letra B indica uma peca branca. Uma letra P indica uma peca preta.\n\n");
+		printf("  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |   \n"
+			   "  +-------------------------------+\n");
+
+		for(i = 'A'; i <= 'H'; i++){
+			printf("%c |", i);
+			for(j = 1; j <= 8; j++){
+				TAB_ObterValorDeCasa(simulacao.pTab, &pPeca, i, j);
+				
+				if(pPeca == NULL){
+					printf("   |");
+				} else {
+					PEC_ObterJogador(pPeca, &jogador);
+					if(jogador == JOGADOR_BRANCO){
+						printf(" B |");
+					} else {
+						printf(" P |");
+					}
+				}
+			}
+			printf("\n");
+			printf("  +-------------------------------+\n");
+		}
+		
+		PRN_ListarPecas();
+
    }
 
 
@@ -732,18 +871,12 @@
 ***********************************************************************/
 
    void PRN_ChecarChequeMate( ){
-      PEC_tppPeca pecaCorrente, rei = ObterRei();
       char reiI; int reiJ;
+      PEC_tppPeca pecaCorrente, rei = ObterRei(&reiI, &reiJ);
       char i; int j;
       CPC_tppClassePeca classeCorrente;
       LIS_tpCondRet lisCondRet;
       PEC_tpJogador jogadorCorrente;
-
-      //achar posição do rei
-      if(PRN_ProcurarPecaNoTabuleiro(rei, &reiI, &reiJ) == 0){
-         printf("\n!! ERRO AO PROCURAR POSICAO DO REI !!\n");
-         PRN_Sair(1);
-      }
 
       //para cada peça no tabuleiro
       for(i = 'A'; i <= 'H'; i++){
@@ -760,10 +893,6 @@
 *
 *  $ED Descrição da função
 *     Inicializa a variável global, criando as estruturas necessárias.
-*
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
 *
 ***********************************************************************/
 
@@ -839,12 +968,6 @@
 					break;
 				case 12:
 					PRN_CriarClasse( );
-					break;
-				case 13:
-					PRN_AlterarClasse( );
-					break;
-				case 14:
-					PRN_ExcluirClasse( );
 					break;
 				case 21:
 					PRN_ListarPecas( );
