@@ -205,6 +205,28 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 
    TAB_tpCondRet TAB_ObterValorDeCasa( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca , char i, int j ) ;
 
+
+/***********************************************************************
+*
+*  $FC Função: TAB Mover valor de uma casa a outra
+*
+*  $EP Parâmetros
+*     $P pTabuleiro - ponteiro para o tabuleiro.
+*     $P iOrig - coordenada horizontal da origem (valor entre 'A' e 'H').
+*     $P jOrig - coordenada vertical da origem (valor entre 1 e 8).
+*     $P iDest - coordenada horizontal do destino (valor entre 'A' e 'H').
+*     $P jDest - coordenada vertical do destino (valor entre 1 e 8).
+*
+*  $FV Valor retornado
+*     TAB_CondRetOK
+*     TAB_CondRetPosicaoInvalida
+*     TAB_CondRetPonteiroNulo
+*
+***********************************************************************/
+
+   TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest ) ;
+
+
 #undef TABULEIRO_EXT
 
 /********** Fim do módulo de definição: Módulo tabuleiro de xadrez **********/

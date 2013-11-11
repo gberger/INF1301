@@ -43,16 +43,16 @@
 
 
 /***** Protótipo das funções encapuladas no módulo *****/
-   void ExcluirCasa( void * pValor );
+   static void ExcluirCasa( void * pValor );
+
+   static TAB_tpCondRet ChecarPosicaoValida( char i, int j );
 
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
 
 /***********************************************************************
-*
 *  $FC Função: TAB Criar tabuleiro
-*
 ***********************************************************************/
 
    TAB_tpCondRet TAB_CriarTabuleiro( TAB_tppTabuleiro * ppTabuleiro ) {
@@ -79,9 +79,7 @@
 
 
 /***********************************************************************
-*
 *  $FC Função: TAB Destruir tabuleiro
-*
 ***********************************************************************/
 
    TAB_tpCondRet TAB_DestruirTabuleiro( TAB_tppTabuleiro pTabuleiro ) {
@@ -100,9 +98,7 @@
 
 
 /***********************************************************************
-*
 *  $FC Função: TAB Definir posição corrente.
-*
 ***********************************************************************/
 
    TAB_tpCondRet TAB_DefinirCorrente( TAB_tppTabuleiro pTabuleiro, char i, int j )
@@ -111,7 +107,7 @@
 		   return TAB_CondRetPonteiroNulo;
 	   }
 
-	   if(  i > 'H' || i < 'A' || j > 8 || j < 1 || MAT_DefinirCorrente( pTabuleiro->pMatriz, (int) (i-'A'), j - 1) == MAT_CondRetPosicaoInvalida )
+	   if(ChecarPosicaoValida(i, j) == TAB_CondRetPosicaoInvalida || MAT_DefinirCorrente( pTabuleiro->pMatriz, (int) (i-'A'), j - 1) == MAT_CondRetPosicaoInvalida )
 		   return TAB_CondRetPosicaoInvalida;
 
 	   pTabuleiro->i = i;
@@ -122,9 +118,7 @@
 
 
 /***********************************************************************
-*
 *  $FC Função: TAB Obter posição corrente.
-*
 ***********************************************************************/
 
    TAB_tpCondRet TAB_ObterCorrente( TAB_tppTabuleiro pTabuleiro, char *i, int *j )
@@ -141,9 +135,7 @@
 
 
 /***********************************************************************
-*
 *  $FC Função: TAB Atribuir valor
-*
 ***********************************************************************/
 
    TAB_tpCondRet TAB_AtribuirValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca pPeca ) {
@@ -159,9 +151,7 @@
 
 
 /***********************************************************************
-*
 *  $FC Função: TAB Obter valor corrente
-*
 ***********************************************************************/
 
    TAB_tpCondRet TAB_ObterValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca ) {
@@ -176,9 +166,7 @@
 
 
 /***********************************************************************
-*
 *  $FC Função: TAB Obter valor de casa
-*
 ***********************************************************************/
 
    TAB_tpCondRet TAB_ObterValorDeCasa( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca , char i, int j ) {
@@ -196,6 +184,32 @@
 	   return TAB_CondRetOK;
    }
 
+/***********************************************************************
+*  $FC Função: TAB Mover valor de uma casa a outra
+***********************************************************************/
+
+   TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest ) {
+	   PEC_tppPeca pPeca;
+	   TAB_tpCondRet ret;
+	   
+	   if(pTabuleiro == NULL) {
+		   return TAB_CondRetPonteiroNulo;
+	   }
+	   
+	   if(ChecarPosicaoValida(iOrig, jOrig) == TAB_CondRetPosicaoInvalida || ChecarPosicaoValida(iDest, jDest) == TAB_CondRetPosicaoInvalida) {
+		   return TAB_CondRetPosicaoInvalida;
+	   }
+
+	   TAB_DefinirCorrente(pTabuleiro, iOrig, jOrig);
+	   TAB_ObterValorCorrente(pTabuleiro, &pPeca);
+	   TAB_AtribuirValorCorrente(pTabuleiro, NULL);
+	   TAB_DefinirCorrente(pTabuleiro, iDest, jDest);
+	   TAB_AtribuirValorCorrente(pTabuleiro, pPeca);
+
+	   return TAB_CondRetOK;
+   }
+
+
 /***** Código das funções encapuladas no módulo *****/
 
 /***********************************************************************
@@ -203,16 +217,40 @@
 *  $FC Função: TAB - Excluir casa
 *
 *  $ED Descrição da função
-*  Função auxiliar para destruir casa
+*	  Função auxiliar para destruir casa
 *
 ***********************************************************************/
 
-   void ExcluirCasa( void * pValor )
+   static void ExcluirCasa( void * pValor )
    {
 	   if(pValor != NULL) {
 		   PEC_DestruirPeca( (PEC_tppPeca) pValor);
 	   }
    }
+
+/***********************************************************************
+*
+*  $FC Função: TAB - Checar posição válida
+*
+*  $ED Descrição da função
+*	  Função auxiliar para checar validez de uma posição
+*
+*  $FV Valor retornado
+*     TAB_CondRetOK
+*     TAB_CondRetPosicaoInvalida
+*
+***********************************************************************/
+
+   static TAB_tpCondRet ChecarPosicaoValida( char i, int j )
+   {
+	   if(i > 'H' || i < 'A' || j > 8 || j < 1){
+		   return TAB_CondRetPosicaoInvalida;
+	   }
+
+	   return TAB_CondRetOK;
+   }
+
+
 
 /********** Fim do módulo de definição: Módulo tabuleiro **********/
 
