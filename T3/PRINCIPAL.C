@@ -24,30 +24,6 @@
 #include "CLASSE_PECA.H"
 #include "PECA.H"
 
-/***********************************************************************
-*
-*  $TC Tipo de dados: PRN Condicoes de retorno
-*
-*  $ED Descrição do tipo
-*     Condições de retorno das funções do módulo principal
-*
-***********************************************************************/
-
-   typedef enum {
-
-		 PRN_CondRetOK ,
-			   /* Executou corretamente */
-
-		 PRN_CondRetPonteiroNulo ,
-			   /* Foi passado um ponteiro para NULL */
-		 
-		 PRN_CondRetErroParm ,
-			   /* Foram passados um ou mais parametros invalidos */
-
-		 PRN_CondRetFaltouMemoria 
-			   /* Faltou memória ao alocar dados */
-
-   } PRN_tpCondRet ;
 
 /***********************************************************************
 *
@@ -89,7 +65,7 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_Sair( int code )
+   void PRN_Sair( int code )
    {
 	   exit( code );
    }
@@ -348,23 +324,16 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_MenuPrincipal( int * opcao )
+   void PRN_MenuPrincipal( int * opcao )
    {
 		
 		printf("01. Novo\n02. Abrir\n03. Salvar\n\n");
-		printf("11. Listar tipos de peça\n12. Criar tipo de peça\n13. Alterar tipo de peça\n14. Excluir tipo de peça\n\n");
-		printf("21. Listar peças\n22. Criar peça\n23. Alterar peça\n24. Excluir peça\n31. Checa-Cheque\n\n");
+		printf("11. Listar tipos de peca\n12. Criar tipo de peca\n13. Alterar tipo de peca\n14. Excluir tipo de peca\n\n");
+		printf("21. Listar pecas\n22. Criar peca\n23. Alterar peca\n24. Excluir peca\n\n");
+		printf("31. Checar cheque-mate\n\n");
 		printf("99. Sair\n\nDigite o codigo da opcao desejada:");
 
 		scanf(" %d", opcao);
-
-		while( *opcao < 1 || (*opcao > 3 && *opcao < 11) || (*opcao > 14 && *opcao < 21) || (*opcao > 24 && *opcao != 31 && *opcao != 99) )
-		{
-			printf("Opcao invalida. Tente novamente:\n");
-			scanf(" %d", opcao);
-		}
-
-		return PRN_CondRetOK;
    }
 		
 
@@ -381,20 +350,20 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_NovoTabuleiro( void )
+   void PRN_NovoTabuleiro( void )
    {
 	   TAB_DestruirTabuleiro( simulacao.pTab );
 
 	   if(TAB_CriarTabuleiro( &(simulacao.pTab) ) != TAB_CondRetOK) {
 		   LIS_DestruirLista( simulacao.pListaClasses );
 		   LIS_DestruirLista( simulacao.pListaPecas );
-		   return PRN_CondRetFaltouMemoria;
+		   
+		   printf("ERRO AO CRIAR TABULEIRO");
+		   PRN_Sair(1);
 	   }
 
 	   LIS_EsvaziarLista( simulacao.pListaClasses );
 	   LIS_EsvaziarLista( simulacao.pListaPecas );
-
-	   return PRN_CondRetOK;
    }
 
 /***********************************************************************
@@ -410,7 +379,7 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_AbrirTabuleiro( void )
+   void PRN_AbrirTabuleiro( void )
    {
 	   char path[200];
 
@@ -420,7 +389,6 @@
 	   PRN_NovoTabuleiro( );
 
 	   LerArquivo( path );
-
    }
 
 
@@ -437,7 +405,7 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_SalvarTabuleiro( void )
+   void PRN_SalvarTabuleiro( void )
    {
 	   CPC_tppClassePeca pClasse;
 	   PEC_tppPeca pPeca;
@@ -448,7 +416,7 @@
 
 	   printf("Digite o path do arquivo:\n");
 	   scanf(" %[^\n]", auxString);
-	   fp = fopen(auxString, "r");
+	   fp = fopen(auxString, "w");
 	   if( !fp ) {
 		   printf("Path inválido.\n\n");
 		   return;
@@ -516,7 +484,7 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_ListarClasses( void )
+   void PRN_ListarClasses( void )
    {
 	   CPC_tppClassePeca pClasse;
 	   char * nome;
@@ -663,7 +631,7 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_ChecarCheque( ){
+   void PRN_ChecarCheque( ){
       PEC_tppPeca pecaCorrente, rei = ObterRei();
       char reiI; int reiJ;
       char i; int j;
@@ -699,25 +667,27 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_Inicializa( void )
+   void PRN_Inicializa( void )
    {
-	   if( TAB_CriarTabuleiro( &(simulacao.pTab) ) != TAB_CondRetOK )
-		   return PRN_CondRetFaltouMemoria;
+	   if( TAB_CriarTabuleiro( &(simulacao.pTab) ) != TAB_CondRetOK ){
+		   printf("ERRO DE MEMORIA AO CRIAR TABULEIRO");
+		   exit(1);
+	   }
 
 	   simulacao.pListaClasses = LIS_CriarLista( DestruirClassePeca );
 	   if( simulacao.pListaClasses == NULL ) {
 		   TAB_DestruirTabuleiro( simulacao.pTab );
-		   return PRN_CondRetFaltouMemoria;
+		   printf("ERRO DE MEMORIA AO CRIAR LISTA DE CLASSES");
+		   exit(1);
 	   }
 
 	   simulacao.pListaPecas = LIS_CriarLista( DestruirPeca );
 	   if( simulacao.pListaPecas == NULL ) {
 		   TAB_DestruirTabuleiro( simulacao.pTab );
 		   LIS_DestruirLista( simulacao.pListaClasses );
-		   return PRN_CondRetFaltouMemoria;
+		   printf("ERRO DE MEMORIA AO CRIAR LISTA DE PECAS");
+		   exit(1);
 	   }
-
-	   return PRN_CondRetOK;
    }
 
 
@@ -738,8 +708,7 @@
    {
 	   int opcao;
 
-	   if( PRN_Inicializa( ) == PRN_CondRetFaltouMemoria)
-		   return PRN_CondRetFaltouMemoria;
+	   PRN_Inicializa( );
 
 	   do {
 			PRN_MenuPrincipal( &opcao );
@@ -758,7 +727,7 @@
 
 	   PRN_Sair( 0 );
 
-	   return PRN_CondRetOK;
+	   return 0;
    }
 
 
