@@ -113,16 +113,25 @@
 
    CPC_tpCondRet CPC_AdicionarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY ) {
       CPC_tpMovimento * movimento;
+	  int resp;
 
       if(pClassePeca == NULL){
          return CPC_CondRetPonteiroNulo;
       }
+
+	  CPC_ChecarMovimento(pClassePeca, movX, movY, &resp);
+	  if(resp == 1){
+		  return CPC_CondRetArgumentosInvalidos;
+	  }
 
       movimento = (CPC_tpMovimento*)malloc(sizeof(CPC_tpMovimento));
 
       if(movimento == NULL){
          return CPC_CondRetFaltouMemoria;
       }
+
+	  movimento->movX = movX;
+	  movimento->movY = movY;
 
       LIS_IrFinalLista(pClassePeca->movimentos);
       if( LIS_InserirElementoApos(pClassePeca->movimentos, movimento) == LIS_CondRetFaltouMemoria ){
