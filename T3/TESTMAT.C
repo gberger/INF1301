@@ -35,6 +35,8 @@ int main (void) {
 	printf("%d\n", i);
 	printf("%d == 33\n", *resultado);
 	printf("%d\n", i);
+	i=MAT_DestruirMatriz(pMatriz);
+	printf("%d\n", i);
 
 	return 0;
 }
