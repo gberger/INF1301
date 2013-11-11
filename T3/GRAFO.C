@@ -656,7 +656,7 @@
 	   
 	   while( LIS_ObterValor( pVertice->pListaSuc ) ) {
 		   pAresta = (GRA_tpAresta *) LIS_ObterValor( pVertice->pListaSuc );
-		   if( pAresta != NULL ) {
+		   if( pAresta != NULL && pAresta->pVerticeApontado != NULL && pAresta->pVerticeApontado->pListaAnt != NULL) {
 			   LIS_ProcurarValor( pAresta->pVerticeApontado->pListaAnt, pVertice );
 			   LIS_ExcluirElemento( pAresta->pVerticeApontado->pListaAnt );
 		   }
@@ -667,13 +667,14 @@
 	   }
 
 	   LIS_DestruirLista( pVertice->pListaSuc );
+	   pVertice->pListaSuc = NULL;
 
 	   //Remover arestas antecessoras
 	   LIS_IrInicioLista( pVertice->pListaAnt );
 	   
 		while(LIS_ObterValor( pVertice->pListaAnt ) ) {
 		   pVerticeSuc = (GRA_tpVerticeGrafo *) LIS_ObterValor( pVertice->pListaAnt );
-		   if( pVerticeSuc != NULL ) {
+		   if( pVerticeSuc != NULL && pVerticeSuc->pListaSuc != NULL) {
 			   PesquisaVerticeNaListaDeAresta( pVerticeSuc->pListaSuc, pVertice->id );
 			   LIS_ExcluirElemento( pVerticeSuc->pListaSuc );
 		   }
@@ -683,6 +684,7 @@
 	   }
 
 	   LIS_DestruirLista( pVertice->pListaAnt );
+	   pVertice->pListaAnt = NULL;
 
 	   if(pGrafo->ExcluirValor != NULL && pVertice->pValor != NULL)
 			pGrafo->ExcluirValor( pVertice->pValor );
