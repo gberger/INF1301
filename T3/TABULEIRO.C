@@ -42,27 +42,6 @@
    } TAB_tpTabuleiro ;
 
 
-/***********************************************************************
-*
-*  $TC Tipo de dados: TAB Descritor da casa de um tabuleiro
-*
-*
-*  $ED Descrição do tipo
-*     A casa do tabuleiro é o ponto de acesso para uma determinada casa.
-*	  Esta armazena uma referência para PECA e o valor secundário.
-*
-***********************************************************************/
-
-   typedef struct TAB_tagCasa {
-
-        PEC_tppPeca pPeca ;
-               /* Ponteiro para a peca que ocupa a casa */
-		int vSec;
-			   /* Valor secundário da casa */
-
-   } TAB_tpCasa ;
-
-
 /***** Protótipo das funções encapuladas no módulo *****/
    void ExcluirCasa( void * pValor );
 
@@ -78,7 +57,6 @@
 
    TAB_tpCondRet TAB_CriarTabuleiro( TAB_tppTabuleiro * ppTabuleiro ) {
 	   TAB_tppTabuleiro pTab;
-	   TAB_tpCasa *pCasa;
 	   int i, j;
 
 	   if(ppTabuleiro == NULL) {
@@ -88,21 +66,6 @@
 	   pTab = (TAB_tpTabuleiro *)malloc(sizeof(TAB_tpTabuleiro));
 	   if(pTab == NULL || MAT_CriarMatriz(&(pTab->pMatriz), 8, ExcluirCasa) != MAT_CondRetOK) {
 		   return TAB_CondRetFaltouMemoria;
-	   }
-
-	   for( i = 0; i < 8; i++ ) {
-		   for( j = 0; j < 8; j++ ) {
-
-			   pCasa = (TAB_tpCasa *)malloc(sizeof(TAB_tpCasa));
-			   if(pCasa==NULL) {
-				   MAT_DestruirMatriz(pTab->pMatriz);
-				   free(pTab);
-				   return TAB_CondRetFaltouMemoria;
-			   }
-
-			   MAT_AtribuirValorCorrente(pTab->pMatriz, (void *)pCasa);
-
-		   }
 	   }
 
 	   pTab->i = 'A';
@@ -184,15 +147,12 @@
 ***********************************************************************/
 
    TAB_tpCondRet TAB_AtribuirValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca pPeca ) {
-	   TAB_tpCasa *pCasa;
 
 	   if(pTabuleiro == NULL) {
 		   return TAB_CondRetPonteiroNulo;
 	   }
 
-	   MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)&pCasa);
-
-	   pCasa->pPeca = pPeca;
+	   MAT_AtribuirValorCorrente( pTabuleiro->pMatriz, (void *)pPeca);
 
 	   return TAB_CondRetOK;
    }
@@ -205,14 +165,11 @@
 ***********************************************************************/
 
    TAB_tpCondRet TAB_ObterValorCorrente( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca ) {
-	   TAB_tpCasa *pCasa;
 	   if(pTabuleiro == NULL) {
 		   return TAB_CondRetPonteiroNulo;
 	   }
 
-	   MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)&pCasa);
-
-	   *ppPeca = pCasa->pPeca;
+	   MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)ppPeca);
 
 	   return TAB_CondRetOK;
    }
@@ -239,72 +196,6 @@
 	   return TAB_CondRetOK;
    }
 
-/***********************************************************************
-*
-*  $FC Função: TAB Atribuir valor secundário
-*
-***********************************************************************/
-
-   TAB_tpCondRet TAB_AtribuirValorSecundario( TAB_tppTabuleiro pTabuleiro, int valorSec ) {
-	   TAB_tpCasa *pCasa;
-
-	   if(pTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
-
-	   MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)&pCasa);
-
-	   pCasa->vSec = valorSec;
-
-	   return TAB_CondRetOK;
-   }
-	   
-
-
-/***********************************************************************
-*
-*  $FC Função: TAB Obter valor secundário
-*
-***********************************************************************/
-
-   TAB_tpCondRet TAB_ObterValorSecundario( TAB_tppTabuleiro pTabuleiro, int * pValorSec ) {
-	   TAB_tpCasa *pCasa;
-	   if(pTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
-
-	   MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)&pCasa);
-
-	   *pValorSec = pCasa->vSec;
-
-	   return TAB_CondRetOK;
-   }
-
-
-/***********************************************************************
-*
-*  $FC Função: TAB Zerar valores secundários
-*
-***********************************************************************/
-
-   TAB_tpCondRet TAB_ZerarValoresSecundarios( TAB_tppTabuleiro pTabuleiro ) {
-	   TAB_tpCasa *pCasa;
-	   int i, j;
-
-	   if(pTabuleiro == NULL) {
-		   return TAB_CondRetPonteiroNulo;
-	   }
-
-	   for( i = 0; i < 8; i++ ) {
-		   for( j = 0; j < 8; j++ ) {
-				MAT_ObterValorCorrente( pTabuleiro->pMatriz, (void **)&pCasa);
-				pCasa->vSec = 0;
-		   }
-	   }
-
-	   return TAB_CondRetOK;
-   }
-
 /***** Código das funções encapuladas no módulo *****/
 
 /***********************************************************************
@@ -319,8 +210,7 @@
    void ExcluirCasa( void * pValor )
    {
 	   if(pValor != NULL) {
-		   free( ( (TAB_tpCasa *)pValor )->pPeca);
-		   free( pValor );
+		   PEC_DestruirPeca( (PEC_tppPeca) pValor);
 	   }
    }
 

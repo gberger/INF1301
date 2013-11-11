@@ -205,65 +205,6 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 
    TAB_tpCondRet TAB_ObterValorDeCasa( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * ppPeca , char i, int j ) ;
 
-
-/***********************************************************************
-*
-*  $FC Função: TAB Atribuir valor secundário
-*
-*  $ED Descrição da função
-*     Atribui valor fornecido ao valor secundário da posição corrente.
-*
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P valorSec  - valor a ser atribuído
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
-*
-***********************************************************************/
-
-   TAB_tpCondRet TAB_AtribuirValorSecundario( TAB_tppTabuleiro pTabuleiro, int valorSec ) ;
-
-
-/***********************************************************************
-*
-*  $FC Função: TAB Obter valor secundário
-*
-*  $ED Descrição da função
-*     Obtem valor auxiliar da posição corrente.
-*
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P pValorSec - ponteiro para variável inteira que receberá o valor
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
-*
-***********************************************************************/
-
-   TAB_tpCondRet TAB_ObterValorSecundario( TAB_tppTabuleiro pTabuleiro, int * pValorSec ) ;
-
-
-/***********************************************************************
-*
-*  $FC Função: TAB Zerar valores secundários
-*
-*  $ED Descrição da função
-*     Atribui zero ao valor secundário de todas as posições do tabuleiro
-*
-*  $EP Parâmetros
-*     $P pTabuleiro - ponteiro para o tabuleiro.
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPonteiroNulo
-*
-***********************************************************************/
-
-   TAB_tpCondRet TAB_ZerarValoresSecundarios( TAB_tppTabuleiro pTabuleiro ) ;
-
 #undef TABULEIRO_EXT
 
 /********** Fim do módulo de definição: Módulo tabuleiro de xadrez **********/
