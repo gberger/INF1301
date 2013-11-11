@@ -49,7 +49,7 @@
 
       pPeca = (PEC_tpPeca*)malloc(sizeof(PEC_tpPeca));
 
-      if (ppPeca = NULL) {
+      if (pPeca == NULL) {
         return PEC_CondRetFaltouMemoria; 
       }
 
