@@ -147,7 +147,17 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_AbrirTabuleiro( );
+   PRN_tpCondRet PRN_AbrirTabuleiro( void )
+   {
+	   char path[200];
+
+	   printf("Digite o path do arquivo:\n");
+	   scanf(" %[^\n]", path);
+
+	   LerArquivo( path );
+
+   }
+
 
 /***********************************************************************
 *
@@ -162,11 +172,74 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_SalvarTabuleiro( );
+   PRN_tpCondRet PRN_SalvarTabuleiro( void )
+   {
+	   CPC_tppClassePeca pClasse;
+	   PEC_tppPeca pPeca;
+	   int i, j, count, nMovs;
+	   char * nome, auxString[200], ic;
+	   PEC_tpJogador jogador;
+
+	   printf("Digite o path do arquivo:\n");
+	   scanf(" %[^\n]", auxString);
+	   fp = fopen(auxString, "r");
+	   if( !fp ) {
+		   printf("Path inválido.\n\n");
+		   return;
+	   }
+
+	   LIS_IrInicioLista( simulacao.pListaClasses );
+	   while (LIS_ObterValor( simulacao.pListaClasses ) ) {
+		   pClasse = (CPC_tppClassePeca) LIS_ObterValor( simulacao.pListaClasses );
+			
+		   CPC_ObterNome(pClasse, &nome);
+		   fprintf(fp, "CLASSE %s\n", nome);
+		   CPC_ObterNumeroMovimentos(pClasse, &nMovs);
+		   for(count = 0; count < nMovs; count++) {
+			   CPC_ObterMovimento( pClasse, count, &i, &j);
+			   fprintf(fp, "MOV %d %d\n", i, j);
+		   }
+		if( LIS_AvancarElementoCorrente( simulacao.pListaClasses, 1 ) != LIS_CondRetOK )
+				break;
+	   }
+	   
+
+	   fprintf(fp, "TABULEIRO\n");
+	   for( ic = 'A'; ic < 'I'; ic++) {
+		   for( j = 1; j < 9; j++) {
+			   TAB_DefinirCorrente(simulacao.pTab, ic, j);
+			   TAB_ObterValorCorrente(simulacao.pTab, &pPeca);
+			   if(pPeca == NULL)
+				   continue;
+
+			   PEC_ObterJogador(pPeca, &jogador);
+
+			   PEC_ObterClassePeca(pPeca, &pClasse);
+			   CPC_ObterNome(pClasse, &nome);
+
+			   fprintf(fp, "%c %c %d %s\n", (jogador == JOGADOR_BRANCO) ? 'B' : 'P', ic, j, nome);
+		   }
+	   }
+		   
+   }
 
 /***********************************************************************
 *
-*  $FC Função: PRN listar pecas
+*  $FC Função: PRN carregar padrao
+*
+*  $ED Descrição da função
+*	  Carrega as classes de peças tradicionais do xadrez
+*
+***********************************************************************/
+
+   void PRN_CarregaPadrao( void )
+   {
+	   LerArquivo( "default.xdz" );
+   }
+
+/***********************************************************************
+*
+*  $FC Função: PRN listar classes
 *
 *  $ED Descrição da função
 *     Lista todas as possibilidades de pecas que podem ser inseridas no tabuleiro.
@@ -177,7 +250,24 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_ListarPecas( );
+   PRN_tpCondRet PRN_ListarClasses( void )
+   {
+	   CPC_tppClassePeca pClasse;
+	   char * nome;
+
+	   printf("Lista de classes criadas:\n");
+
+	   LIS_IrInicioLista( simulacao.pListaClasses );
+	   while (LIS_ObterValor( simulacao.pListaClasses ) ) {
+		   pClasse = (CPC_tppClassePeca) LIS_ObterValor( simulacao.pListaClasses );
+			
+		   CPC_ObterNome(pClasse, &nome);
+		   printf("%s\n",nome);
+		   
+		if( LIS_AvancarElementoCorrente( simulacao.pListaClasses, 1 ) != LIS_CondRetOK )
+				break;
+	   }
+   }
 
 /***********************************************************************
 *
@@ -313,7 +403,57 @@
 	   return PRN_CondRetOK;
    }
 
-	   
+/***********************************************************************
+*
+*  $FC Função: PRN - Le arquivo de configuracao
+*
+***********************************************************************/
+
+   void LerArquivo( char * path )
+   {
+	   char auxString[200], jogador, i;
+	   int j;
+	   FILE *fp;
+	   CPC_tppClassePeca pClasse;
+	   PEC_tppPeca pPeca;
+
+	   fp = fopen(path, "r");
+	   if( !fp ) {
+		   printf("Path inválido.\n\n");
+		   return;
+	   }
+
+	   while( fscanf(fp, " %s", auxString) == 1 ) {
+		   if( strcmp( auxString, "CLASSE") == 0 ) {
+			   fscanf(fp, " %[^\n]", auxString);
+			   if( CPC_CriarClassePeca(&pClasse, auxString) != CPC_CondRetOK) {
+				   printf( "Faltou memória." );
+				   PRN_Sair( );
+			   }
+			   LIS_InserirElementoApos(simulacao.pListaClasses, (void *) pClasse);
+
+		   } else if( strcmp( auxString, "MOV") == 0 ) {
+			   fscanf(fp, " %d %d", &i, &j);
+			   if( CPC_AdicionarMovimento(pClasse, i, j) != CPC_CondRetOK) {
+					printf( "Faltou memória." );
+					PRN_Sair( );
+			   }
+
+		   } else if( strcmp( auxString, "TABULEIRO") == 0 ) {
+			   while( scanf( " %c %c %d %[^\n]", &jogador, &i, &j, auxString) == 4) {
+				   pClasse = PRN_ProcurarClasse( auxString );
+				   if(!pClasse)
+					   continue;
+				   if( PEC_CriarPeca( &pPeca, pClasse, (jogador == 'B') ? JOGADOR_BRANCO : JOGADOR_PRETO ) != PEC_CondRetOK ) {
+					   printf( "Faltou memória." );
+					   PRN_Sair( );
+				   }
+				   TAB_DefinirCorrente(simulacao.pTab, i, j);
+				   TAB_AtribuirValorCorrente(simulacao.pTab, pPeca);
+			   }
+		   }
+	   }
+   }
 	
    void DestruirPeca( void * pValor )
    {
