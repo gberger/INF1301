@@ -11,6 +11,7 @@
 *
 ***************************************************************************/
 
+#include <stdio.h>
 #include <malloc.h>
 
 #define PECA_OWN
@@ -57,7 +58,7 @@
 
       *ppPeca = pPeca;
      	
-      return PEC_CondRetOk;
+      return PEC_CondRetOK;
     }
 
 
@@ -73,7 +74,7 @@
 
       free(pPeca);
 
-      return PEC_CondRetOk;
+      return PEC_CondRetOK;
    }
 
 
@@ -88,7 +89,7 @@
 
       *ppClassePeca = pPeca->pClassePeca;
 
-      return PEC_CondRetOk;
+      return PEC_CondRetOK;
    }
 
 
@@ -103,7 +104,7 @@
 
       *pJogador = pPeca->jogador;
 
-      return PEC_CondRetOk;
+      return PEC_CondRetOK;
    }
 
 

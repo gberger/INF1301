@@ -33,9 +33,9 @@
 
    typedef struct CPC_tagClassePeca {
 
-      char * nome,
+      char * nome;
 
-      LIS_tppLista movimentos
+      LIS_tppLista movimentos;
 
    } CPC_tpClassePeca ;
 
@@ -43,9 +43,9 @@
 
    typedef struct CPC_tagMovimento {
       
-      int movX,
+      int movX;
 
-      int movY
+      int movY;
    
    } CPC_tpMovimento;
 
@@ -86,7 +86,7 @@
 
       *ppClassePeca = cp;
 
-      return CPC_CondRetOk;
+      return CPC_CondRetOK;
    }
 
 
@@ -103,7 +103,7 @@
       free(pClassePeca->nome);
       free(pClassePeca);
 
-      return CPC_CondRetOk;
+      return CPC_CondRetOK;
    }
 
 
@@ -129,7 +129,7 @@
          return CPC_CondRetFaltouMemoria;
       }
 
-      return CPC_CondRetOk;
+      return CPC_CondRetOK;
    }
 
 
@@ -144,7 +144,7 @@
 
       *numMovimentos = LIS_ObterNumElem(pClassePeca->movimentos);
 
-      return CPC_CondRetOk;
+      return CPC_CondRetOK;
    }
 
 
@@ -153,12 +153,12 @@
 ***********************************************************************/
 
    CPC_tpCondRet CPC_ObterMovimento( CPC_tppClassePeca pClassePeca , int idxMovimento , int * pMovX , int * pMovY ) {
+	   int numElem;
+      CPC_tpMovimento * movimento;
+
       if(pClassePeca == NULL){
          return CPC_CondRetPonteiroNulo;
       }
-
-      int numElem;
-      CPC_tpMovimento * movimento;
 
       CPC_ObterNumeroMovimentos(pClassePeca, &numElem);
 
@@ -169,12 +169,12 @@
       LIS_IrInicioLista(pClassePeca->movimentos);
       LIS_AvancarElementoCorrente(pClassePeca->movimentos, idxMovimento);
 
-      movimento = LIS_ObterValor(pClassePeca->movimentos)
+      movimento = (CPC_tpMovimento*) LIS_ObterValor(pClassePeca->movimentos);
 
       *pMovX = movimento->movX;
       *pMovY = movimento->movY;
 
-      return CPC_CondRetOk;
+      return CPC_CondRetOK;
    }
 
 /***********************************************************************
@@ -200,11 +200,11 @@
          CPC_ObterMovimento(pClassePeca, i, &movXObtido, &movYObtido);
          if(movXObtido == movX && movYObtido == movY){
             *resposta = 1;
-            return CPC_CondRetOk;      
+            return CPC_CondRetOK;      
          }
       }
 
-      return CPC_CondRetOk;      
+      return CPC_CondRetOK;      
    }
 
 
@@ -219,7 +219,7 @@
 
       *pNome = pClassePeca->nome;
 
-      return CPC_CondRetOk;
+      return CPC_CondRetOK;
    }
 
 
@@ -230,9 +230,6 @@
    }
 
 
-#undef CLASSE_PECA_EXT
 
-/********** Fim do módulo de definição: Módulo classe de peça de xadrez **********/
+/********** Fim do módulo de implementação: Módulo classe de peça de xadrez **********/
 
-#else
-#endif

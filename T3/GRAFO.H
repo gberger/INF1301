@@ -91,7 +91,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *        valores que serão usados nos vértices do grafo
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        ppGrafo conterá um ponteiro para um grafo
 *     SE GRA_CondRetFaltouMemoria
 *        ppGrafo não será modificado
@@ -121,7 +121,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     pGrafo deve ser ponteiro válido para um grafo do módulo
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        pGrafo terá sido liberado e será agora um ponteiro inválido
 *     SE GRA_CondRetPonteiroNulo
 *        pGrafo era NULL
@@ -150,7 +150,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     pGrafo deve ser ponteiro válido para um grafo do módulo
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        pGrafo terá sido esvaziado: todos os vértices, arestas e origens
 *           terão sido excluídos
 *        vértice corrente será NULL
@@ -183,7 +183,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     ppValor != NULL
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        ppValor conterá ponteiro para o valor contido no vértice corrente
 *     SE GRA_CondRetPonteiroNulo
 *        pGrafo era NULL ou ppValor era NULL
@@ -213,7 +213,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     pGrafo deve ser ponteiro válido para um grafo do módulo
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        pGrafo terá em seu nó corrente o valor pValor
 *     SE GRA_CondRetPonteiroNulo
 *        pGrafo era NULL
@@ -246,7 +246,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     idVertice deve ser um id de um vértice válido existente no grafo
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        pGrafo terá como vértice corrente o vértice cujo id é idVertice
 *     SE GRA_CondRetPonteiroNulo
 *        pGrafo era NULL
@@ -282,7 +282,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *       e tal vértice deve ser um dos sucessores do vértice corrente
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        pGrafo terá como vértice corrente o vértice cujo id é idVertice
 *     SE GRA_CondRetPonteiroNulo
 *        pGrafo era NULL
@@ -318,7 +318,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     pGrafo deve ser ponteiro válido para um grafo do módulo
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        pGrafo terá um novo vértice com o valor e identificador dados
 *     SE GRA_CondRetFaltouMemoria
 *        pGrafo não será modificado
@@ -349,7 +349,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     pGrafo deve ser ponteiro válido para um grafo do módulo
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        o antigo vértice corrente de pGrafo será excluído
 *        o novo vértice corrente será o primeiro da lista de vértices
 *        ou o novo vértice corrente será NULL, caso o grafo esteja vazio
@@ -389,7 +389,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     idAresta deve ser uma string de no máximo 9 caracteres válidos
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        pGrafo terá uma nova aresta apontando do vértice origem 
 *           ao vértice destino
 *     SE GRA_CondRetPonteiroNulo
@@ -435,7 +435,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     idAresta deve ser uma string de no máximo 9 caracteres válidos
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        pGrafo terá uma nova aresta apontando do vértice corrente 
 *           ao vértice destino
 *     SE GRA_CondRetPonteiroNulo
@@ -496,7 +496,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     idAresta deve ser um identificador válido de uma aresta existente
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        pGrafo terá uma nova aresta apontando do vértice corrente 
 *           ao vértice destino
 *     SE GRA_CondRetPonteiroNulo
@@ -532,7 +532,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     idVértice deve ser um id válido de um vértice existente
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        pGrafo terá uma nova origem
 *        vértice cujo id é idVertice será uma origem
 *     SE GRA_CondRetPonteiroNulo
@@ -568,7 +568,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *     idVértice deve ser um id válido de um vértice existente
 *
 *  $EAE Assertivas de saída
-*     SE GRA_CondRetOk
+*     SE GRA_CondRetOK
 *        vértice cujo id é idVertice não será mais uma origem
 *     SE GRA_CondRetPonteiroNulo
 *        pGrafo era NULL

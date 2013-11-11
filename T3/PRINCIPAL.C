@@ -15,7 +15,7 @@
 #define MAXNOME_S "100"
 
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
@@ -76,6 +76,24 @@
 
    PRN_tpSimulacao simulacao;
 
+/***********************************************************************
+*
+*  $FC Função: PRN funcao de saida
+*
+*  $ED Descrição da função
+*     Fecha o programa.
+*
+*  $FV Valor retornado
+*     PRN_CondRetOK
+*     PRN_CondRetFaltouMemoria
+*
+***********************************************************************/
+
+   PRN_tpCondRet PRN_Sair( int code )
+   {
+	   exit( code );
+   }
+
 
 /***********************************************************************
 *
@@ -96,7 +114,7 @@
       CPC_tppClassePeca pClassePeca;
       char *nomeObtido;
 
-      if(nome == NULL){
+      if(nomeProcurado == NULL){
          return NULL;
       }
 
@@ -104,20 +122,95 @@
 
       do {
 
-         pClassePeca = LIS_ObterValor(simulacao.pListaClasses);
+         pClassePeca = (CPC_tppClassePeca) LIS_ObterValor(simulacao.pListaClasses);
 
          if(pClassePeca != NULL){
             CPC_ObterNome(pClassePeca, &nomeObtido);
 
-            if(strcmp(nomeObtido, nomeProcudo) == 0){
+            if(strcmp(nomeObtido, nomeProcurado) == 0){
                return pClassePeca;
             }
          }
 
-         lisCondRet = LIS_AvancarElementoCorrente(simulacao.pListaClasses)
-      } while(lisCondRet != LIS_CondRetFimLista && lisCondRet != LIS_CondRetListaVazia)
+         lisCondRet = LIS_AvancarElementoCorrente(simulacao.pListaClasses, 1);
+      } while(lisCondRet != LIS_CondRetFimLista && lisCondRet != LIS_CondRetListaVazia);
 
       return NULL;
+   }
+
+/***********************************************************************
+*
+*  $FC Função: PRN - Le arquivo de configuracao
+*
+***********************************************************************/
+
+   PEC_tppPeca ObterRei ( void )
+   {
+	   return NULL;
+   }
+
+
+
+/***********************************************************************
+*
+*  $FC Função: PRN - Le arquivo de configuracao
+*
+***********************************************************************/
+
+   void LerArquivo( char * path )
+   {
+	   char auxString[200], jogador, i;
+	   int j;
+	   FILE *fp;
+	   CPC_tppClassePeca pClasse;
+	   PEC_tppPeca pPeca;
+
+	   fp = fopen(path, "r");
+	   if( !fp ) {
+		   printf("Path inválido.\n\n");
+		   return;
+	   }
+
+	   while( fscanf(fp, " %s", auxString) == 1 ) {
+		   if( strcmp( auxString, "CLASSE") == 0 ) {
+			   fscanf(fp, " %[^\n]", auxString);
+			   if( CPC_CriarClassePeca(&pClasse, auxString) != CPC_CondRetOK) {
+				   printf( "Faltou memória." );
+				   PRN_Sair( 1 );
+			   }
+			   LIS_InserirElementoApos(simulacao.pListaClasses, (void *) pClasse);
+
+		   } else if( strcmp( auxString, "MOV") == 0 ) {
+			   fscanf(fp, " %d %d", &i, &j);
+			   if( CPC_AdicionarMovimento(pClasse, i, j) != CPC_CondRetOK) {
+					printf( "Faltou memória." );
+					PRN_Sair( 1 );
+			   }
+
+		   } else if( strcmp( auxString, "TABULEIRO") == 0 ) {
+			   while( scanf( " %c %c %d %[^\n]", &jogador, &i, &j, auxString) == 4) {
+				   pClasse = PRN_ProcurarClasse( auxString );
+				   if(!pClasse)
+					   continue;
+				   if( PEC_CriarPeca( &pPeca, pClasse, (jogador == 'B') ? JOGADOR_BRANCO : JOGADOR_PRETO ) != PEC_CondRetOK ) {
+					   printf( "Faltou memória." );
+					   PRN_Sair( 1 );
+				   }
+				   TAB_DefinirCorrente(simulacao.pTab, i, j);
+				   TAB_AtribuirValorCorrente(simulacao.pTab, pPeca);
+			   }
+		   }
+	   }
+   }
+	
+   void DestruirPeca( void * pValor )
+   {
+	   PEC_DestruirPeca( (PEC_tppPeca) pValor );
+   }
+
+   void DestruirClassePeca( void * pValor )
+   {
+	   CPC_DestruirClassePeca( (CPC_tppClassePeca) pValor );
    }
 
 
@@ -134,7 +227,7 @@
 *
 ***********************************************************************/
 
-   int PRN_ProcurarPecaNoTabuleiro (PEC_tppPeca peca, char &i, int &j)
+   int PRN_ProcurarPecaNoTabuleiro (PEC_tppPeca peca, char *i, int *j)
    {
       char ii, oldI;
       int jj, oldJ;
@@ -147,7 +240,7 @@
             TAB_DefinirCorrente(simulacao.pTab, ii, jj);
             TAB_ObterValorCorrente(simulacao.pTab, &pecaObtida);
             if(pecaObtida == peca){
-               TAB_AB_DefinirCorrente(simulacao.pTab, oldI, oldJ);
+               TAB_DefinirCorrente(simulacao.pTab, oldI, oldJ);
                
                *i = ii;
                *j = jj;
@@ -179,7 +272,7 @@
       movX = abs(movX);
       movY = abs(movY);
 
-      return movX == movY ? 0 : 1
+      return movX == movY ? 0 : 1;
    }
 
 
@@ -351,6 +444,7 @@
 	   int i, j, count, nMovs;
 	   char * nome, auxString[200], ic;
 	   PEC_tpJogador jogador;
+	   FILE *fp;
 
 	   printf("Digite o path do arquivo:\n");
 	   scanf(" %[^\n]", auxString);
@@ -458,11 +552,12 @@
    	PEC_tppPeca * ppPeca;
    	PEC_tppPeca * ppPecaAux;
    	PEC_tpJogador jogador;
+	CPC_tppClassePeca pClassePeca;
 
    	printf("Criacao de Peca\n");
    	printf("Digite a classe da peca\n");
 
-   	scanf(" %" MAXNOME_SP "[^ \n]",nomeClasse);
+   	scanf(" %" MAXNOME_S "[^ \n]",nomeClasse);
 
    	pClassePeca = PRN_ProcurarClasse(nomeClasse);
 
@@ -542,11 +637,11 @@
 			return;
 		}
 
-		if(LIS_ProcurarValor( simulacao.pListaPecas, *ppPeca)==LIS_CondRetOk) {
+		if(LIS_ProcurarValor( simulacao.pListaPecas, *ppPeca)==LIS_CondRetOK) {
 			LIS_ExcluirElemento( simulacao.pListaPecas );
 		} else {
 			printf("Erro ao excluir peca da lista de pecas");
-			PRN_Sair();
+			PRN_Sair( 1 );
 		}
 
 		PEC_DestruirPeca(*ppPeca);
@@ -569,17 +664,16 @@
 ***********************************************************************/
 
    PRN_tpCondRet PRN_ChecarCheque( ){
-      pPeca rei = ObterRei();
+      PEC_tppPeca pecaCorrente, rei = ObterRei();
       char reiI; int reiJ;
       char i; int j;
-      pPeca pecaCorrente;
       CPC_tppClassePeca classeCorrente;
       LIS_tpCondRet lisCondRet;
       PEC_tpJogador jogadorCorrente;
 
       //achar posição do rei
       if(PRN_ProcurarPecaNoTabuleiro(rei, &reiI, &reiJ) == 0){
-         printf("\n!! ERRO AO PROCURAR POSICAO DO REI !!\n")
+         printf("\n!! ERRO AO PROCURAR POSICAO DO REI !!\n");
          PRN_Sair(1);
       }
 
@@ -626,20 +720,6 @@
 	   return PRN_CondRetOK;
    }
 
-/***********************************************************************
-*
-*  $FC Função: PRN funcao de saida
-*
-*  $ED Descrição da função
-*     Fecha o programa.
-*
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
-*
-***********************************************************************/
-
-   PRN_tpCondRet PRN_Sair( );
 
 /***********************************************************************
 *
@@ -676,71 +756,11 @@
 		   }
 	   } while( opcao != 99 );
 
-	   PRN_Sair( );
+	   PRN_Sair( 0 );
 
 	   return PRN_CondRetOK;
    }
 
-/***********************************************************************
-*
-*  $FC Função: PRN - Le arquivo de configuracao
-*
-***********************************************************************/
 
-   void LerArquivo( char * path )
-   {
-	   char auxString[200], jogador, i;
-	   int j;
-	   FILE *fp;
-	   CPC_tppClassePeca pClasse;
-	   PEC_tppPeca pPeca;
-
-	   fp = fopen(path, "r");
-	   if( !fp ) {
-		   printf("Path inválido.\n\n");
-		   return;
-	   }
-
-	   while( fscanf(fp, " %s", auxString) == 1 ) {
-		   if( strcmp( auxString, "CLASSE") == 0 ) {
-			   fscanf(fp, " %[^\n]", auxString);
-			   if( CPC_CriarClassePeca(&pClasse, auxString) != CPC_CondRetOK) {
-				   printf( "Faltou memória." );
-				   PRN_Sair( );
-			   }
-			   LIS_InserirElementoApos(simulacao.pListaClasses, (void *) pClasse);
-
-		   } else if( strcmp( auxString, "MOV") == 0 ) {
-			   fscanf(fp, " %d %d", &i, &j);
-			   if( CPC_AdicionarMovimento(pClasse, i, j) != CPC_CondRetOK) {
-					printf( "Faltou memória." );
-					PRN_Sair( );
-			   }
-
-		   } else if( strcmp( auxString, "TABULEIRO") == 0 ) {
-			   while( scanf( " %c %c %d %[^\n]", &jogador, &i, &j, auxString) == 4) {
-				   pClasse = PRN_ProcurarClasse( auxString );
-				   if(!pClasse)
-					   continue;
-				   if( PEC_CriarPeca( &pPeca, pClasse, (jogador == 'B') ? JOGADOR_BRANCO : JOGADOR_PRETO ) != PEC_CondRetOK ) {
-					   printf( "Faltou memória." );
-					   PRN_Sair( );
-				   }
-				   TAB_DefinirCorrente(simulacao.pTab, i, j);
-				   TAB_AtribuirValorCorrente(simulacao.pTab, pPeca);
-			   }
-		   }
-	   }
-   }
-	
-   void DestruirPeca( void * pValor )
-   {
-	   PEC_DestruirPeca( (PEC_tppPeca) pValor );
-   }
-
-   void DestruirClassePeca( void * pValor )
-   {
-	   CPC_DestruirClassePeca( (CPC_tppClassePeca) pValor );
-   }
 
 /********** Fim do módulo de implementação: Módulo principal **********/
