@@ -46,8 +46,6 @@ typedef struct TAB_tagTabuleiro {
 
 static void ExcluirCasa( void * pValor );
 
-static TAB_tpCondRet ChecarPosicaoValida( char i, int j );
-
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -186,9 +184,8 @@ TAB_tpCondRet TAB_ObterValorDeCasa( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * p
 *  $FC Função: TAB Mover valor de uma casa a outra
 ***********************************************************************/
 
-TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest ) {
-    PEC_tppPeca pPeca;
-    TAB_tpCondRet ret;
+TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest, PEC_tppPeca * pPecaComida ) {
+    PEC_tppPeca pPeca, pPecaComida;
 
     if(pTabuleiro == NULL) {
         return TAB_CondRetPonteiroNulo;
@@ -202,7 +199,45 @@ TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig
     TAB_ObterValorCorrente(pTabuleiro, &pPeca);
     TAB_AtribuirValorCorrente(pTabuleiro, NULL);
     TAB_DefinirCorrente(pTabuleiro, iDest, jDest);
+    TAB_ObterValorCorrente(pTabuleiro, pPecaComida);
     TAB_AtribuirValorCorrente(pTabuleiro, pPeca);
+
+    return TAB_CondRetOK;
+}
+
+/***********************************************************************
+*  $FC Função: TAB Mover valor de uma casa a outra
+***********************************************************************/
+
+TAB_tpCondRet TAB_DesMoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest, PEC_tppPeca pPecaComida ) {
+    PEC_tppPeca pPeca;
+
+    if(pTabuleiro == NULL) {
+        return TAB_CondRetPonteiroNulo;
+    }
+
+    if(ChecarPosicaoValida(iOrig, jOrig) == TAB_CondRetPosicaoInvalida || ChecarPosicaoValida(iDest, jDest) == TAB_CondRetPosicaoInvalida) {
+        return TAB_CondRetPosicaoInvalida;
+    }
+
+    TAB_DefinirCorrente(pTabuleiro, iDest, jDest);
+    TAB_ObterValorCorrente(pTabuleiro, &pPeca);
+    TAB_AtribuirValorCorrente(pTabuleiro, pPecaComida);
+    TAB_DefinirCorrente(pTabuleiro, iOrig, jOrig);
+    TAB_AtribuirValorCorrente(pTabuleiro, pPeca);
+
+    return TAB_CondRetOk;
+}
+
+
+/***********************************************************************
+*  $FC Função: TAB - Checar posição válida
+***********************************************************************/
+
+TAB_tpCondRet ChecarPosicaoValida( char i, int j ) {
+    if(i > 'H' || i < 'A' || j > 8 || j < 1) {
+        return TAB_CondRetPosicaoInvalida;
+    }
 
     return TAB_CondRetOK;
 }
@@ -225,28 +260,5 @@ static void ExcluirCasa( void * pValor ) {
     }
 }
 
-/***********************************************************************
-*
-*  $FC Função: TAB - Checar posição válida
-*
-*  $ED Descrição da função
-*	  Função auxiliar para checar validez de uma posição
-*
-*  $FV Valor retornado
-*     TAB_CondRetOK
-*     TAB_CondRetPosicaoInvalida
-*
-***********************************************************************/
-
-static TAB_tpCondRet ChecarPosicaoValida( char i, int j ) {
-    if(i > 'H' || i < 'A' || j > 8 || j < 1) {
-        return TAB_CondRetPosicaoInvalida;
-    }
-
-    return TAB_CondRetOK;
-}
-
-
 
 /********** Fim do módulo de definição: Módulo tabuleiro **********/
-

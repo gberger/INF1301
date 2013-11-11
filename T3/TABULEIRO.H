@@ -216,6 +216,7 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *     $P jOrig - coordenada vertical da origem (valor entre 1 e 8).
 *     $P iDest - coordenada horizontal do destino (valor entre 'A' e 'H').
 *     $P jDest - coordenada vertical do destino (valor entre 1 e 8).
+*     $P pPecaComida - ponteiro para ponteiro de peça onde será posto a peça eventualmente comida.
 *
 *  $FV Valor retornado
 *     TAB_CondRetOK
@@ -225,6 +226,46 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 ***********************************************************************/
 
    TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest ) ;
+
+
+/***********************************************************************
+*
+*  $FC Função: TAB Mover valor de uma casa a outra
+*
+*  $ED Descrição da função
+*     Desfaz a última mudança feita por TAB_MoverValor.
+*
+*  $EP Parâmetros
+*     $P pTabuleiro - ponteiro para o tabuleiro.
+*     $P iOrig - coordenada horizontal da origem (valor entre 'A' e 'H').
+*     $P jOrig - coordenada vertical da origem (valor entre 1 e 8).
+*     $P iDest - coordenada horizontal do destino (valor entre 'A' e 'H').
+*     $P jDest - coordenada vertical do destino (valor entre 1 e 8).
+*     $P pPecaComida - ponteiro de peça que deve ser recuperada.
+*
+*  $FV Valor retornado
+*     TAB_CondRetOK
+*     TAB_CondRetPosicaoInvalida
+*     TAB_CondRetPonteiroNulo
+*
+***********************************************************************/
+
+   TAB_tpCondRet TAB_DesMoverValor( TAB_tppTabuleiro pTabuleiro ) ;
+
+/***********************************************************************
+*
+*  $FC Função: TAB - Checar posição válida
+*
+*  $ED Descrição da função
+*     Função auxiliar para checar validez de uma posição
+*
+*  $FV Valor retornado
+*     TAB_CondRetOK
+*     TAB_CondRetPosicaoInvalida
+*
+***********************************************************************/
+
+   TAB_tpCondRet ChecarPosicaoValida( char i, int j ) ;
 
 
 #undef TABULEIRO_EXT
