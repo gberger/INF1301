@@ -17,7 +17,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 #include "TABULEIRO.H"
 #include "LISTA.H"
@@ -39,11 +38,11 @@
 typedef struct PRN_tagSimulacao {
 
     TAB_tppTabuleiro pTab;
-/* Ponteiro para o tabuleiro corrente */
+        /* Ponteiro para o tabuleiro corrente */
     LIS_tppLista pListaPecas;
-/* Ponteiro para a lista de peças */
+        /* Ponteiro para a lista de peças */
     LIS_tppLista pListaClasses;
-/* Ponteiro para a lista de classes de peças */
+        /* Ponteiro para a lista de classes de peças */
 
 } PRN_tpSimulacao ;
 
@@ -122,7 +121,6 @@ CPC_tppClassePeca PRN_ProcurarClasse (char *nomeProcurado) {
     LIS_IrInicioLista(simulacao.pListaClasses);
 
     do {
-
         pClassePeca = (CPC_tppClassePeca) LIS_ObterValor(simulacao.pListaClasses);
 
         if(pClassePeca != NULL) {
@@ -137,16 +135,6 @@ CPC_tppClassePeca PRN_ProcurarClasse (char *nomeProcurado) {
     } while(lisCondRet != LIS_CondRetFimLista && lisCondRet != LIS_CondRetListaVazia);
 
     return NULL;
-}
-
-/***********************************************************************
-*
-*  $FC Função: PRN - Le arquivo de configuracao
-*
-***********************************************************************/
-
-PEC_tppPeca ObterRei ( char * i, int * j ) {
-
 }
 
 
@@ -245,6 +233,51 @@ int PRN_ProcurarPecaNoTabuleiro (PEC_tppPeca peca, char *i, int *j) {
 
 /***********************************************************************
 *
+*  $FC Função: PRN - Obter rei branco
+*
+*  $ED Descrição da função
+*     Procura no tabuleiro a peça um classe de nome "Rei" que pertença
+*       ao jogador branco.
+*
+*  $FV Valor Retornado
+*     NULL caso não tenha achado
+*     Ponteiro para a peça, caso tenha achado, e nesse caso o valor de i e de j
+*       serão atualizados para conter a posição dessa peça no tabuleiro.
+*
+***********************************************************************/
+
+PEC_tppPeca PRN_ObterReiBranco ( char * i, int * j ) {
+    LIS_tpCondRet lisCondRet;
+    PEC_tppPeca peca;
+    PEC_tpJogador jogador;
+    CPC_tppClassePeca classePeca, classeRei = PRN_ProcurarClasse("Rei");
+
+    if(classeRei == NULL){
+        return NULL;
+    }
+
+    LIS_IrInicioLista( simulacao.pListaPecas );
+    do {
+
+        peca = (PEC_tppPeca) LIS_ObterValor(simulacao.pListaPecas);
+        PEC_ObterClassePeca(peca, &classePeca);
+        PEC_ObterJogador(peca, &jogador)
+
+        if(jogador == JOGADOR_BRANCO && classePeca == classeRei){
+            if( PRN_ProcurarPecaNoTabuleiro(peca, &i, &j) ){
+                return peca;
+            }
+        }
+
+        lisCondRet = LIS_AvancarElementoCorrente(simulacao.pListaPecas, 1);
+    } while(lisCondRet != LIS_CondRetFimLista && lisCondRet != LIS_CondRetListaVazia);
+
+    return NULL;
+}
+
+
+/***********************************************************************
+*
 *  $FC Função: PRN checa se movimento é do tipo pulo
 *
 *  $ED Descrição da função
@@ -257,11 +290,15 @@ int PRN_ProcurarPecaNoTabuleiro (PEC_tppPeca peca, char *i, int *j) {
 *
 ***********************************************************************/
 
-int PRN_ChecarMovimentoPulo (int movX, int movY) {
-    movX = abs(movX);
-    movY = abs(movY);
+int PRN_ChecarMovimentoPulo (int movI, int movJ) {
+    if(movI < 0) {
+        movI = -movI;
+    }
+    if(movJ < 0) {
+        movJ = -movJ;
+    }
 
-    return movX == movY ? 0 : 1;
+    return movI == movJ ? 0 : 1;
 }
 
 
@@ -270,7 +307,10 @@ int PRN_ChecarMovimentoPulo (int movX, int movY) {
 *  $FC Função: PRN checar legalidade de movimento
 *
 *  $ED Descrição da função
-*     Checa se um movimento é legal
+*     Checa se um movimento é legal, CHECANDO SOMENTE OBSTACULOS NO CAMINHO
+*       E CONFLITOS DE DESTINO COM PEÇAS DO MESMO JOGADOR.
+*     ASSUME-SE QUE O MOVIMENTO PRIMITIVO É UM MOVIMENTO VÁLIDO PARA A
+*       CLASSE DA PEÇA NA ORIGEM.
 *
 *  $FV Valor retornado
 *     1 se o movimento é legal
@@ -278,50 +318,147 @@ int PRN_ChecarMovimentoPulo (int movX, int movY) {
 *
 ***********************************************************************/
 
-int PRN_ChecarLegalidade (char iOrigem, int jOrigem, char iDestino, int jDestino) {
-    PEC_tppPeca atacante, obstaculo;
-    CPC_tppClassePeca classeAtacante;
-    PEC_tpJogador jogador;
-    int resposta;
-    int movX, movY;
+int PRN_ChecarLegalidade (PEC_tpJogador jogador, char iOrigem, int jOrigem, char iDestino, int jDestino) {
+    PEC_tppPeca defensor;
+    PEC_tpJogador jogadorDefensor;
+    PEC_tppPeca obstaculo;
+    int movI, movJ;
     char i; int j;
 
-    TAB_ObterValorDeCasa(simulacao.pTab, &atacante, iOrigem, jOrigem);
-    PEC_ObterClassePeca(atacante, &classeAtacante);
-    PEC_ObterJogador(atacante, &jogador);
+    movI = iDestino - iOrigem;
+    movJ = jDestino - jOrigem;
 
-    movX = iDestino - iOrigem;
-    movY = jDestino - jOrigem;
+    TAB_ObterValorDeCasa(simulacao.pTab, &defensor, iDestino, iOrigem);
 
-    if(jogador == JOGADOR_PRETO) {
-        movX *= -1;
-        movY *= -1;   
+    // Se tentar mover uma peça de um jogador para uma casa que está ocupada por
+    // uma peça do mesmo jogador, não é um movimento legal.
+    // (não é permitido comer peças próprias)
+    if( defensor != NULL ) {
+        PEC_ObterJogador(defensor, &jogadorDefensor);
+        if(jogadorDefensor == jogador){
+            return 0;
+        }
     }
 
-    if(PRN_ChecarMovimentoPulo(movX, movY) == 0) {
-// if(movX == 0) {
-//    //horizontal
-//    for(i = iOrigem+1; i < iDestino; i += ) {
-//       TAB_ObterValorDeCasa(simulacao.pTab, &obstaculo, )
-//    }
-// }
-// else if(movY == 0) {
-//    //vertical
-//    for(j = jOrigem+1; j < jDestino; j++) {
+    //
+    if(PRN_ChecarMovimentoPulo(movI, movJ) == 1) {
+        // Sendo um movimento de pulo, não há necessidade de checar obstáculos
+        // Logo, o movimento é válido
 
-//    }
-// } else {
-//    //diagonal
-//    for(i = iOrigem+1, j = jOrigem+1; i < iDestino, j < jDestino; i++, j++) {
-
-//    }
-// }
-
+        return 1;
     }
 
-    CPC_ChecarMovimento(classeAtacante, movX, movY, &resposta);
+    // Não sendo um movimento de pulo, precisamos saber se há obstáculos.
 
-    return resposta;
+    if( movJ == 0 ) {
+        if( movI > 0 ) {
+            // movimento de letra crescente
+            j = jOrigem; // = jDestino;
+
+            for( i = iOrigem + 1; i < iDestino; i++ ) {
+                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                if(obstaculo != NULL){
+                    return 0;
+                }
+            }
+
+            return 1;
+        } 
+        if ( movI < 0 ) {
+            // movimento de letra decrescente
+            j = jOrigem; // = jDestino;
+
+            for( i = iOrigem - 1 ; i > iDestino; i-- ) {
+                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                if(obstaculo != NULL){
+                    return 0;
+                }
+            }
+
+            return 1;
+        }
+    }   
+
+    if( movI == 0 ) {
+        if( movJ > 0 ) {
+            // movimento de numero crescente
+            i = iOrigem; // = iDestino;
+
+            for( j = jOrigem + 1; j < jDestino; j++ ) {
+                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                if(obstaculo != NULL){
+                    return 0;
+                }
+            }
+
+            return 1;
+        } 
+        if ( movJ < 0 ) {
+            // movimento de numero decrescente
+            i = iOrigem; // = iDestino;
+
+            for( j = jOrigem - 1; j > jDestino; j-- ) {
+                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                if(obstaculo != NULL){
+                    return 0;
+                }
+            }
+
+            return 1;
+        }
+    } 
+
+    if( movJ > 0 ) {
+        if( movI > 0 ) {
+            // movimento de letra e numero crescente
+            for( i = iOrigem + 1, j = jOrigem + 1; i < iDestino && j < jDestino; i++, j++ ) {
+                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                if(obstaculo != NULL){
+                    return 0;
+                }
+            }
+
+            return 1;
+        }
+        else {
+            //movimento de letra crescente e numero decrescente
+            for( i = iOrigem - 1, j = jOrigem + 1; i > iDestino && j < jDestino; i--; j++ ) {
+                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                if(obstaculo != NULL){
+                    return 0;
+                }
+            }
+
+            return 1;
+        }
+    }
+
+    else { 
+        if( movI > 0 ) {
+            // movimento de letra decrescente e numero crescente
+            for( i = iOrigem + 1, j = jOrigem - 1; i < iDestino && j > jDestino; i++, j--) {
+                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                if(obstaculo != NULL){
+                    return 0;
+                }
+            }
+
+            return 1;
+        }
+        else {
+            // movimento de letra e numero decrescente
+            for( i = iOrigem - 1, j = jOrigem - 1; i > iDestino && j > jDestino; i--, j--) {
+                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                if(obstaculo != NULL){
+                    return 0;
+                }
+            }
+
+            return 1;
+        }
+    }
+
+    return 1;
 }
 
 /***********************************************************************
@@ -338,7 +475,7 @@ void PRN_MenuPrincipal( int * opcao ) {
     printf("01. Novo\n02. Abrir\n03. Salvar\n09. Mostra diretorio atual.\n\n");
     printf("11. Listar classes de peca\n12. Criar classe de peca\n\n");
     printf("21. Listar pecas\n22. Criar peca\n23. Alterar peca\n24. Excluir peca\n\n");
-    printf("31. Exibir tabuleiro.\n32. Checar cheque-mate\n\n");
+    printf("31. Exibir tabuleiro.\n32. Checar Xeque-mate\n\n");
     printf("99. Sair\n\nDigite o codigo da opcao desejada: \n> ");
 
     scanf(" %d", opcao);
@@ -487,7 +624,7 @@ void PRN_ListarClasses( void ) {
     CPC_tppClassePeca pClasse;
     char * nome;
     int count, nMovs;
-    int movX, movY;
+    int movI, movJ;
 
     printf("Lista de classes criadas:\n");
 
@@ -500,8 +637,8 @@ void PRN_ListarClasses( void ) {
 
         CPC_ObterNumeroMovimentos(pClasse, &nMovs);
         for(count = 0; count < nMovs; count++) {
-            CPC_ObterMovimento( pClasse, count, &movX, &movY);
-            printf("{%d,%d} ", movX, movY);
+            CPC_ObterMovimento( pClasse, count, &movI, &movJ);
+            printf("{%d,%d} ", movI, movJ);
         }
 
         printf("\n");
@@ -525,7 +662,7 @@ void PRN_ListarClasses( void ) {
 
 void PRN_CriarClasse( void ) {
     char nomeClasse[MAXNOME];
-    int movX, movY;
+    int movI, movJ;
     CPC_tppClassePeca pClassePeca;
 
 
@@ -546,21 +683,29 @@ void PRN_CriarClasse( void ) {
         PRN_Sair(1);
     }
 
+    printf("Agora serao cadastrados os movimentos dessa classe criada.\n"
+           "Um movimento contem uma componente em X em uma em Y.\n"
+           "Um conjunto de movimentos indicam a totalidade das jogadas possiveis de uma peca.\n"
+           "Por exemplo, uma peca que so se move uma casa para a frente tera somente um movimento: {0,1}.\n"
+           "Ja uma casa que se move qualquer numero de casas para a direita ou para tras tera os movimentos:\n"
+           "{1,0}, {2,0} ... {7,0} e {0,-1}, {0,-2} ... {0,-7}.\n"
+           "Vale lembrar que, ja que o tabuleiro de xadrez tem dimensao 8x8, os componentes de movimentos devem ser inteiros entre -7 e 7.\n")
+
     while(1) {
         printf("Novo movimento. Digite as componentes do movimento (ou 0 e 0 para acabar).\n");
         printf("Digite a componente horizontal do movimento (entre -7 e 7)\n> ");
-        scanf(" %d", &movX);
+        scanf(" %d", &movI);
         printf("Digite a componente vertical do movimento (entre -7 e 7)\n> ");
-        scanf(" %d", &movY);
+        scanf(" %d", &movJ);
 
-        if(movX == 0 && movY == 0) {
+        if(movI == 0 && movJ == 0) {
             break;
         }
-        if(movX > 7 || movX < -7 || movY > 7 || movY < -7) {
+        if(movI > 7 || movI < -7 || movJ > 7 || movJ < -7) {
             break;
         }
 
-        if( CPC_AdicionarMovimento(pClassePeca, movX, movY) == CPC_CondRetFaltouMemoria) {
+        if( CPC_AdicionarMovimento(pClassePeca, movI, movJ) == CPC_CondRetFaltouMemoria) {
             printf("Erro de memoria ao adicionar movimento.");
             PRN_Sair(1);
         }
@@ -822,7 +967,7 @@ void PRN_ExibirTabuleiro( ) {
     printf("  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |   \n"
         "  +-------------------------------+\n");
 
-    for(i = 'A'; i <= 'H'; i++) {
+    for(i = 'H'; i >= 'A'; i--) {
         printf("%c |", i);
         for(j = 1; j <= 8; j++) {
             TAB_ObterValorDeCasa(simulacao.pTab, &pPeca, i, j);
@@ -846,30 +991,122 @@ void PRN_ExibirTabuleiro( ) {
 
 }
 
-
 /***********************************************************************
 *
-*  $FC Função: PRN checar cheque-mate
+*  $FC Função: PRN checar xeque
 *
 *  $ED Descrição da função
-*     Checa se a configuração do tabuleiro configura um cheque-mate
+*     Função auxiliar que verifica se o rei branco está ameaçado pelas peças pretas.
+*
+*  $FV Valor retornado
+*     1, caso esteja
+*     0, caso contrário
 *
 ***********************************************************************/
 
-void PRN_ChecarChequeMate( ) {
-    char reiI; int reiJ;
-    PEC_tppPeca pecaCorrente, rei = ObterRei(&reiI, &reiJ);
-    char i; int j;
-    CPC_tppClassePeca classeCorrente;
-    LIS_tpCondRet lisCondRet;
-    PEC_tpJogador jogadorCorrente;
 
-//para cada peça no tabuleiro
+int PRN_ChecarAmeacaReiBranco ( ) {
+    // 
+
+
+    return 1;
+}
+
+/***********************************************************************
+*
+*  $FC Função: PRN checar xeque-mate
+*
+*  $ED Descrição da função
+*     Verifica se a configuração do tabuleiro configura um xeque-mate.
+*     Dá informacoes para o usuário sobre o xeque-mate.
+*
+***********************************************************************/
+
+void PRN_ChecarXequeMate( ) {
+    char reiI; int reiJ;
+    PEC_tppPeca rei;
+
+    char i, iDest;
+    int j, jDest;
+    PEC_tppPeca pecaAtual, pPecaComida;
+    PEC_tpJogador jogadorDaPecaAtual;
+    CPC_tppClassePeca classeDaPecaAtual;
+    LIS_tpCondRet lisCondRet;
+
+    int nMovs, i, movI, movJ;
+
+    
+    // Primeiro, precisamos ter um rei válido
+    rei = PRN_ObterReiBranco(&reiI, &reiJ);
+    if(rei == NULL) {
+        printf("Nao foi encontrado uma peca com a classe 'Rei' que pertenca "
+               "ao jogador branco e que esteja posicionado no tabuleiro.\n"
+               "Por favor, ajuste o cenario do tabuleiro e tente novamente.");
+        return;
+    }
+
+    // CHECAR XEQUE
+    // Um pré-requisito para estar em xeque-mate é estar em xeque. Vamos checar essa condição.
+    // O jogador branco está (no mínimo) em xeque caso o rei branco esteja ameaçado e seja a vez do jogador branco.
+    if( PRN_ChecarAmeacaReiBranco() == 0) {
+        printf("O cenario configurado nao eh de xeque-mate (e nem de xeque).");
+        return;
+    }
+
+    // Agora, precisamos ver se ha algum movimento que possa ser feito que deixe o rei branco fora de ameaça.
+    // Para cada casa do tabuleiro, vamos ver se contém uma peça branca; se sim, vamos realizar cada um  
+    // de seus movimentos, retornando o tabuleiro para a posição inicial após cada movimento realizado.
+    // Depois de cada movimento, será verificado se a posição ainda configura ameaça para o rei branco. 
+    // Se houver algum movimento possível que deixe o rei branco fora de perigo, o jogador branco não
+    // está em xeque-mate. Caso contrário, ele está em xeque-mate.
     for(i = 'A'; i <= 'H'; i++) {
         for(j = 1; j <= 8; j++) {
-            PRN_ChecarLegalidade(i, j, reiI, reiJ);
+            TAB_ObterValorDeCasa( simulacao.pTab, &pecaAtualCorrente, i, j );
+
+            if( pecaAtual != NULL ) {
+                PEC_ObterJogador( pecaAtual, &jogadorDaPecaAtual );
+
+                if( jogadorDaPecaAtual == JOGADOR_BRANCO) {
+                    PEC_ObterClassePeca( pecaAtual, &classeDaPecaAtual );
+
+                    if( classeDaPecaAtual == NULL ){
+                        printf("Erro: peca com classe nula.");
+                        PRN_Sair(1);
+                    }
+
+                    CPC_ObterNumeroMovimentos( classeDaPecaAtual, &nMovs );
+
+                    for(i = 0; i < nMovs; i++){
+                        CPC_ObterMovimento( classeDaPecaAtual, i, &movI, &movJ );
+
+                        iDest = i + movI;
+                        jDest = j + movJ;
+
+                        if(TAB_ChecarPosicaoValida(iDest, jDest) == TAB_CondRetOK) {
+
+                            //checar se movimento eh legal
+                            if( PRN_ChecarLegalidade( jogadorDaPecaAtual, i, j, iDest, jDest) == 1 ) {
+
+                                TAB_MoverValor( simulacao.pTab, i, j, iDest, jDest, &pPecaComida);
+
+                                if(PRN_ChecarAmeacaReiBranco() == 0){
+                                    printf("O jogador branco esta em xeque, mas nao em xeque-mate.\n"
+                                           "Movimento: %c%d para %c%d.", iOrig, jOrig, iDest, jDest);
+                                    return;
+                                }
+
+                                TAB_DesMoverValor( simulacao.pTab, i, j, iDest, jDest, pPecaComida);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
+
+    printf("O jogador branco esta em xeque-mate.");
+
+    return;
 }
 
 
@@ -926,11 +1163,11 @@ int main( void ) {
 
     printf("TRABALHO 3 DE PROGRAMACAO MODULAR - 2013.2\n"
         "AUTORES: Felipe Luiz, Guilherme Berger e Joao Vicente\n"
-        "Bem-vindo ao verificador de cheque-mate!\n"
+        "Bem-vindo ao verificador de Xeque-mate!\n"
         "O jogador com o rei em perigo e' o branco.\n"
         "Use as opcoes do menu para construir o cenario desejado.\n"
         "Ja existem as classes de peca padrao do xadrez: Rei, Torre, Bispo, Cavalo e Rainha.\n"
-        "O jogador em perigo deve possuir somente um Rei para o cheque-mate ser verificado.\n");
+        "O jogador em perigo deve possuir somente um Rei para o Xeque-mate ser verificado.\n");
 
     do {
         printf("\n(pressione qualquer tecla para exibir o menu)");
@@ -971,7 +1208,7 @@ int main( void ) {
             PRN_ExibirTabuleiro( );
             break;
             case 32:
-            PRN_ChecarChequeMate( );
+            PRN_ChecarXequeMate( );
             break;
         }
     } while( opcao != 99 );
