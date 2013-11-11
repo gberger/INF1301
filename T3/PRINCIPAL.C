@@ -11,6 +11,9 @@
 *
 ***************************************************************************/
 
+#define MAXNOME 100
+#define MAXNOME_S "100"
+
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
@@ -31,17 +34,17 @@
 
    typedef enum {
 
-         PRN_CondRetOK ,
-               /* Executou corretamente */
+		 PRN_CondRetOK ,
+			   /* Executou corretamente */
 
-         PRN_CondRetPonteiroNulo ,
-               /* Foi passado um ponteiro para NULL */
-         
-         PRN_CondRetErroParm ,
-               /* Foram passados um ou mais parametros invalidos */
+		 PRN_CondRetPonteiroNulo ,
+			   /* Foi passado um ponteiro para NULL */
+		 
+		 PRN_CondRetErroParm ,
+			   /* Foram passados um ou mais parametros invalidos */
 
-         PRN_CondRetFaltouMemoria 
-               /* Faltou memória ao alocar dados */
+		 PRN_CondRetFaltouMemoria 
+			   /* Faltou memória ao alocar dados */
 
    } PRN_tpCondRet ;
 
@@ -58,8 +61,8 @@
 
    typedef struct PRN_tagSimulacao {
 
-        TAB_tppTabuleiro pTab;
-               /* Ponteiro para o tabuleiro corrente */
+		TAB_tppTabuleiro pTab;
+			   /* Ponteiro para o tabuleiro corrente */
 		LIS_tppLista pListaPecas;
 			   /* Ponteiro para a lista de peças */
 		LIS_tppLista pListaClasses;
@@ -276,30 +279,68 @@
 *  $FC Função: PRN cria peca
 *
 *  $ED Descrição da função
-*     Abre o menu para criacao de uma peca pelo usuario.
-*
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
+*     Abre o menu para colocar uma peca no tabuleiro.
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_CriarPeca( );
+   void PRN_CriarPeca( ) {
 
-/***********************************************************************
-*
-*  $FC Função: PRN alterar peca
-*
-*  $ED Descrição da função
-*     Abre o menu de alteracao, onde o usuario pode reconfigurar uma peca.
-*
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
-*
-***********************************************************************/
+   	char coluna;
+   	char nomeClasse[MAXNOME];
+   	int linha;
+   	PEC_tppPeca * ppPeca;
+   	PEC_tppPeca * ppPecaAux;
+   	PEC_tpJogador jogador;
 
-   PRN_tpCondRet PRN_AlterarPeca( );
+   	printf("Criacao de Peca\n");
+   	printf("Digite a classe da peca\n");
+
+   	scanf(" %" MAXNOME_SP "[^ \n]",nomeClasse);
+
+   	pClassePeca = PRN_ProcurarClasse(nomeClasse);
+
+   	if(pClassePeca==NULL) { 
+   		printf("Classe inexistente\n");
+   		return;
+   	}
+
+   	printf("\nDigite 0 para peca do usuario e 1 para peca do computador\n");
+
+   	scanf("%d", &jogador);
+   
+   	PEC_CriarPeca(ppPeca, pClassePeca, jogador);
+
+   	if(ppPeca==NULL) {
+   		printf("Falta de memoria ao criar peca");
+   		return;
+   	}
+
+   	printf("Digite as coordenadas do tabuleiro onde a peca se encontra\n");
+   	printf("Digite a coluna (A a H)\n");
+   	scanf(" %1[A-H]",&coluna);
+   	printf("Digite a linha (1 a 8)\n");
+   	scanf("%d",&linha);
+
+		if(TAB_DefinirCorrente( simulacao.pTab, coluna, linha )==TAB_CondRetPosicaoInvalida) {
+			printf("Esta posicao nao existe!\n");
+			return;
+		}
+
+		TAB_ObterValorCorrente( simulacao.pTab, ppPecaAux );
+
+		if(ppPecaAux!=NULL) {
+			printf("Ja existe uma peca nesta casa. Por favor, escolha outra.\n");
+			return;
+		}   	
+
+		if(TAB_AtribuirValorCorrente( simulacao.pTab, *ppPeca)==TAB_CondRetFaltouMemoria) {
+			printf("Erro de memoria ao atribuir peca ao local do tabuleiro");
+			return;
+		}
+
+   	LIS_InserirElementoApos(simulacao.pListaPecas, *ppPeca);
+
+   }
 
 /***********************************************************************
 *
@@ -308,13 +349,44 @@
 *  $ED Descrição da função
 *     Exclui algum tipo de peca previamente definido pelo usuario.
 *
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
-*
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_ExcluirPeca( );
+   void PRN_ExcluirPeca( ) {
+
+		char coluna;
+		int linha;
+		PEC_tppPeca * ppPeca;
+
+		printf("Digite as coordenadas do tabuleiro onde esta a peca que voce deseja deletar\n");
+		printf("Digite a coluna (A a H)\n");
+		scanf(" %1[A-H]",&coluna);
+		printf("Digite a linha (1 a 8)\n");
+		scanf("%d",&linha);
+
+		if(TAB_DefinirCorrente( simulacao.pTab, coluna, linha )==TAB_CondRetPosicaoInvalida) {
+			printf("Esta posicao nao existe!\n");
+			return;
+		}
+
+		TAB_ObterValorCorrente( simulacao.pTab, ppPeca );
+		   
+		if(ppPeca==NULL) {
+		   printf("Esta posicao nao contem uma peca!\n");
+			return;
+		}
+
+		if(LIS_ProcurarValor( simulacao.pListaPecas, *ppPeca)==LIS_CondRetOk) {
+			LIS_ExcluirElemento( simulacao.pListaPecas );
+		} else {
+			printf("Erro ao excluir peca da lista de pecas");
+			PRN_Sair();
+		}
+
+		PEC_DestruirPeca(*ppPeca);
+
+		printf("Peca destruida com sucesso!\n");
+
+	}
 
 /***********************************************************************
 *
