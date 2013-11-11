@@ -1,0 +1,21 @@
+Data    Horas Trabalhadas	Tipo Tarefa					Descrição da Tarefa Realizada
+
+03/11	1					projetar					Projeto da arquitetura da solução
+
+03/11	4					codificar módulo			Alteração do módulo GRAFO, e codificação dos módulos MATRIZ e TABULEIRO
+
+03/11	1					revisar código do módulo	Revisão do código dos módulos acima
+
+03/11	1					especificar as funções		Especificações dos módulos acima
+
+10/11	3					codificar módulo			Codificação do arquivo PRINCIPAL.C
+
+10/11	2					diagnosticar e corrigir os problemas encontrados	Correção de falhas de execução do programa gerado
+
+10/11	2					revisar projetos			Verificação dos arquivos de código do projeto
+
+10/11	1					projetar					Criação dos arquivos de modelo físicos e exemplo
+
+
+
+
