@@ -106,8 +106,8 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *  $FC Função: CPC Adicionar movimento a classe de peça
 *
 *  $ED Descrição da função
-*     Obtém o nome da classe de peça passada, escrevendo no
-*     ponteiro para string dado.
+*     Adiciona um tipo de movimento à classe de peça dada.
+*     Um movimento é descrito pelos seus componentes horizontal e vertical.
 *
 *  $EP Parâmetros
 *     $P pClassePeca - ponteiro para a classe de peça
