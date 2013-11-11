@@ -11,6 +11,9 @@
 *
 ***************************************************************************/
 
+#define MAXNOME 100
+#define MAXNOME_S "100"
+
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
@@ -32,17 +35,17 @@
 
    typedef enum {
 
-         PRN_CondRetOK ,
-               /* Executou corretamente */
+		 PRN_CondRetOK ,
+			   /* Executou corretamente */
 
-         PRN_CondRetPonteiroNulo ,
-               /* Foi passado um ponteiro para NULL */
-         
-         PRN_CondRetErroParm ,
-               /* Foram passados um ou mais parametros invalidos */
+		 PRN_CondRetPonteiroNulo ,
+			   /* Foi passado um ponteiro para NULL */
+		 
+		 PRN_CondRetErroParm ,
+			   /* Foram passados um ou mais parametros invalidos */
 
-         PRN_CondRetFaltouMemoria 
-               /* Faltou memória ao alocar dados */
+		 PRN_CondRetFaltouMemoria 
+			   /* Faltou memória ao alocar dados */
 
    } PRN_tpCondRet ;
 
@@ -59,8 +62,8 @@
 
    typedef struct PRN_tagSimulacao {
 
-        TAB_tppTabuleiro pTab;
-               /* Ponteiro para o tabuleiro corrente */
+		TAB_tppTabuleiro pTab;
+			   /* Ponteiro para o tabuleiro corrente */
 		LIS_tppLista pListaPecas;
 			   /* Ponteiro para a lista de peças */
 		LIS_tppLista pListaClasses;
@@ -314,7 +317,19 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_AbrirTabuleiro( );
+   PRN_tpCondRet PRN_AbrirTabuleiro( void )
+   {
+	   char path[200];
+
+	   printf("Digite o path do arquivo:\n");
+	   scanf(" %[^\n]", path);
+
+	   PRN_NovoTabuleiro( );
+
+	   LerArquivo( path );
+
+   }
+
 
 /***********************************************************************
 *
@@ -329,11 +344,74 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_SalvarTabuleiro( );
+   PRN_tpCondRet PRN_SalvarTabuleiro( void )
+   {
+	   CPC_tppClassePeca pClasse;
+	   PEC_tppPeca pPeca;
+	   int i, j, count, nMovs;
+	   char * nome, auxString[200], ic;
+	   PEC_tpJogador jogador;
+
+	   printf("Digite o path do arquivo:\n");
+	   scanf(" %[^\n]", auxString);
+	   fp = fopen(auxString, "r");
+	   if( !fp ) {
+		   printf("Path inválido.\n\n");
+		   return;
+	   }
+
+	   LIS_IrInicioLista( simulacao.pListaClasses );
+	   while (LIS_ObterValor( simulacao.pListaClasses ) ) {
+		   pClasse = (CPC_tppClassePeca) LIS_ObterValor( simulacao.pListaClasses );
+			
+		   CPC_ObterNome(pClasse, &nome);
+		   fprintf(fp, "CLASSE %s\n", nome);
+		   CPC_ObterNumeroMovimentos(pClasse, &nMovs);
+		   for(count = 0; count < nMovs; count++) {
+			   CPC_ObterMovimento( pClasse, count, &i, &j);
+			   fprintf(fp, "MOV %d %d\n", i, j);
+		   }
+		if( LIS_AvancarElementoCorrente( simulacao.pListaClasses, 1 ) != LIS_CondRetOK )
+				break;
+	   }
+	   
+
+	   fprintf(fp, "TABULEIRO\n");
+	   for( ic = 'A'; ic < 'I'; ic++) {
+		   for( j = 1; j < 9; j++) {
+			   TAB_DefinirCorrente(simulacao.pTab, ic, j);
+			   TAB_ObterValorCorrente(simulacao.pTab, &pPeca);
+			   if(pPeca == NULL)
+				   continue;
+
+			   PEC_ObterJogador(pPeca, &jogador);
+
+			   PEC_ObterClassePeca(pPeca, &pClasse);
+			   CPC_ObterNome(pClasse, &nome);
+
+			   fprintf(fp, "%c %c %d %s\n", (jogador == JOGADOR_BRANCO) ? 'B' : 'P', ic, j, nome);
+		   }
+	   }
+		   
+   }
 
 /***********************************************************************
 *
-*  $FC Função: PRN listar pecas
+*  $FC Função: PRN carregar padrao
+*
+*  $ED Descrição da função
+*	  Carrega as classes de peças tradicionais do xadrez
+*
+***********************************************************************/
+
+   void PRN_CarregaPadrao( void )
+   {
+	   LerArquivo( "default.xdz" );
+   }
+
+/***********************************************************************
+*
+*  $FC Função: PRN listar classes
 *
 *  $ED Descrição da função
 *     Lista todas as possibilidades de pecas que podem ser inseridas no tabuleiro.
@@ -344,37 +422,92 @@
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_ListarPecas( );
+   PRN_tpCondRet PRN_ListarClasses( void )
+   {
+	   CPC_tppClassePeca pClasse;
+	   char * nome;
+
+	   printf("Lista de classes criadas:\n");
+
+	   LIS_IrInicioLista( simulacao.pListaClasses );
+	   while (LIS_ObterValor( simulacao.pListaClasses ) ) {
+		   pClasse = (CPC_tppClassePeca) LIS_ObterValor( simulacao.pListaClasses );
+			
+		   CPC_ObterNome(pClasse, &nome);
+		   printf("%s\n",nome);
+		   
+		if( LIS_AvancarElementoCorrente( simulacao.pListaClasses, 1 ) != LIS_CondRetOK )
+				break;
+	   }
+   }
 
 /***********************************************************************
 *
 *  $FC Função: PRN cria peca
 *
 *  $ED Descrição da função
-*     Abre o menu para criacao de uma peca pelo usuario.
-*
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
+*     Abre o menu para colocar uma peca no tabuleiro.
 *
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_CriarPeca( );
+   void PRN_CriarPeca( ) {
 
-/***********************************************************************
-*
-*  $FC Função: PRN alterar peca
-*
-*  $ED Descrição da função
-*     Abre o menu de alteracao, onde o usuario pode reconfigurar uma peca.
-*
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
-*
-***********************************************************************/
+   	char coluna;
+   	char nomeClasse[MAXNOME];
+   	int linha;
+   	PEC_tppPeca * ppPeca;
+   	PEC_tppPeca * ppPecaAux;
+   	PEC_tpJogador jogador;
 
-   PRN_tpCondRet PRN_AlterarPeca( );
+   	printf("Criacao de Peca\n");
+   	printf("Digite a classe da peca\n");
+
+   	scanf(" %" MAXNOME_SP "[^ \n]",nomeClasse);
+
+   	pClassePeca = PRN_ProcurarClasse(nomeClasse);
+
+   	if(pClassePeca==NULL) { 
+   		printf("Classe inexistente\n");
+   		return;
+   	}
+
+   	printf("\nDigite 0 para peca do usuario e 1 para peca do computador\n");
+
+   	scanf("%d", &jogador);
+   
+   	PEC_CriarPeca(ppPeca, pClassePeca, jogador);
+
+   	if(ppPeca==NULL) {
+   		printf("Falta de memoria ao criar peca");
+   		return;
+   	}
+
+   	printf("Digite as coordenadas do tabuleiro onde a peca se encontra\n");
+   	printf("Digite a coluna (A a H)\n");
+   	scanf(" %1[A-H]",&coluna);
+   	printf("Digite a linha (1 a 8)\n");
+   	scanf("%d",&linha);
+
+		if(TAB_DefinirCorrente( simulacao.pTab, coluna, linha )==TAB_CondRetPosicaoInvalida) {
+			printf("Esta posicao nao existe!\n");
+			return;
+		}
+
+		TAB_ObterValorCorrente( simulacao.pTab, ppPecaAux );
+
+		if(ppPecaAux!=NULL) {
+			printf("Ja existe uma peca nesta casa. Por favor, escolha outra.\n");
+			return;
+		}   	
+
+		if(TAB_AtribuirValorCorrente( simulacao.pTab, *ppPeca)==TAB_CondRetFaltouMemoria) {
+			printf("Erro de memoria ao atribuir peca ao local do tabuleiro");
+			return;
+		}
+
+   	LIS_InserirElementoApos(simulacao.pListaPecas, *ppPeca);
+
+   }
 
 /***********************************************************************
 *
@@ -383,13 +516,44 @@
 *  $ED Descrição da função
 *     Exclui algum tipo de peca previamente definido pelo usuario.
 *
-*  $FV Valor retornado
-*     PRN_CondRetOK
-*     PRN_CondRetFaltouMemoria
-*
 ***********************************************************************/
 
-   PRN_tpCondRet PRN_ExcluirPeca( );
+   void PRN_ExcluirPeca( ) {
+
+		char coluna;
+		int linha;
+		PEC_tppPeca * ppPeca;
+
+		printf("Digite as coordenadas do tabuleiro onde esta a peca que voce deseja deletar\n");
+		printf("Digite a coluna (A a H)\n");
+		scanf(" %1[A-H]",&coluna);
+		printf("Digite a linha (1 a 8)\n");
+		scanf("%d",&linha);
+
+		if(TAB_DefinirCorrente( simulacao.pTab, coluna, linha )==TAB_CondRetPosicaoInvalida) {
+			printf("Esta posicao nao existe!\n");
+			return;
+		}
+
+		TAB_ObterValorCorrente( simulacao.pTab, ppPeca );
+		   
+		if(ppPeca==NULL) {
+		   printf("Esta posicao nao contem uma peca!\n");
+			return;
+		}
+
+		if(LIS_ProcurarValor( simulacao.pListaPecas, *ppPeca)==LIS_CondRetOk) {
+			LIS_ExcluirElemento( simulacao.pListaPecas );
+		} else {
+			printf("Erro ao excluir peca da lista de pecas");
+			PRN_Sair();
+		}
+
+		PEC_DestruirPeca(*ppPeca);
+
+		printf("Peca destruida com sucesso!\n");
+
+	}
 
 /***********************************************************************
 *
@@ -517,7 +681,57 @@
 	   return PRN_CondRetOK;
    }
 
-	   
+/***********************************************************************
+*
+*  $FC Função: PRN - Le arquivo de configuracao
+*
+***********************************************************************/
+
+   void LerArquivo( char * path )
+   {
+	   char auxString[200], jogador, i;
+	   int j;
+	   FILE *fp;
+	   CPC_tppClassePeca pClasse;
+	   PEC_tppPeca pPeca;
+
+	   fp = fopen(path, "r");
+	   if( !fp ) {
+		   printf("Path inválido.\n\n");
+		   return;
+	   }
+
+	   while( fscanf(fp, " %s", auxString) == 1 ) {
+		   if( strcmp( auxString, "CLASSE") == 0 ) {
+			   fscanf(fp, " %[^\n]", auxString);
+			   if( CPC_CriarClassePeca(&pClasse, auxString) != CPC_CondRetOK) {
+				   printf( "Faltou memória." );
+				   PRN_Sair( );
+			   }
+			   LIS_InserirElementoApos(simulacao.pListaClasses, (void *) pClasse);
+
+		   } else if( strcmp( auxString, "MOV") == 0 ) {
+			   fscanf(fp, " %d %d", &i, &j);
+			   if( CPC_AdicionarMovimento(pClasse, i, j) != CPC_CondRetOK) {
+					printf( "Faltou memória." );
+					PRN_Sair( );
+			   }
+
+		   } else if( strcmp( auxString, "TABULEIRO") == 0 ) {
+			   while( scanf( " %c %c %d %[^\n]", &jogador, &i, &j, auxString) == 4) {
+				   pClasse = PRN_ProcurarClasse( auxString );
+				   if(!pClasse)
+					   continue;
+				   if( PEC_CriarPeca( &pPeca, pClasse, (jogador == 'B') ? JOGADOR_BRANCO : JOGADOR_PRETO ) != PEC_CondRetOK ) {
+					   printf( "Faltou memória." );
+					   PRN_Sair( );
+				   }
+				   TAB_DefinirCorrente(simulacao.pTab, i, j);
+				   TAB_AtribuirValorCorrente(simulacao.pTab, pPeca);
+			   }
+		   }
+	   }
+   }
 	
    void DestruirPeca( void * pValor )
    {
