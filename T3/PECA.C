@@ -46,6 +46,7 @@ typedef struct PEC_tagPeca {
 ***********************************************************************/
 
 PEC_tpCondRet PEC_CriarPeca( PEC_tppPeca * ppPeca , CPC_tppClassePeca pClassePeca , PEC_tpJogador jogador ) {
+    
     PEC_tpPeca * pPeca;
 
     if(pClassePeca == NULL) {
