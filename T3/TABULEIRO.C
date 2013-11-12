@@ -55,7 +55,6 @@ static void ExcluirCasa( void * pValor );
 
 TAB_tpCondRet TAB_CriarTabuleiro( TAB_tppTabuleiro * ppTabuleiro ) {
     TAB_tppTabuleiro pTab;
-    int i, j;
 
     if(ppTabuleiro == NULL) {
         return TAB_CondRetPonteiroNulo;

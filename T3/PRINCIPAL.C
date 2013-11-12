@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
 
 #include "TABULEIRO.H"
 #include "LISTA.H"
@@ -186,7 +187,7 @@ CPC_tppClassePeca PRN_ProcurarClasse (char *nomeProcurado) {
 
 int PRN_CarregarArquivoXdz( char * path ) {
     char auxString[200], jogador;
-    int i, j, res;
+    int i, j;
     FILE *fp;
     CPC_tppClassePeca pClasse;
     PEC_tppPeca pPeca;
@@ -288,7 +289,6 @@ int PRN_ProcurarPecaNoTabuleiro (PEC_tppPeca peca, char *i, int *j) {
 ***********************************************************************/
 
 PEC_tppPeca PRN_ObterReiBranco ( char * i, int * j ) {
-    LIS_tpCondRet lisCondRet;
     PEC_tppPeca pPeca;
     PEC_tpJogador jogador;
     CPC_tppClassePeca pClasse;
@@ -972,6 +972,8 @@ void PRN_ExcluirPeca( ) {
         return;
     }
 
+	TAB_AtribuirValorCorrente( simulacao.pTab, NULL);
+
 	LIS_IrInicioLista(simulacao.pListaPecas);
     if(LIS_ProcurarValor( simulacao.pListaPecas, pPeca) == LIS_CondRetOK) {
         LIS_ExcluirElemento( simulacao.pListaPecas );
@@ -979,8 +981,6 @@ void PRN_ExcluirPeca( ) {
         printf("Erro ao excluir peca da lista de pecas");
         PRN_Sair( 1 );
     }
-
-    PEC_DestruirPeca(pPeca);
 
     printf("Peca destruida com sucesso!\n");
 }
@@ -1058,7 +1058,7 @@ int PRN_ChecarAmeacaReiBranco ( ) {
         printf("Nao foi encontrado uma peca com a classe 'Rei' que pertenca "
                "ao jogador branco e que esteja posicionado no tabuleiro.\n"
                "Por favor, ajuste o cenario do tabuleiro e tente novamente.");
-        return;
+        return 0;
     }
 
 	// Vamos ver se há algum movimento possível que coma o rei branco.
@@ -1118,7 +1118,6 @@ void PRN_ChecarXequeMate( ) {
     PEC_tppPeca pecaAtual, pPecaComida;
     PEC_tpJogador jogadorDaPecaAtual;
     CPC_tppClassePeca classeDaPecaAtual;
-    LIS_tpCondRet lisCondRet;
 
     int nMovs, c, movI, movJ, ameaca, legalidade;
 
@@ -1229,7 +1228,7 @@ int main( void ) {
 
     do {
         printf("\n(pressione qualquer tecla para exibir o menu)");
-        getch();
+        _getch();
         PRN_MenuPrincipal( &opcao );
         switch(opcao) {
             case 1:

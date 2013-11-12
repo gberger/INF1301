@@ -250,7 +250,7 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_DesMoverValor( TAB_tppTabuleiro pTabuleiro ) ;
+   TAB_tpCondRet TAB_DesMoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest, PEC_tppPeca pPecaComida ) ;
 
 /***********************************************************************
 *
