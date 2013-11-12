@@ -9,7 +9,7 @@ As estruturas são:
 - Matriz, que contém:
     - Cabeça da matriz
 - Tabuleiro, que contém:
-	- Cabeça do tabuleiro
+    - Cabeça do tabuleiro
 - Lista, que contém:
     - Cabeça da lista
     - Nó da lista
@@ -132,6 +132,7 @@ Seja `peca` um ponteiro para estrutura cabeça de peça.
 Sempre valerá que `peca->jogador` é um enumerador de jogador válido.
 
 Se `peca->pClassePeca != NULL` então:
+
  - `peca->pClassePeca` aponta para estrutura cabeça de classe de peça, onde valem as asserivas estruturas de cabeça de classe de peça.
 
 
@@ -144,6 +145,7 @@ Se `simulacao->pTab != NULL` então `simulacao->pTab` aponta para estrutura cabe
 Se `simulacao->pListaClasses != NULL` então `simulacao->pListaClasses` aponta para estrutura cabeca da lista, onde valem as assertivas estruturais da lista e para os valores referenciados nesta lista, valem as assertivas estruturais de Classe
 
 Se `simulacao->pListaPecas != NULL` então
+
  - `simulacao->pListaPecas` aponta para estrutura cabeca da lista, onde valem as assertivas estruturais da lista e para os valores referenciados nesta lista, valem as assertivas estruturais de Peça
  - para cada estrutura cabeça de peça referenciada na lista em `simulacao->pListaPecas` a mesma deve estar referenciada por uma única posição do tabuleiro referenciado por `simulacao->pTab`
  - para cada estrutura cabeça de peça referenciada na lista em `simulacao->pListaPecas` a mesma deve ser de uma classe de peça referenciada em algum elemento de `simulacao->pListaClasses`

@@ -724,7 +724,7 @@ void PRN_CriarClasse( void ) {
            "Um movimento contem uma componente vertical e um horizontal.\n"
            "Um conjunto de movimentos indicam a totalidade das jogadas possiveis de uma peca.\n"
            "Por exemplo, uma peca que so se move uma casa para a frente tera somente um movimento: {0,1}.\n"
-           "Ja uma casa que se move qualquer numero de casas para a direita ou para tras tera os movimentos:\n"
+           "Ja uma peca que se move qualquer numero de casas para a direita ou para tras tera os movimentos:\n"
            "{0,1}, {0,2} ... {0,7} e {-1,0}, {-2,0} ... {-7,0}.\n"
            "Vale lembrar que, ja que o tabuleiro de xadrez tem dimensao 8x8, os componentes de movimentos devem ser inteiros entre -7 e 7.\n");
 
