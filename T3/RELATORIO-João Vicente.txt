@@ -1,0 +1,9 @@
+Data    Horas Trabalhadas	Tipo Tarefa					Descrição da Tarefa Realizada
+
+10/11	1					projetar					Compreensão da estrutura proposta pelos colegas
+10/11	3					codificar módulo			Codificação do módulo PECA. 
+10/11	1					revisar código do módulo	Revisão do código dos módulos acima
+10/11	2					codificar módulo            Codificação inicial do arquivo PRINCIPAL.C  		
+10/11	3					codificar módulo			Codificação do arquivo PRINCIPAL.C
+10/11	2					revisar projetos			Revisar códigos em geral do projeto.
+
