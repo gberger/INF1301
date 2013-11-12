@@ -111,8 +111,8 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 *  $EP Parâmetros
 *     $P pClassePeca - ponteiro para a classe de peça
-*     $P movX - inteiro de -7 a 7 contendo o valor horizontal do movimento
-*     $P movY - inteiro de -7 a 7 contendo o valor vertical do movimento
+*     $P movI - inteiro de -7 a 7 contendo o valor vertical do movimento
+*     $P movJ - inteiro de -7 a 7 contendo o valor horizontal do movimento
 *
 *  $FV Valor retornado
 *     CPC_CondRetOK
@@ -121,7 +121,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-    CPC_tpCondRet CPC_AdicionarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY ) ;
+    CPC_tpCondRet CPC_AdicionarMovimento( CPC_tppClassePeca pClassePeca , int movI , int movJ ) ;
 
 
 /***********************************************************************
@@ -155,8 +155,8 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *  $EP Parâmetros
 *     $P pClassePeca - ponteiro para a classe de peça
 *     $P idxMovimento - índice do movimento, inteiro de 0 até (numMovimentos - 1)
-*     $P pMovX - ponteiro para inteiro que conterá a componente horizontal do movimento
-*     $P pMovY - ponteiro para inteiro que conterá a componente vertical do movimento
+*     $P pmovI - ponteiro para inteiro que conterá a componente vertical do movimento
+*     $P pmovJ - ponteiro para inteiro que conterá a componente horizontal do movimento
 *
 *  $FV Valor retornado
 *     CPC_CondRetOK
@@ -165,7 +165,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-    CPC_tpCondRet CPC_ObterMovimento( CPC_tppClassePeca pClassePeca , int idxMovimento , int * pMovX , int * pMovY ) ;
+    CPC_tpCondRet CPC_ObterMovimento( CPC_tppClassePeca pClassePeca , int idxMovimento , int * pmovI , int * pmovJ ) ;
 
 
 /***********************************************************************
@@ -177,8 +177,8 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 *  $EP Parâmetros
 *     $P pClassePeca - ponteiro para a classe de peça
-*     $P movX - inteiro de -7 a 7 contendo o valor horizontal do movimento
-*     $P movY - inteiro de -7 a 7 contendo o valor vertical do movimento
+*     $P movI - inteiro de -7 a 7 contendo o valor vertical do movimento
+*     $P movJ - inteiro de -7 a 7 contendo o valor horizontal do movimento
 *     $P resposta - ponteiro para inteiro que conterá a resposta (1 ou 0)
 *
 *  $FV Valor retornado
@@ -188,7 +188,7 @@ typedef struct CPC_tagClassePeca * CPC_tppClassePeca ;
 *
 ***********************************************************************/
 
-    CPC_tpCondRet CPC_ChecarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY , int * resposta ) ;
+    CPC_tpCondRet CPC_ChecarMovimento( CPC_tppClassePeca pClassePeca , int movI , int movJ , int * resposta ) ;
 
 
 /***********************************************************************

@@ -116,8 +116,8 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 *  $EP Parâmetros
 *     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P i - coordenada horizontal (valor entre 'A' e 'H').
-*     $P j - coordenada vertical (valor entre 1 e 8).
+*     $P i - coordenada vertical (valor entre 'A' e 'H').
+*     $P j - coordenada horizontal (valor entre 1 e 8).
 *
 *  $FV Valor retornado
 *     TAB_CondRetOK
@@ -138,8 +138,8 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 *  $EP Parâmetros
 *     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P i - ponteiro que receberá a coord. horizontal (valor entre 'A' e 'H').
-*     $P j - coordenada que receberá a coord. vertical (valor entre 1 e 8).
+*     $P i - ponteiro que receberá a coord. vertical (valor entre 'A' e 'H').
+*     $P j - coordenada que receberá a coord. horizontal (valor entre 1 e 8).
 *
 *  $FV Valor retornado
 *     TAB_CondRetOK
@@ -212,10 +212,10 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 *  $EP Parâmetros
 *     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P iOrig - coordenada horizontal da origem (valor entre 'A' e 'H').
-*     $P jOrig - coordenada vertical da origem (valor entre 1 e 8).
-*     $P iDest - coordenada horizontal do destino (valor entre 'A' e 'H').
-*     $P jDest - coordenada vertical do destino (valor entre 1 e 8).
+*     $P iOrig - coordenada vertical da origem (valor entre 'A' e 'H').
+*     $P jOrig - coordenada horizontal da origem (valor entre 1 e 8).
+*     $P iDest - coordenada vertical do destino (valor entre 'A' e 'H').
+*     $P jDest - coordenada horizontal do destino (valor entre 1 e 8).
 *     $P pPecaComida - ponteiro para ponteiro de peça onde será posto a peça eventualmente comida.
 *
 *  $FV Valor retornado
@@ -225,7 +225,7 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 ***********************************************************************/
 
-   TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest ) ;
+   TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest, PEC_tppPeca * pPecaComida  ) ;
 
 
 /***********************************************************************
@@ -237,10 +237,10 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 *  $EP Parâmetros
 *     $P pTabuleiro - ponteiro para o tabuleiro.
-*     $P iOrig - coordenada horizontal da origem (valor entre 'A' e 'H').
-*     $P jOrig - coordenada vertical da origem (valor entre 1 e 8).
-*     $P iDest - coordenada horizontal do destino (valor entre 'A' e 'H').
-*     $P jDest - coordenada vertical do destino (valor entre 1 e 8).
+*     $P iOrig - coordenada vertical da origem (valor entre 'A' e 'H').
+*     $P jOrig - coordenada horizontal da origem (valor entre 1 e 8).
+*     $P iDest - coordenada vertical do destino (valor entre 'A' e 'H').
+*     $P jDest - coordenada horizontal do destino (valor entre 1 e 8).
 *     $P pPecaComida - ponteiro de peça que deve ser recuperada.
 *
 *  $FV Valor retornado
@@ -265,7 +265,7 @@ typedef struct TAB_tagTabuleiro * TAB_tppTabuleiro ;
 *
 ***********************************************************************/
 
-   TAB_tpCondRet ChecarPosicaoValida( char i, int j ) ;
+   TAB_tpCondRet TAB_ChecarPosicaoValida( char i, int j ) ;
 
 
 #undef TABULEIRO_EXT

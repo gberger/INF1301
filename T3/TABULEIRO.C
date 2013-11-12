@@ -11,7 +11,7 @@
 *
 ***************************************************************************/
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 #define TABULEIRO_OWN
@@ -104,7 +104,7 @@ TAB_tpCondRet TAB_DefinirCorrente( TAB_tppTabuleiro pTabuleiro, char i, int j ) 
         return TAB_CondRetPonteiroNulo;
     }
 
-    if(ChecarPosicaoValida(i, j) == TAB_CondRetPosicaoInvalida || MAT_DefinirCorrente( pTabuleiro->pMatriz, (int) (i-'A'), j - 1) == MAT_CondRetPosicaoInvalida )
+    if(TAB_ChecarPosicaoValida(i, j) == TAB_CondRetPosicaoInvalida || MAT_DefinirCorrente( pTabuleiro->pMatriz, (int) (i-'A'), j - 1) == MAT_CondRetPosicaoInvalida )
         return TAB_CondRetPosicaoInvalida;
 
     pTabuleiro->i = i;
@@ -185,13 +185,13 @@ TAB_tpCondRet TAB_ObterValorDeCasa( TAB_tppTabuleiro pTabuleiro, PEC_tppPeca * p
 ***********************************************************************/
 
 TAB_tpCondRet TAB_MoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jOrig, char iDest, int jDest, PEC_tppPeca * pPecaComida ) {
-    PEC_tppPeca pPeca, pPecaComida;
+    PEC_tppPeca pPeca;
 
     if(pTabuleiro == NULL) {
         return TAB_CondRetPonteiroNulo;
     }
 
-    if(ChecarPosicaoValida(iOrig, jOrig) == TAB_CondRetPosicaoInvalida || ChecarPosicaoValida(iDest, jDest) == TAB_CondRetPosicaoInvalida) {
+    if(TAB_ChecarPosicaoValida(iOrig, jOrig) == TAB_CondRetPosicaoInvalida || TAB_ChecarPosicaoValida(iDest, jDest) == TAB_CondRetPosicaoInvalida) {
         return TAB_CondRetPosicaoInvalida;
     }
 
@@ -216,7 +216,7 @@ TAB_tpCondRet TAB_DesMoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jO
         return TAB_CondRetPonteiroNulo;
     }
 
-    if(ChecarPosicaoValida(iOrig, jOrig) == TAB_CondRetPosicaoInvalida || ChecarPosicaoValida(iDest, jDest) == TAB_CondRetPosicaoInvalida) {
+    if(TAB_ChecarPosicaoValida(iOrig, jOrig) == TAB_CondRetPosicaoInvalida || TAB_ChecarPosicaoValida(iDest, jDest) == TAB_CondRetPosicaoInvalida) {
         return TAB_CondRetPosicaoInvalida;
     }
 
@@ -226,7 +226,7 @@ TAB_tpCondRet TAB_DesMoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jO
     TAB_DefinirCorrente(pTabuleiro, iOrig, jOrig);
     TAB_AtribuirValorCorrente(pTabuleiro, pPeca);
 
-    return TAB_CondRetOk;
+    return TAB_CondRetOK;
 }
 
 
@@ -234,7 +234,7 @@ TAB_tpCondRet TAB_DesMoverValor( TAB_tppTabuleiro pTabuleiro, char iOrig, int jO
 *  $FC Função: TAB - Checar posição válida
 ***********************************************************************/
 
-TAB_tpCondRet ChecarPosicaoValida( char i, int j ) {
+TAB_tpCondRet TAB_ChecarPosicaoValida( char i, int j ) {
     if(i > 'H' || i < 'A' || j > 8 || j < 1) {
         return TAB_CondRetPosicaoInvalida;
     }

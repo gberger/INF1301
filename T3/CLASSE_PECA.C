@@ -11,7 +11,7 @@
 *
 ***************************************************************************/
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -51,9 +51,9 @@ typedef struct CPC_tagClassePeca {
 
 typedef struct CPC_tagMovimento {
 
-    int movX;
+    int movI;
 
-    int movY;
+    int movJ;
 
 } CPC_tpMovimento;
 
@@ -121,7 +121,7 @@ CPC_tpCondRet CPC_DestruirClassePeca( CPC_tppClassePeca pClassePeca ) {
 *  $FC Função: CPC Adicionar movimento a classe de peça
 ***********************************************************************/
 
-CPC_tpCondRet CPC_AdicionarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY ) {
+CPC_tpCondRet CPC_AdicionarMovimento( CPC_tppClassePeca pClassePeca , int movI , int movJ ) {
     CPC_tpMovimento * movimento;
     int resp;
 
@@ -129,7 +129,7 @@ CPC_tpCondRet CPC_AdicionarMovimento( CPC_tppClassePeca pClassePeca , int movX ,
         return CPC_CondRetPonteiroNulo;
     }
 
-    CPC_ChecarMovimento(pClassePeca, movX, movY, &resp);
+    CPC_ChecarMovimento(pClassePeca, movI, movJ, &resp);
     if(resp == 1) {
         return CPC_CondRetArgumentosInvalidos;
     }
@@ -140,8 +140,8 @@ CPC_tpCondRet CPC_AdicionarMovimento( CPC_tppClassePeca pClassePeca , int movX ,
         return CPC_CondRetFaltouMemoria;
     }
 
-    movimento->movX = movX;
-    movimento->movY = movY;
+    movimento->movI = movI;
+    movimento->movJ = movJ;
 
     LIS_IrFinalLista(pClassePeca->movimentos);
     if( LIS_InserirElementoApos(pClassePeca->movimentos, movimento) == LIS_CondRetFaltouMemoria ) {
@@ -171,7 +171,7 @@ CPC_tpCondRet CPC_ObterNumeroMovimentos( CPC_tppClassePeca pClassePeca , int * n
 *  $FC Função: CPC Obter movimento de classe de peça
 ***********************************************************************/
 
-CPC_tpCondRet CPC_ObterMovimento( CPC_tppClassePeca pClassePeca , int idxMovimento , int * pMovX , int * pMovY ) {
+CPC_tpCondRet CPC_ObterMovimento( CPC_tppClassePeca pClassePeca , int idxMovimento , int * pMovI , int * pMovJ ) {
     int numElem;
     CPC_tpMovimento * movimento;
 
@@ -190,8 +190,8 @@ CPC_tpCondRet CPC_ObterMovimento( CPC_tppClassePeca pClassePeca , int idxMovimen
 
     movimento = (CPC_tpMovimento*) LIS_ObterValor(pClassePeca->movimentos);
 
-    *pMovX = movimento->movX;
-    *pMovY = movimento->movY;
+    *pMovI = movimento->movI;
+    *pMovJ = movimento->movJ;
 
     return CPC_CondRetOK;
 }
@@ -200,24 +200,24 @@ CPC_tpCondRet CPC_ObterMovimento( CPC_tppClassePeca pClassePeca , int idxMovimen
 *  $FC Função: CPC Checar movimento de classe de peça
 ***********************************************************************/
 
-CPC_tpCondRet CPC_ChecarMovimento( CPC_tppClassePeca pClassePeca , int movX , int movY , int * resposta ) {
+CPC_tpCondRet CPC_ChecarMovimento( CPC_tppClassePeca pClassePeca , int movI , int movJ , int * resposta ) {
     int numMovimentos;
     int i;
-    int movXObtido, movYObtido;
+    int movIObtido, movJObtido;
 
     if(pClassePeca == NULL) {
         return CPC_CondRetPonteiroNulo;
     }
 
-    if(movX > 7 || movY > 7 || movX < -7 || movY < -7) {
+    if(movI > 7 || movJ > 7 || movI < -7 || movJ < -7) {
         *resposta = 0;
     }
 
     CPC_ObterNumeroMovimentos(pClassePeca, &numMovimentos);
 
     for(i = 0; i < numMovimentos; i++) {
-        CPC_ObterMovimento(pClassePeca, i, &movXObtido, &movYObtido);
-        if(movXObtido == movX && movYObtido == movY) {
+        CPC_ObterMovimento(pClassePeca, i, &movIObtido, &movJObtido);
+        if(movIObtido == movI && movJObtido == movJ) {
             *resposta = 1;
             return CPC_CondRetOK;      
         }

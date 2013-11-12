@@ -1,4 +1,4 @@
-D/***************************************************************************
+/***************************************************************************
 *  $MCI Módulo de implementação: Módulo matriz quadrada
 *
 *  Arquivo gerado:              MATRIZ.C
@@ -11,7 +11,7 @@ D/***************************************************************************
 *
 ***************************************************************************/
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 #define MATRIZ_OWN
@@ -47,7 +47,7 @@ typedef struct MAT_tagMatriz {
 *  Função: MAT Criar matriz
 **********************************************************************/
 
-MAT_tpCondRet MAT_CriarMatriz( MAT_tppMatriz * ppMatriz, int n, void ( * ExcluirValor ) ( void * pDado ) {
+MAT_tpCondRet MAT_CriarMatriz( MAT_tppMatriz * ppMatriz, int n, void ( * ExcluirValor ) ( void * pDado ) ){
     int linhaCorrente, colunaCorrente;
 
     if(n <= 0) {
@@ -154,7 +154,7 @@ MAT_tpCondRet MAT_DefinirCorrente( MAT_tppMatriz pMatriz, int i, int j ) {
         return MAT_CondRetPonteiroNulo;
     } 
 
-    if( i < 0 || i > (pMatriz->n - 1) ||  j < 0 || j > (pMatriz->n - 1) {
+    if( i < 0 || i > (pMatriz->n - 1) ||  j < 0 || j > (pMatriz->n - 1)) {
         return MAT_CondRetPosicaoInvalida;
     }
 

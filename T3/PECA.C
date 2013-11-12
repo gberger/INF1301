@@ -12,7 +12,7 @@
 ***************************************************************************/
 
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #define PECA_OWN
 #include "PECA.H"

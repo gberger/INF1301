@@ -158,8 +158,8 @@ typedef struct MAT_tagMatriz * MAT_tppMatriz ;
 *
 *  $EP Parâmetros
 *     $P pMatriz - ponteiro para a matriz.
-*     $P i - coordenada horizontal.
-*     $P j - coordenada vertical.
+*     $P i - coordenada vertical.
+*     $P j - coordenada horizontal.
 *
 *  $FV Valor retornado
 *     MAT_CondRetOK
