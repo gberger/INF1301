@@ -1,0 +1,11 @@
+Data    Horas Trabalhadas	Tipo Tarefa					Descrição da Tarefa Realizada
+
+03/11	1					estudar 					Estudo do xadrez e do xeque-mate
+10/11	2.5					especificar as funções		Especificações das funções dos módulos CLASSE_PECA e PECA
+10/11	2					codificar módulo			Codificação do módulo CLASSE_PECA
+10/11	1					revisar código do módulo	Revisão do código dos módulos acima		
+10/11	3					codificar módulo			Codificação do arquivo PRINCIPAL.C (interface e funções básicas)
+10/11	1					revisar projetos			Revisar códigos em geral do projeto
+11/11	2.2					revisar projetos			Revisar documentação e textos
+11/11	4.5					codificar módulo			Codificação do arquivo PRINCIPAL.C (algoritmo de xeque-mate) e correções em geral no programa
+11/11	1					projetar					Criação dos arquivos das assertivas estruturais e do README
