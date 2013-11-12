@@ -4,7 +4,7 @@
 *  Arquivo gerado:              LISTA.c
 *  Letras identificadoras:      LIS
 *
-*  Projeto: T2 INF1301 2013.2
+*  Projeto: T3 INF1301 2013.2
 *  Autores: gb - Guilherme Berger
 *           fl - Felipe Luiz
 *           jv - João Vicente
