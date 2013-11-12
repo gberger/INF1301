@@ -98,6 +98,38 @@ void DestruirClassePeca( void * pValor ) {
 
 /***********************************************************************
 *
+*  $FC Função: PRN funcao de inicialização
+*
+*  $ED Descrição da função
+*     Inicializa a variável global, criando as estruturas necessárias.
+*
+***********************************************************************/
+
+void PRN_Inicializa( void ) {
+    if( TAB_CriarTabuleiro( &(simulacao.pTab) ) != TAB_CondRetOK ) {
+        printf("ERRO DE MEMORIA AO CRIAR TABULEIRO");
+        exit(1);
+    }
+
+    simulacao.pListaClasses = LIS_CriarLista( DestruirClassePeca );
+    if( simulacao.pListaClasses == NULL ) {
+        TAB_DestruirTabuleiro( simulacao.pTab );
+        printf("ERRO DE MEMORIA AO CRIAR LISTA DE CLASSES");
+        exit(1);
+    }
+
+    simulacao.pListaPecas = LIS_CriarLista( DestruirPeca );
+    if( simulacao.pListaPecas == NULL ) {
+        TAB_DestruirTabuleiro( simulacao.pTab );
+        LIS_DestruirLista( simulacao.pListaClasses );
+        printf("ERRO DE MEMORIA AO CRIAR LISTA DE PECAS");
+        exit(1);
+    }
+}
+
+
+/***********************************************************************
+*
 *  $FC Função: PRN procurar classe de peça
 *
 *  $ED Descrição da função
@@ -154,14 +186,14 @@ CPC_tppClassePeca PRN_ProcurarClasse (char *nomeProcurado) {
 
 int PRN_CarregarArquivoXdz( char * path ) {
     char auxString[200], jogador;
-    int i, j;
+    int i, j, res;
     FILE *fp;
     CPC_tppClassePeca pClasse;
     PEC_tppPeca pPeca;
 
     fp = fopen(path, "r");
     if( !fp ) {
-        printf("Path inválido.\n\n");
+        printf("Path invalido.\n\n");
         return 0;
     }
 
@@ -176,7 +208,7 @@ int PRN_CarregarArquivoXdz( char * path ) {
 
         } else if( strcmp( auxString, "MOV") == 0 ) {
             fscanf(fp, " %d %d", &i, &j);
-            if( CPC_AdicionarMovimento(pClasse, i, j) != CPC_CondRetOK) {
+            if( CPC_AdicionarMovimento(pClasse, i, j) == CPC_CondRetFaltouMemoria) {
                 printf( "Faltou memória." );
                 PRN_Sair( 1 );
             }
@@ -257,31 +289,35 @@ int PRN_ProcurarPecaNoTabuleiro (PEC_tppPeca peca, char *i, int *j) {
 
 PEC_tppPeca PRN_ObterReiBranco ( char * i, int * j ) {
     LIS_tpCondRet lisCondRet;
-    PEC_tppPeca peca;
+    PEC_tppPeca pPeca;
     PEC_tpJogador jogador;
-    CPC_tppClassePeca classePeca, classeRei = PRN_ProcurarClasse("Rei");
+    CPC_tppClassePeca pClasse;
+	char ic; int jc;
+	char *nome;
 
-    if(classeRei == NULL){
-        return NULL;
+	for( ic = 'A'; ic <= 'H'; ic++) {
+        for( jc = 1; jc <= 8; jc++) {
+            TAB_ObterValorDeCasa(simulacao.pTab, &pPeca, ic, jc);
+            if(pPeca == NULL)
+                continue;
+
+            PEC_ObterJogador(pPeca, &jogador);
+            if(jogador != JOGADOR_BRANCO) 
+				continue;
+			
+			PEC_ObterClassePeca(pPeca, &pClasse);
+            CPC_ObterNome(pClasse, &nome);
+						
+			if(strcmp(nome, "Rei") != 0)
+				continue;
+			
+			*i = ic;
+			*j = jc;
+			return pPeca;
+        }
     }
 
-    LIS_IrInicioLista( simulacao.pListaPecas );
-    do {
-
-        peca = (PEC_tppPeca) LIS_ObterValor(simulacao.pListaPecas);
-        PEC_ObterClassePeca(peca, &classePeca);
-        PEC_ObterJogador(peca, &jogador)
-
-        if(jogador == JOGADOR_BRANCO && classePeca == classeRei){
-            if( PRN_ProcurarPecaNoTabuleiro(peca, &i, &j) ){
-                return peca;
-            }
-        }
-
-        lisCondRet = LIS_AvancarElementoCorrente(simulacao.pListaPecas, 1);
-    } while(lisCondRet != LIS_CondRetFimLista && lisCondRet != LIS_CondRetListaVazia);
-
-    return NULL;
+	return NULL;
 }
 
 
@@ -300,14 +336,11 @@ PEC_tppPeca PRN_ObterReiBranco ( char * i, int * j ) {
 ***********************************************************************/
 
 int PRN_ChecarMovimentoPulo (int movI, int movJ) {
-    if(movI < 0) {
-        movI = -movI;
-    }
-    if(movJ < 0) {
-        movJ = -movJ;
-    }
+	if(movI == movJ || movI == -movJ || movI == 0 || movJ == 0){
+		return 0;
+	}
 
-    return movI == movJ ? 0 : 1;
+    return 1;
 }
 
 
@@ -337,7 +370,7 @@ int PRN_ChecarLegalidade (PEC_tpJogador jogador, char iOrigem, int jOrigem, char
     movI = iDestino - iOrigem;
     movJ = jDestino - jOrigem;
 
-    TAB_ObterValorDeCasa(simulacao.pTab, &defensor, iDestino, iOrigem);
+    TAB_ObterValorDeCasa(simulacao.pTab, &defensor, iDestino, jDestino);
 
     // Se tentar mover uma peça de um jogador para uma casa que está ocupada por
     // uma peça do mesmo jogador, não é um movimento legal.
@@ -365,7 +398,7 @@ int PRN_ChecarLegalidade (PEC_tpJogador jogador, char iOrigem, int jOrigem, char
             j = jOrigem; // = jDestino;
 
             for( i = iOrigem + 1; i < iDestino; i++ ) {
-                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                TAB_ObterValorDeCasa(simulacao.pTab, &obstaculo, i, j);
                 if(obstaculo != NULL){
                     return 0;
                 }
@@ -378,7 +411,7 @@ int PRN_ChecarLegalidade (PEC_tpJogador jogador, char iOrigem, int jOrigem, char
             j = jOrigem; // = jDestino;
 
             for( i = iOrigem - 1 ; i > iDestino; i-- ) {
-                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                TAB_ObterValorDeCasa(simulacao.pTab, &obstaculo, i, j);
                 if(obstaculo != NULL){
                     return 0;
                 }
@@ -394,7 +427,7 @@ int PRN_ChecarLegalidade (PEC_tpJogador jogador, char iOrigem, int jOrigem, char
             i = iOrigem; // = iDestino;
 
             for( j = jOrigem + 1; j < jDestino; j++ ) {
-                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                TAB_ObterValorDeCasa(simulacao.pTab, &obstaculo, i, j);
                 if(obstaculo != NULL){
                     return 0;
                 }
@@ -407,7 +440,7 @@ int PRN_ChecarLegalidade (PEC_tpJogador jogador, char iOrigem, int jOrigem, char
             i = iOrigem; // = iDestino;
 
             for( j = jOrigem - 1; j > jDestino; j-- ) {
-                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                TAB_ObterValorDeCasa(simulacao.pTab, &obstaculo, i, j);
                 if(obstaculo != NULL){
                     return 0;
                 }
@@ -421,7 +454,7 @@ int PRN_ChecarLegalidade (PEC_tpJogador jogador, char iOrigem, int jOrigem, char
         if( movI > 0 ) {
             // movimento de letra e numero crescente
             for( i = iOrigem + 1, j = jOrigem + 1; i < iDestino && j < jDestino; i++, j++ ) {
-                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                TAB_ObterValorDeCasa(simulacao.pTab, &obstaculo, i, j);
                 if(obstaculo != NULL){
                     return 0;
                 }
@@ -431,8 +464,8 @@ int PRN_ChecarLegalidade (PEC_tpJogador jogador, char iOrigem, int jOrigem, char
         }
         else {
             //movimento de letra crescente e numero decrescente
-            for( i = iOrigem - 1, j = jOrigem + 1; i > iDestino && j < jDestino; i--; j++ ) {
-                TAB_ObterValorDeCasa(i, j, &obstaculo);
+            for( i = iOrigem - 1, j = jOrigem + 1; i > iDestino && j < jDestino; i--, j++ ) {
+                TAB_ObterValorDeCasa(simulacao.pTab, &obstaculo, i, j);
                 if(obstaculo != NULL){
                     return 0;
                 }
@@ -446,7 +479,7 @@ int PRN_ChecarLegalidade (PEC_tpJogador jogador, char iOrigem, int jOrigem, char
         if( movI > 0 ) {
             // movimento de letra decrescente e numero crescente
             for( i = iOrigem + 1, j = jOrigem - 1; i < iDestino && j > jDestino; i++, j--) {
-                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                TAB_ObterValorDeCasa(simulacao.pTab, &obstaculo, i, j);
                 if(obstaculo != NULL){
                     return 0;
                 }
@@ -457,7 +490,7 @@ int PRN_ChecarLegalidade (PEC_tpJogador jogador, char iOrigem, int jOrigem, char
         else {
             // movimento de letra e numero decrescente
             for( i = iOrigem - 1, j = jOrigem - 1; i > iDestino && j > jDestino; i--, j--) {
-                TAB_ObterValorDeCasa(i, j, &obstaculo);
+                TAB_ObterValorDeCasa(simulacao.pTab, &obstaculo, i, j);
                 if(obstaculo != NULL){
                     return 0;
                 }
@@ -487,7 +520,7 @@ void PRN_MenuPrincipal( int * opcao ) {
     printf("31. Exibir tabuleiro.\n32. Checar Xeque-mate\n\n");
     printf("99. Sair\n\nDigite o codigo da opcao desejada: \n> ");
 
-    scanf(" %d", opcao);
+    scanf("%d", opcao);
 }
 
 
@@ -501,29 +534,16 @@ void PRN_MenuPrincipal( int * opcao ) {
 ***********************************************************************/
 
 void PRN_NovoTabuleiro( void ) {
-    char certeza;
 
-    printf("Voce tem certeza? Suas alteracoes nao serao salvas. (S/N)\n> ");
-    scanf(" %c", &certeza);
-
-    if(!(certeza == 'S' || certeza == 's' || certeza == '1' || certeza == 'y' || certeza == 'Y')) {
-        return;
-    }
-
+    LIS_DestruirLista( simulacao.pListaClasses );
+    LIS_DestruirLista( simulacao.pListaPecas );
     TAB_DestruirTabuleiro( simulacao.pTab );
 
-    if(TAB_CriarTabuleiro( &(simulacao.pTab) ) != TAB_CondRetOK) {
-        LIS_DestruirLista( simulacao.pListaClasses );
-        LIS_DestruirLista( simulacao.pListaPecas );
+	simulacao.pTab = NULL;
+	simulacao.pListaClasses = NULL;
+	simulacao.pListaPecas = NULL;
 
-        printf("ERRO AO CRIAR TABULEIRO");
-        PRN_Sair(1);
-    }
-
-    LIS_EsvaziarLista( simulacao.pListaClasses );
-    LIS_EsvaziarLista( simulacao.pListaPecas );
-
-    printf("O tabuleiro foi zerado.");
+	PRN_Inicializa();
 }
 
 /***********************************************************************
@@ -538,8 +558,13 @@ void PRN_NovoTabuleiro( void ) {
 void PRN_AbrirTabuleiro( void ) {
     char path[200];
 
-    printf("Digite o path do arquivo:\n");
+    printf("Digite o path do arquivo para abrir:\n");
     scanf(" %[^\n]", path);
+
+	if( access( path, 0 ) == -1 ) {
+		printf("O arquivo nao existe.");
+		return;
+	} 
 
     PRN_NovoTabuleiro( );
 
@@ -566,7 +591,7 @@ void PRN_SalvarTabuleiro( void ) {
     PEC_tpJogador jogador;
     FILE *fp;
 
-    printf("Digite o path do arquivo:\n");
+    printf("Digite o path do arquivo para salvar:\n");
     scanf(" %[^\n]", auxString);
     fp = fopen(auxString, "w");
     if( !fp ) {
@@ -606,6 +631,7 @@ void PRN_SalvarTabuleiro( void ) {
         }
     }
 
+	printf("Salvo com sucesso.");
     fclose(fp);
 }
 
@@ -695,18 +721,18 @@ void PRN_CriarClasse( void ) {
     }
 
     printf("Agora serao cadastrados os movimentos dessa classe criada.\n"
-           "Um movimento contem uma componente em X em uma em Y.\n"
+           "Um movimento contem uma componente vertical e um horizontal.\n"
            "Um conjunto de movimentos indicam a totalidade das jogadas possiveis de uma peca.\n"
            "Por exemplo, uma peca que so se move uma casa para a frente tera somente um movimento: {0,1}.\n"
            "Ja uma casa que se move qualquer numero de casas para a direita ou para tras tera os movimentos:\n"
-           "{1,0}, {2,0} ... {7,0} e {0,-1}, {0,-2} ... {0,-7}.\n"
-           "Vale lembrar que, ja que o tabuleiro de xadrez tem dimensao 8x8, os componentes de movimentos devem ser inteiros entre -7 e 7.\n")
+           "{0,1}, {0,2} ... {0,7} e {-1,0}, {-2,0} ... {-7,0}.\n"
+           "Vale lembrar que, ja que o tabuleiro de xadrez tem dimensao 8x8, os componentes de movimentos devem ser inteiros entre -7 e 7.\n");
 
     while(1) {
-        printf("Novo movimento. Digite as componentes do movimento (ou 0 e 0 para acabar).\n");
-        printf("Digite a componente horizontal do movimento (entre -7 e 7)\n> ");
+        printf("\nNovo movimento. Digite as componentes do movimento (ou 0 e 0 para acabar).\n");
+        printf("Digite a componente vertical do movimento (entre -7 e 7).\n> ");
         scanf(" %d", &movI);
-        printf("Digite a componente vertical do movimento (entre -7 e 7)\n> ");
+        printf("Digite a componente horizontal do movimento (entre -7 e 7).\n> ");
         scanf(" %d", &movJ);
 
         if(movI == 0 && movJ == 0) {
@@ -808,7 +834,7 @@ void PRN_CriarPeca( )
     printf("Digite a coluna (A a H)\n> ");
     scanf(" %c", &coluna);
     printf("Digite a linha (1 a 8)\n> ");
-    scanf(" %d", &linha);
+    scanf("%d", &linha);
 
     if(TAB_DefinirCorrente( simulacao.pTab, coluna, linha ) == TAB_CondRetPosicaoInvalida) {
         printf("Esta posicao nao existe!\n");
@@ -872,14 +898,14 @@ void PRN_AlterarPeca( ) {
 
     printf("O que voce deseja alterar?\n");
     printf("1 - Posicao\n2 - Classe\n> ");
-    scanf(" %d", &opcao);
+    scanf("%d", &opcao);
 
     if(opcao == 1) {
         printf("Digite as novas coordenadas da peca\n");
         printf("Digite a coluna (A a H)\n> ");
         scanf(" %c", &coluna2);
         printf("Digite a linha (1 a 8)\n> ");
-        scanf(" %d", &linha2);
+        scanf("%d", &linha2);
 
         if(TAB_DefinirCorrente( simulacao.pTab, coluna2, linha2 ) == TAB_CondRetPosicaoInvalida) {
             printf("Esta posicao nao existe!\n");
@@ -893,7 +919,7 @@ void PRN_AlterarPeca( ) {
             return;
         }       
 
-        TAB_MoverValor(simulacao.pTab, coluna, linha, coluna2, linha2);
+        TAB_MoverValor(simulacao.pTab, coluna, linha, coluna2, linha2, &pPecaAux);
 
     } 
     else if(opcao == 2) {
@@ -946,6 +972,7 @@ void PRN_ExcluirPeca( ) {
         return;
     }
 
+	LIS_IrInicioLista(simulacao.pListaPecas);
     if(LIS_ProcurarValor( simulacao.pListaPecas, pPeca) == LIS_CondRetOK) {
         LIS_ExcluirElemento( simulacao.pListaPecas );
     } else {
@@ -1017,10 +1044,59 @@ void PRN_ExibirTabuleiro( ) {
 
 
 int PRN_ChecarAmeacaReiBranco ( ) {
-    // 
+    char reiI; int reiJ;
+    PEC_tppPeca rei, pecaAtual;
+	PEC_tpJogador jogadorDaPecaAtual;
+	CPC_tppClassePeca classeDaPecaAtual;
 
+	char i;
+	int j, movI, movJ, resposta, legalidade;
+	
+	// Primeiro, precisamos ter um rei válido
+    rei = PRN_ObterReiBranco(&reiI, &reiJ);
+    if(rei == NULL) {
+        printf("Nao foi encontrado uma peca com a classe 'Rei' que pertenca "
+               "ao jogador branco e que esteja posicionado no tabuleiro.\n"
+               "Por favor, ajuste o cenario do tabuleiro e tente novamente.");
+        return;
+    }
 
-    return 1;
+	// Vamos ver se há algum movimento possível que coma o rei branco.
+	// Para cada casa do tabuleiro, vamos ver se contém uma peça preta; se sim, vamos verificar
+	// se existe algum movimento possível e legal para essa peça que a permita comer
+	// o rei branco.
+	for(i = 'A'; i <= 'H'; i++) {
+        for(j = 1; j <= 8; j++) {
+            TAB_ObterValorDeCasa( simulacao.pTab, &pecaAtual, i, j );
+
+            if( pecaAtual != NULL ) {
+                PEC_ObterJogador( pecaAtual, &jogadorDaPecaAtual );
+
+                if( jogadorDaPecaAtual == JOGADOR_PRETO) {
+                    PEC_ObterClassePeca( pecaAtual, &classeDaPecaAtual );
+
+                    if( classeDaPecaAtual == NULL ){
+                        printf("Erro: peca com classe nula.");
+                        PRN_Sair(1);
+                    }
+
+					movI = -(reiI - i);
+					movJ = -(reiJ - j);
+
+					CPC_ChecarMovimento(classeDaPecaAtual, movI, movJ, &resposta);
+
+					if(resposta == 1){
+						legalidade = PRN_ChecarLegalidade( jogadorDaPecaAtual, i, j, reiI, reiJ);
+						if(legalidade == 1){
+							return 1;
+						}
+					}
+                }
+            }
+        }
+    }
+
+    return 0;
 }
 
 /***********************************************************************
@@ -1044,7 +1120,7 @@ void PRN_ChecarXequeMate( ) {
     CPC_tppClassePeca classeDaPecaAtual;
     LIS_tpCondRet lisCondRet;
 
-    int nMovs, i, movI, movJ;
+    int nMovs, c, movI, movJ, ameaca, legalidade;
 
     
     // Primeiro, precisamos ter um rei válido
@@ -1072,7 +1148,7 @@ void PRN_ChecarXequeMate( ) {
     // está em xeque-mate. Caso contrário, ele está em xeque-mate.
     for(i = 'A'; i <= 'H'; i++) {
         for(j = 1; j <= 8; j++) {
-            TAB_ObterValorDeCasa( simulacao.pTab, &pecaAtualCorrente, i, j );
+            TAB_ObterValorDeCasa( simulacao.pTab, &pecaAtual, i, j );
 
             if( pecaAtual != NULL ) {
                 PEC_ObterJogador( pecaAtual, &jogadorDaPecaAtual );
@@ -1087,8 +1163,8 @@ void PRN_ChecarXequeMate( ) {
 
                     CPC_ObterNumeroMovimentos( classeDaPecaAtual, &nMovs );
 
-                    for(i = 0; i < nMovs; i++){
-                        CPC_ObterMovimento( classeDaPecaAtual, i, &movI, &movJ );
+                    for(c = 0; c < nMovs; c++){
+                        CPC_ObterMovimento( classeDaPecaAtual, c, &movI, &movJ );
 
                         iDest = i + movI;
                         jDest = j + movJ;
@@ -1096,17 +1172,20 @@ void PRN_ChecarXequeMate( ) {
                         if(TAB_ChecarPosicaoValida(iDest, jDest) == TAB_CondRetOK) {
 
                             //checar se movimento eh legal
-                            if( PRN_ChecarLegalidade( jogadorDaPecaAtual, i, j, iDest, jDest) == 1 ) {
+							legalidade = PRN_ChecarLegalidade( jogadorDaPecaAtual, i, j, iDest, jDest);
+                            if( legalidade == 1 ) {
 
                                 TAB_MoverValor( simulacao.pTab, i, j, iDest, jDest, &pPecaComida);
 
-                                if(PRN_ChecarAmeacaReiBranco() == 0){
+								ameaca = PRN_ChecarAmeacaReiBranco();
+
+								TAB_DesMoverValor( simulacao.pTab, i, j, iDest, jDest, pPecaComida);
+
+                                if(ameaca == 0){
                                     printf("O jogador branco esta em xeque, mas nao em xeque-mate.\n"
-                                           "Movimento: %c%d para %c%d.", iOrig, jOrig, iDest, jDest);
+                                           "Movimento: %c%d para %c%d.", i, j, iDest, jDest);
                                     return;
                                 }
-
-                                TAB_DesMoverValor( simulacao.pTab, i, j, iDest, jDest, pPecaComida);
                             }
                         }
                     }
@@ -1118,38 +1197,6 @@ void PRN_ChecarXequeMate( ) {
     printf("O jogador branco esta em xeque-mate.");
 
     return;
-}
-
-
-/***********************************************************************
-*
-*  $FC Função: PRN funcao de inicialização
-*
-*  $ED Descrição da função
-*     Inicializa a variável global, criando as estruturas necessárias.
-*
-***********************************************************************/
-
-void PRN_Inicializa( void ) {
-    if( TAB_CriarTabuleiro( &(simulacao.pTab) ) != TAB_CondRetOK ) {
-        printf("ERRO DE MEMORIA AO CRIAR TABULEIRO");
-        exit(1);
-    }
-
-    simulacao.pListaClasses = LIS_CriarLista( DestruirClassePeca );
-    if( simulacao.pListaClasses == NULL ) {
-        TAB_DestruirTabuleiro( simulacao.pTab );
-        printf("ERRO DE MEMORIA AO CRIAR LISTA DE CLASSES");
-        exit(1);
-    }
-
-    simulacao.pListaPecas = LIS_CriarLista( DestruirPeca );
-    if( simulacao.pListaPecas == NULL ) {
-        TAB_DestruirTabuleiro( simulacao.pTab );
-        LIS_DestruirLista( simulacao.pListaClasses );
-        printf("ERRO DE MEMORIA AO CRIAR LISTA DE PECAS");
-        exit(1);
-    }
 }
 
 
