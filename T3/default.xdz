@@ -51,6 +51,20 @@ MOV 4 4
 MOV 5 5
 MOV 6 6
 MOV 7 7
+MOV 1 -1
+MOV 2 -2
+MOV 3 -3
+MOV 4 -4
+MOV 5 -5
+MOV 6 -6
+MOV 7 -7
+MOV 1 -1
+MOV 2 -2
+MOV 3 -3
+MOV 4 -4
+MOV 5 -5
+MOV 6 -6
+MOV 7 -7
 CLASSE Rainha
 MOV -1 0
 MOV -2 0
@@ -94,6 +108,20 @@ MOV 4 4
 MOV 5 5
 MOV 6 6
 MOV 7 7
+MOV 1 -1
+MOV 2 -2
+MOV 3 -3
+MOV 4 -4
+MOV 5 -5
+MOV 6 -6
+MOV 7 -7
+MOV 1 -1
+MOV 2 -2
+MOV 3 -3
+MOV 4 -4
+MOV 5 -5
+MOV 6 -6
+MOV 7 -7
 CLASSE Cavalo
 MOV 1 2
 MOV 1 -2
