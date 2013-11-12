@@ -16,6 +16,8 @@ As estruturas são:
     - 
 - Peca, que contém:
     - 
+- Simulação, que contém
+	- Cabeça da simulação
 
 
 # Assertivas Estruturais
@@ -81,7 +83,7 @@ As estruturas são:
 	Se um vértice possui `(idVertice1 + 1) % (matriz->n) != 0` então este possui uma aresta de id MAT_L que aponta para o vértice cujo `idVertice2 == idVertice1 + 1`
 
 	Se um vértice possui `idVertice1 % (matriz->n) != 0` então este possui uma aresta de id MAT_O que aponta para o vértice cujo `idVertice2 == idVertice1 - 1`
-	
+
 
 ## Tabuleiro
 	Seja `tabuleiro` um ponteiro para estrutura cabeça do tabuleiro
@@ -95,3 +97,23 @@ As estruturas são:
 	Sempre `tabuleiro->i == X` e `tabuleiro->j == Y`
 
 	Sempre a posição corrente da matriz terá suas coordenadas i e j dadas por `X - 'A'` e `Y - 1`, respectivamente
+
+	Seja `pValor` o valor referenciado por uma posição do tabuleiro
+
+	Se `pValor != NULL` então `pValor` aponta para estrutura cabeça de peça
+
+
+## Simulação
+	Seja `simulacao` um ponteiro para estrutura cabeça da simulação
+
+	Se `simulacao->pTab != NULL` então `simulacao->pTab` aponta para estrutura cabeça do tabuleiro, valendo as assertivas estruturais do tabuleiro
+
+	Se `simulacao->pListaClasses != NULL` então `simulacao->pListaClasses` aponta para estrutura cabeca da lista, onde valem as assertivas estruturais da lista e para os valores referenciados nesta lista, valem as assertivas estruturais de Classe
+
+	Se `simulacao->pListaPecas != NULL` então
+	 - `simulacao->pListaPecas` aponta para estrutura cabeca da lista, onde valem as assertivas estruturais da lista e para os valores referenciados nesta lista, valem as assertivas estruturais de Peça
+	 - para cada estrutura cabeça de peça referenciada na lista em `simulacao->pListaPecas` a mesma deve estar referenciada por uma única posição do tabuleiro referenciado por `simulacao->pTab`
+	 - para cada estrutura cabeça de peça referenciada na lista em `simulacao->pListaPecas` a mesma deve ser de uma classe referenciada em algum elemento de `simulacao->pListaClasses`
+
+
+
