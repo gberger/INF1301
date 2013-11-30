@@ -20,8 +20,12 @@
 #include    "Generico.h"
 #include    "LerParm.h"
 
-#include    "Grafo.h"
+#include    "CESPDIN.H"
 #include    "Vertice.h"
+#include    "Grafo.h"
+
+#define ID_VER_tppVertice 1
+
 
 static const char CRIAR_GRAFO_CMD         [ ] = "=criargrafo"           ;
 static const char DESTRUIR_GRAFO_CMD      [ ] = "=destruirgrafo"        ;
@@ -37,6 +41,11 @@ static const char INSARO_GRAFO_CMD        [ ] = "=inserirarestaorigem"  ;
 static const char EXCAR_GRAFO_CMD         [ ] = "=excluiraresta"        ;
 static const char ADDOR_GRAFO_CMD         [ ] = "=adicionarorigem"      ;
 static const char RMVOR_GRAFO_CMD         [ ] = "=removerorigem"        ;
+
+#ifdef _DEBUG
+static const char DETURPAR_GRAFO_CMD      [ ] = "=deturpar"             ;
+static const char VERIFICAR_GRAFO_CMD     [ ] = "=verificar"            ;
+#endif
 
 #define TRUE  1
 #define FALSE 0
@@ -78,6 +87,8 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 * =excluiraresta         inxGrafo idAresta CondRetEsp
 * =adicionarorigem       inxGrafo idVertice CondRetEsp
 * =removerorigem         inxGrafo idVertice CondRetEsp
+* =deturpar				 inxGrafo acao
+* =verificar			 inxGrafo numErrosEsp
 *
 ***********************************************************************/
 
@@ -86,7 +97,8 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
       int inxGrafo  = -1 ,
           numLidos   = -1 ,
-          CondRetEsp = -1  ;
+          CondRetEsp = -1 ,
+		  param, numErros;
 
       char idVertice;
       char idVertice2;
@@ -99,7 +111,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
       void * pDado ;
 
-      char ** pValor;
+      char * pValor;
 
       /* Testar criar Grafo */
         if ( strcmp( ComandoTeste , CRIAR_GRAFO_CMD  ) == 0 ) {
@@ -165,12 +177,10 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             CondRet = GRA_ObterValorCorrente( vtGRAFO[ inxGrafo ], &novoVertice );
 
-            pValor = (char**)malloc(sizeof(char));
+            VER_ObterValor( novoVertice, &pValor);
 
-            VER_ObterValor( novoVertice, pValor);
-
-            return TST_CompararString( StringDado , *pValor ,
-                     "Condicao de retorno errada ao obter corrente."  ) ;   
+            return TST_CompararString( StringDado , pValor ,
+                     "Retorno errado ao obter valor corrente."  ) ;   
 
         } /* fim ativa: Testar obter vertice corrente em Grafo */
 
@@ -185,6 +195,8 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
             } /* if */
            
             VER_CriarVertice( &novoVertice );
+
+			CED_DefinirTipoEspaco( novoVertice, ID_VER_tppVertice );
 
             VER_AtribuirValor( novoVertice, StringDado ) ;
             
@@ -240,6 +252,10 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
             } /* if */
            
             VER_CriarVertice( &novoVertice );
+
+#ifdef _DEBUG
+			CED_EhEspacoAtivo( novoVertice );
+#endif
 
             VER_AtribuirValor( novoVertice, StringDado ) ;
             
@@ -352,7 +368,42 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
         } /* fim ativa: Testar remover origem em Grafo */
 
-   } /* Fim função: TLIS &Testar grafo */
+#ifdef _DEBUG
+		/* Realizar deturpacao */
+        else if ( strcmp( ComandoTeste , DETURPAR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &param) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+			return TST_CompararInt( GRA_CondRetOK , GRA_Deturpar(vtGRAFO[ inxGrafo ], param),
+                     "Erro ao deturpar."  ) ;
+
+        } /* fim ativa: Realizar deturpacao */
+
+		/* Realizar verificao estrututral */
+        else if ( strcmp( ComandoTeste , RMVOR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &param) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+			GRA_VerificarEstrutura( vtGRAFO[ inxGrafo ], &numErros );
+
+            return TST_CompararInt( param , numErros ,
+                     "Total de erros errado ao verificar estrutura."  ) ;
+
+        } /* fim ativa: Realizar verificao estrututral */
+
+#endif
+
+   } /* Fim função: TGRA &Testar grafo */
 
 
 /*****  Código das funções encapsuladas no módulo  *****/

@@ -37,6 +37,11 @@
 	   LIS_tppLista pListaSuc;
 	   char id;
 	   void * pValor;
+#ifdef _DEBUG
+		int idTipo;
+		GRA_tppGrafo pCabeca;
+		int tamValor;
+#endif
    } GRA_tpVerticeGrafo ;
 
    typedef GRA_tpVerticeGrafo * GRA_tppVerticeGrafo;
@@ -58,6 +63,10 @@
 	   LIS_tppLista pListaVertices;
 	   GRA_tppVerticeGrafo pVerticeCorrente;
 	   void ( * ExcluirValor ) ( void * pValor ) ;
+#ifdef _DEBUG
+	   int totalElem;
+	   int tamValores;
+#endif
    } GRA_tpGrafo ;
 
 /***********************************************************************
@@ -74,6 +83,9 @@
    typedef struct GRA_tagAresta {
 	   char idAresta[10];
 	   GRA_tppVerticeGrafo pVerticeApontado;
+		#ifdef _DEBUG
+			GRA_tppGrafo pCabeca;
+		#endif
    } GRA_tpAresta ;
 
 
@@ -127,6 +139,12 @@
 	   pGrafo->ExcluirValor = ExcluirValor;
 
 	   *ppGrafo = pGrafo;
+
+#ifdef _DEBUG
+	   CED_EhEspacoAtivo(pGrafo);
+	   pGrafo->totalElem = 0;
+	   pGrafo->tamValores = 0;
+#endif
 
 	   return GRA_CondRetOK;
    };
@@ -213,6 +231,12 @@
 	   }
 
 	   pGrafo->pVerticeCorrente->pValor = pValor;
+		#ifdef _DEBUG
+			pGrafo->pVerticeCorrente->idTipo = CED_ObterTipoEspaco(pValor);
+			pGrafo->tamValores -= pGrafo->pVerticeCorrente->tamValor;
+			pGrafo->pVerticeCorrente->tamValor = (pValor != NULL) ? CED_ObterTamanhoValor(pValor) : 0;
+			pGrafo->tamValores += pGrafo->pVerticeCorrente->tamValor;
+		#endif
 
 	   return GRA_CondRetOK;
    }
@@ -293,6 +317,11 @@
 
 	   vertice->pValor = pVertice;
 	   vertice->id = idVertice;
+#ifdef _DEBUG
+		(pGrafo->totalElem)++;
+		vertice->pCabeca = pGrafo;
+		vertice->tamValor = 0;
+#endif
 
 	   LIS_IrFinalLista(pGrafo->pListaVertices);
 	   CondRetLis = LIS_InserirElementoApos(pGrafo->pListaVertices, (void *) vertice);
@@ -496,6 +525,29 @@
 	   return GRA_CondRetOK;
    }
 
+/***********************************************************************
+*
+*  $FC Função: GRA Verificar estrutura
+*
+***********************************************************************/
+
+   GRA_tpCondRet GRA_VerificarEstrutura( GRA_tppGrafo pGrafo, int * numErros )
+   {
+	   return GRA_CondRetOK;
+   }
+
+
+/***********************************************************************
+*
+*  $FC Função: GRA Deturpar estrutura
+*
+***********************************************************************/
+
+   GRA_tpCondRet GRA_Deturpar( GRA_tppGrafo pGrafo, int flag )
+   {
+	   return GRA_CondRetOK;
+   }
+
 
 /***** Código das funções encapuladas no módulo *****/
 
@@ -547,6 +599,10 @@
 		   free(pVertice);
 		   return NULL;
 	   }
+
+#ifdef _DEBUG
+	   CED_EhEspacoAtivo(pVertice);
+#endif
 
 	   return pVertice;
    }
@@ -659,6 +715,12 @@
 
 	   pGrafo->ExcluirValor( pVertice->pValor );
 
+	   free( pVertice );
+
+#ifdef _DEBUG
+	   (pGrafo->totalElem)--;
+#endif
+
    }
 
 
@@ -682,6 +744,9 @@
 
 	   strcpy(pAresta->idAresta, idAresta);
 	   pAresta->pVerticeApontado = pVerticeDestino;
+#ifdef _DEBUG
+	   pAresta->pCabeca = pVerticeOrigem->pCabeca;
+#endif
 
 	   LIS_IrFinalLista(pVerticeOrigem->pListaSuc);
 	   CondRetLis = LIS_InserirElementoApos(pVerticeOrigem->pListaSuc, (void *) pAresta);
@@ -694,6 +759,10 @@
 	   if(CondRetLis == LIS_CondRetFaltouMemoria) {
 		   return GRA_CondRetFaltouMemoria;
 	   }
+
+#ifdef _DEBUG
+	   CED_EhEspacoAtivo(pAresta);
+#endif
 
 	   return GRA_CondRetOK;
    }

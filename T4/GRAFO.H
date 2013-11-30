@@ -558,7 +558,56 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 ***********************************************************************/
 
    GRA_tpCondRet GRA_RemoverOrigem( GRA_tppGrafo pGrafo, char idVertice ) ;
-   
+
+#ifdef _DEBUG
+/***********************************************************************
+*
+*  $FC Função: GRA Verificar estrutura
+*
+*  $ED Descrição da função
+*		Verifica a estrutura, contabilizando o total de erros encontrados.
+*
+*  $EP Parâmetros
+*     $P pGrafo - ponteiro para o grafo.
+*     $P numErros - ponteiro para inteiro que recebera o total de erros.
+*
+*  $FV Valor retornado
+*     GRA_CondRetOK
+*
+***********************************************************************/
+
+   GRA_tpCondRet GRA_VerificarEstrutura( GRA_tppGrafo pGrafo, int * numErros ) ;
+
+
+/***********************************************************************
+*
+*  $FC Função: GRA Deturpar estrutura
+*
+*  $ED Descrição da função
+*		Deturpa a estrutura, de acordo com a flag fornecida.
+*
+*  $EP Parâmetros
+*     $P pGrafo - ponteiro para o grafo.
+*     $P flag - tipo de deturpacao, pode ser:
+*			1  - elimina o elemento corrente da estrutura escolhida.
+*			2  - atribui NULL ao ponteiro para um vértice sucessor.
+*			3  - atribui NULL ao ponteiro para um vértice predecessor.
+*			4  - atribui lixo ao ponteiro para a referência a um vértice sucessor
+*			5  - atribui lixo ao ponteiro para a referência a um vértice predecessor.
+*			6  - atribui NULL ao ponteiro para o conteúdo do vértice.
+*			7  - altera o tipo de estrutura apontado no vértice.
+*			8  - destaca vértice do grafo sem liberá-lo com free
+*			9  - atribui NULL ao ponteiro corrente
+*			10 - atribui NULL a um ponteiro de origem.
+*
+*  $FV Valor retornado
+*     GRA_CondRetOK
+*
+***********************************************************************/
+
+   GRA_tpCondRet GRA_Deturpar( GRA_tppGrafo pGrafo, int flag ) ;
+
+#endif
 
 #undef GRAFO_EXT
 

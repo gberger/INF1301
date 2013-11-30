@@ -194,7 +194,7 @@
 *
 ***********************************************************************/
 
-   CNT_tpCondRet CNT_InicializarContadores( FILE * pArqLog , char * NomeArquivo ) ;
+//   CNT_tpCondRet CNT_InicializarContadores( FILE * pArqLog , char * NomeArquivo ) ;
 
 
 /***********************************************************************
