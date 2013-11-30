@@ -11,12 +11,17 @@
 *
 ***************************************************************************/
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define GRAFO_OWN
 #include "GRAFO.H"
 #undef GRAFO_OWN
+
+#ifdef _DEBUG
+#include "CONTA.H"
+#include "CESPDIN.H"
+#endif
 
 /***********************************************************************
 *
