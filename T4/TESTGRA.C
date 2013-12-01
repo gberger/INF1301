@@ -385,7 +385,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
         } /* fim ativa: Realizar deturpacao */
 
 		/* Realizar verificao estrututral */
-        else if ( strcmp( ComandoTeste , RMVOR_GRAFO_CMD  ) == 0 ) {
+        else if ( strcmp( ComandoTeste , VERIFICAR_GRAFO_CMD  ) == 0 ) {
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &param) ;
 

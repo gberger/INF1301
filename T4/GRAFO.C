@@ -13,6 +13,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #define GRAFO_OWN
 #include "GRAFO.H"
@@ -231,12 +232,16 @@
 	   }
 
 	   pGrafo->pVerticeCorrente->pValor = pValor;
-		#ifdef _DEBUG
-			pGrafo->pVerticeCorrente->idTipo = CED_ObterTipoEspaco(pValor);
-			pGrafo->tamValores -= pGrafo->pVerticeCorrente->tamValor;
-			pGrafo->pVerticeCorrente->tamValor = (pValor != NULL) ? CED_ObterTamanhoValor(pValor) : 0;
-			pGrafo->tamValores += pGrafo->pVerticeCorrente->tamValor;
-		#endif
+
+#ifdef _DEBUG
+		pGrafo->pVerticeCorrente->idTipo = CED_ObterTipoEspaco(pValor);
+		pGrafo->tamValores -= pGrafo->pVerticeCorrente->tamValor;
+		if(pValor != NULL)
+			pGrafo->pVerticeCorrente->tamValor = CED_ObterTamanhoValor(pValor);
+		else
+			pGrafo->pVerticeCorrente->tamValor = 0;
+		pGrafo->tamValores += pGrafo->pVerticeCorrente->tamValor;
+#endif
 
 	   return GRA_CondRetOK;
    }
@@ -531,8 +536,115 @@
 *
 ***********************************************************************/
 
+
+#define INCERROS { (*numErros)++; printf("\nLINHA %d\n",__LINE__); }
+
    GRA_tpCondRet GRA_VerificarEstrutura( GRA_tppGrafo pGrafo, int * numErros )
    {
+	   int achou, qtd = 0, somaTam = 0;
+	   GRA_tppVerticeGrafo pVertice, pVertice2;
+	   GRA_tpAresta * pAresta;
+
+	   *numErros = 0;
+	   
+	   LIS_IrInicioLista( pGrafo->pListaVertices );
+	   if(LIS_ObterValor(pGrafo->pListaVertices) != NULL)
+	   {
+			if(pGrafo->pVerticeCorrente == NULL)
+				INCERROS
+
+			if(LIS_AvancarElementoCorrente(pGrafo->pListaOrigens, 1) != LIS_CondRetFimLista)
+			{
+				pVertice = (GRA_tppVerticeGrafo)LIS_ObterValor(pGrafo->pListaVertices);
+				if(pVertice != pGrafo->pVerticeCorrente)
+					INCERROS
+			}
+	   }
+
+	   LIS_IrInicioLista(pGrafo->pListaOrigens);
+	   while( LIS_ObterValor( pGrafo->pListaOrigens ) ) {
+		   pVertice = (GRA_tppVerticeGrafo) LIS_ObterValor( pGrafo->pListaOrigens );
+		   LIS_IrInicioLista(pGrafo->pListaVertices);
+		   if( LIS_ProcurarValor(pGrafo->pListaVertices, pVertice) != LIS_CondRetOK )
+			   INCERROS
+
+		   if( LIS_AvancarElementoCorrente( pGrafo->pListaOrigens, 1 ) != LIS_CondRetOK )
+			   break;
+	   }
+
+	   LIS_IrInicioLista(pGrafo->pListaVertices);
+	   if(LIS_ProcurarValor(pGrafo->pListaVertices, pGrafo->pVerticeCorrente) != LIS_CondRetOK)
+		   INCERROS
+
+	   // Para cada vertice
+	   LIS_IrInicioLista(pGrafo->pListaVertices);
+	   while( LIS_ObterValor( pGrafo->pListaVertices ) ) {
+		   pVertice = (GRA_tppVerticeGrafo) LIS_ObterValor( pGrafo->pListaVertices );
+
+		   // Para cada predecessor
+		   LIS_IrInicioLista(pVertice->pListaAnt);
+		   while( LIS_ObterValor( pVertice->pListaAnt ) ) {
+				pVertice2 = (GRA_tppVerticeGrafo) LIS_ObterValor( pVertice->pListaAnt );
+				achou = 0;
+				// Para cada sucessor do predecessor
+				LIS_IrInicioLista(pVertice2->pListaSuc);
+				while( LIS_ObterValor( pVertice2->pListaSuc ) ) {
+					pAresta = (GRA_tpAresta *) LIS_ObterValor( pVertice2->pListaSuc );
+
+						if( pAresta->pVerticeApontado == pVertice )
+							achou = 1;
+
+					if( LIS_AvancarElementoCorrente( pVertice2->pListaSuc, 1 ) != LIS_CondRetOK )
+						break;
+				} // Fim: Para cada sucessor do predecessor
+				if(!achou)
+					INCERROS
+				if( LIS_AvancarElementoCorrente( pVertice->pListaAnt, 1 ) != LIS_CondRetOK )
+					break;
+		   } // Fim: Para cada predecessor
+
+
+		   // Para cada sucessor
+		   LIS_IrInicioLista(pVertice->pListaSuc);
+		   while( LIS_ObterValor( pVertice->pListaSuc ) ) {
+				pAresta = (GRA_tpAresta *) LIS_ObterValor( pVertice->pListaSuc );
+				
+					if(pAresta->pCabeca != pGrafo)
+						INCERROS
+
+					if(pAresta->pVerticeApontado->pCabeca != pGrafo)
+						INCERROS
+
+					if(LIS_ProcurarValor(pAresta->pVerticeApontado->pListaAnt, pVertice) != LIS_CondRetOK)
+						INCERROS
+
+				if( LIS_AvancarElementoCorrente( pVertice->pListaSuc, 1 ) != LIS_CondRetOK )
+					break;
+		   } // Fim: Para cada sucessor
+
+		   if(pVertice->pCabeca != pGrafo)
+			   INCERROS
+
+		   if((pVertice->pValor == NULL && pVertice->tamValor != 0) || (pVertice->tamValor != CED_ObterTamanhoValor(pVertice->pValor) ))
+			   INCERROS
+
+		   if(pVertice->pValor != NULL && pVertice->idTipo != CED_ObterTipoEspaco(pVertice->pValor))
+			   INCERROS
+
+		   qtd++;
+
+		   somaTam += pVertice->tamValor;
+
+		   if( LIS_AvancarElementoCorrente( pGrafo->pListaVertices, 1 ) != LIS_CondRetOK )
+			   break;
+	   } // Fim: Para cada vertice
+
+	   if(pGrafo->totalElem != qtd)
+		   INCERROS
+
+	   if(pGrafo->tamValores != somaTam)
+		   INCERROS
+
 	   return GRA_CondRetOK;
    }
 
