@@ -675,6 +675,113 @@
 
    GRA_tpCondRet GRA_Deturpar( GRA_tppGrafo pGrafo, int flag )
    {
+		GRA_tppVerticeGrafo pVertice;
+		GRA_tpAresta * pAresta;
+		void * pValor;
+		int concluido = 0;
+		switch(flag) {
+			case 1:
+				free(pGrafo->pVerticeCorrente);
+				break;
+			case 2:
+				LIS_IrInicioLista(pGrafo->pListaVertices);
+				while( !concluido ) {
+					pVertice = (GRA_tppVerticeGrafo)LIS_ObterValor(pGrafo->pListaVertices);
+					LIS_IrInicioLista(pVertice->pListaSuc);
+					pAresta = LIS_ObterValor(pVertice->pListaSuc);
+					if(pAresta != NULL) {
+						pAresta->pVerticeApontado = NULL;
+						concluido = 1;
+					}
+
+					if(LIS_AvancarElementoCorrente(pGrafo->pListaVertices,1) != LIS_CondRetOK) break;
+				}
+				break;
+			case 3:
+				LIS_IrInicioLista(pGrafo->pListaVertices);
+				while( !concluido ) {
+					pVertice = (GRA_tppVerticeGrafo)LIS_ObterValor(pGrafo->pListaVertices);
+					LIS_IrInicioLista(pVertice->pListaAnt);
+					if(LIS_ExcluirElemento( pVertice->pListaAnt ) == LIS_CondRetOK) {
+						LIS_InserirElementoAntes( pVertice->pListaAnt, NULL );
+						concluido = 1;
+					}
+
+					if(LIS_AvancarElementoCorrente(pGrafo->pListaVertices,1) != LIS_CondRetOK) break;
+				}
+				break;
+			case 4:
+				LIS_IrInicioLista(pGrafo->pListaVertices);
+				while( !concluido ) {
+					pVertice = (GRA_tppVerticeGrafo)LIS_ObterValor(pGrafo->pListaVertices);
+					LIS_IrInicioLista(pVertice->pListaSuc);
+					pAresta = LIS_ObterValor(pVertice->pListaSuc);
+					if(pAresta != NULL) {
+						pAresta->pVerticeApontado = (GRA_tppVerticeGrafo)0x00012345;
+						concluido = 1;
+					}
+
+					if(LIS_AvancarElementoCorrente(pGrafo->pListaVertices,1) != LIS_CondRetOK) break;
+				}
+				break;
+			case 5:
+				LIS_IrInicioLista(pGrafo->pListaVertices);
+				while( !concluido ) {
+					pVertice = (GRA_tppVerticeGrafo)LIS_ObterValor(pGrafo->pListaVertices);
+					LIS_IrInicioLista(pVertice->pListaAnt);
+					if(LIS_ExcluirElemento( pVertice->pListaAnt ) == LIS_CondRetOK) {
+						LIS_InserirElementoAntes( pVertice->pListaAnt, (void*)0x00012345 );
+						concluido = 1;
+					}
+
+					if(LIS_AvancarElementoCorrente(pGrafo->pListaVertices,1) != LIS_CondRetOK) break;
+				}
+				break;
+			case 6:
+				LIS_IrInicioLista(pGrafo->pListaVertices);
+				while( !concluido ) {
+					pVertice = (GRA_tppVerticeGrafo)LIS_ObterValor(pGrafo->pListaVertices);
+					if(pVertice != NULL) {
+						pVertice->pValor = NULL;
+						concluido = 1;
+					}
+
+					if(LIS_AvancarElementoCorrente(pGrafo->pListaVertices,1) != LIS_CondRetOK) break;
+				}
+				break;
+			case 7:
+				LIS_IrInicioLista(pGrafo->pListaVertices);
+				while( !concluido ) {
+					pVertice = (GRA_tppVerticeGrafo)LIS_ObterValor(pGrafo->pListaVertices);
+					if(pVertice != NULL) {
+						pVertice->idTipo = 40;
+						concluido = 1;
+					}
+
+					if(LIS_AvancarElementoCorrente(pGrafo->pListaVertices,1) != LIS_CondRetOK) break;
+				}
+				break;
+			case 8:
+				// to do
+				break;
+			case 9:
+				pGrafo->pVerticeCorrente = NULL;
+				break;
+			case 10:
+				LIS_IrInicioLista(pGrafo->pListaOrigens);
+				while( !concluido ) {
+					pVertice = (GRA_tppVerticeGrafo)LIS_ObterValor(pGrafo->pListaOrigens);
+					if(pVertice != NULL) {
+						LIS_ExcluirElemento(pGrafo->pListaOrigens);
+						LIS_InserirElementoAntes(pGrafo->pListaOrigens, NULL);
+						concluido = 1;
+					}
+
+					if(LIS_AvancarElementoCorrente(pGrafo->pListaOrigens,1) != LIS_CondRetOK) break;
+				}
+				break;
+		}
+
 	   return GRA_CondRetOK;
    }
 #endif
