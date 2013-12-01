@@ -277,6 +277,8 @@
 		   return GRA_CondRetGrafoVazio;
 	   }
 
+	   pGrafo->ExcluirValor(pGrafo->pVerticeCorrente->pValor);
+
 	   #ifdef _DEBUG
 	      CNT_CONTAR( "GRA_AlterarValorCorrente-pr0" ) ;
 	   #endif
@@ -451,9 +453,6 @@
 	   }
 
 	   if (CondRetLis != LIS_CondRetOK){
-	   	 #ifdef _DEBUG
-	   	    CNT_CONTAR( "GRA_InserirVertice-if2" ) ;
-	   	 #endif
 		   return GRA_CondRetFaltouMemoria;
 	   }
 
@@ -482,11 +481,8 @@
    	   CNT_CONTAR( "GRA_ExcluirVerticeCorrente" ) ;
    	#endif
 
-   	 #ifdef _DEBUG
-	   RemoverVertice(pGrafo, pGrafo->pVerticeCorrente, 1);
-	   #else
 	   RemoverVertice(pGrafo, pGrafo->pVerticeCorrente);
-	   #endif
+
 	   LIS_IrInicioLista(pGrafo->pListaVertices);
 	   LIS_ProcurarValor(pGrafo->pListaVertices, (void *) pGrafo->pVerticeCorrente);
 	   LIS_ExcluirElemento(pGrafo->pListaVertices);
@@ -731,9 +727,6 @@
 	   LIS_IrFinalLista(pGrafo->pListaOrigens);
 	   condRetLis = LIS_InserirElementoApos(pGrafo->pListaOrigens, (void *) pVertice);
 	   if(condRetLis == LIS_CondRetFaltouMemoria) {
-	   		#ifdef _DEBUG
-	   		   CNT_CONTAR( "GRA_AdicionarOrigem-if1" ) ;
-	   		#endif
 	   		return GRA_CondRetFaltouMemoria;
 	   }
 
@@ -1270,10 +1263,6 @@
 			   break;
 		   }
 
-		   #ifdef _DEBUG
-		      CNT_CONTAR( "RemoverVertice-br0" ) ;
-		   #endif
-
 	   }
 
 	   LIS_DestruirLista( pVertice->pListaSuc );
@@ -1305,10 +1294,6 @@
 		   	 #endif
 			   break;
 		   }
-
-		   #ifdef _DEBUG
-		      CNT_CONTAR( "RemoverVertice-br1" ) ;
-		   #endif
 	   }
 
 	   LIS_DestruirLista( pVertice->pListaAnt );
@@ -1321,10 +1306,6 @@
 	   			CNT_CONTAR( "RemoverVertice-if4" ) ;
 			#endif
 	   	free( pVertice );
-	   } else {
-	   	#ifdef _DEBUG
-	   	   CNT_CONTAR( "RemoverVertice-else0" ) ;
-	   	#endif
 	   }
 
 #ifdef _DEBUG
