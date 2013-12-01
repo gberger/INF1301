@@ -1374,7 +1374,7 @@
 	   }
 
 	   #ifdef _DEBUG
-	      CNT_CONTAR( "AdicionarAresta-pr1" ) ;
+	      CNT_CONTAR( "AdicionarAresta-pr2" ) ;
 	   #endif
 
 #ifdef _DEBUG
