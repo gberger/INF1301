@@ -101,6 +101,8 @@
 
 	static GRA_tpVerticeGrafo * PesquisaVerticeNaListaDeAresta( LIS_tppLista pLista, char idVertice ) ;
 
+	static void RemoverVerticeFreeOpcional ( GRA_tppGrafo pGrafo, GRA_tppVerticeGrafo pVertice, int darFree);
+
 	static void RemoverVertice ( GRA_tppGrafo pGrafo, GRA_tppVerticeGrafo pVertice ) ;
 
 	static GRA_tpCondRet AdicionarAresta( GRA_tppVerticeGrafo pVerticeOrigem, GRA_tppVerticeGrafo pVerticeDestino, char * idAresta) ;
@@ -1010,7 +1012,16 @@
 				}
 				break;
 			case 8:
-				// to do
+				LIS_IrInicioLista(pGrafo->pListaOrigens);
+				while( !concluido ) {
+					pVertice = (GRA_tppVerticeGrafo)LIS_ObterValor(pGrafo->pListaOrigens);
+					if(pVertice != NULL) {
+						RemoverVerticeFreeOpcional(pGrafo, pVertice, 0);
+						concluido = 1;
+					}
+
+					if(LIS_AvancarElementoCorrente(pGrafo->pListaOrigens,1) != LIS_CondRetOK) break;
+				}
 				break;
 			case 9:
 				pGrafo->pVerticeCorrente = NULL;
@@ -1214,19 +1225,16 @@
 
 /***********************************************************************
 *
-*  $FC Função: GRA - Remover vértice
+*  $FC Função: GRA - Remover vértice com free opcional
 *
 *  $ED Descrição da função
 *  Remove pVertice de pGrafo, destruindo todas as arestas em seus
 *  antecessores e sucessores, além do conteúdo armazenado neste
+*  - darFree deve ser 1 para que o espaco seja destruido
 *
 ***********************************************************************/
 
-   static void RemoverVertice ( GRA_tppGrafo pGrafo, GRA_tppVerticeGrafo pVertice
-#ifdef _DEBUG
-   	, int darFree
-#endif
-    ){
+   static void RemoverVerticeFreeOpcional ( GRA_tppGrafo pGrafo, GRA_tppVerticeGrafo pVertice, int darFree){
 	   GRA_tpVerticeGrafo * pVerticeSuc;
 	   GRA_tpAresta * pAresta;
 
@@ -1308,23 +1316,35 @@
 
 	   pGrafo->ExcluirValor( pVertice->pValor );
 
-#ifdef _debug
 	   if(darFree){
-	   	CNT_CONTAR( "RemoverVertice-if4" ) ;
+		   #ifdef _DEBUG
+	   			CNT_CONTAR( "RemoverVertice-if4" ) ;
+			#endif
 	   	free( pVertice );
 	   } else {
 	   	#ifdef _DEBUG
 	   	   CNT_CONTAR( "RemoverVertice-else0" ) ;
 	   	#endif
 	   }
-#else
-	   free( pVertice );
-#endif
 
 #ifdef _DEBUG
 	   (pGrafo->totalElem)--;
 #endif
 
+   }
+
+/***********************************************************************
+*
+*  $FC Função: GRA - Remover vértice
+*
+*  $ED Descrição da função
+*  Remove pVertice de pGrafo, chamando RemoverVerticeFreeOpcional
+*  com darFree 1
+*
+***********************************************************************/
+
+   static void RemoverVertice ( GRA_tppGrafo pGrafo, GRA_tppVerticeGrafo pVertice){
+	   return RemoverVerticeFreeOpcional(pGrafo, pVertice, 1);
    }
 
 

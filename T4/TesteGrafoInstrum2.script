@@ -38,7 +38,7 @@
 =declararparm   ArestaInvalida   int  7
 
 == Inicializar contadores
-=inicializarcontadores  ""
+=inicializarcontadores  "acumulador"
 =lercontadores          "Grafo"
 =iniciarcontagem
 
@@ -88,6 +88,13 @@
 == Adiciona Arestas no Corrente
 =inserirarestaorigem grafo0 C d OK
 
+== Deturpar
+=deturpar grafo0 1
+
+== Registrar acumulador
+=registraracumulador   "acumulador"
+=terminarcontadores
+
 == Verificar estrutura
 =verificar  grafo0 0
 =verificar  grafo1 0
@@ -111,9 +118,6 @@
 == Terminar controlar contadores
 =pararcontagem
 =verificarcontagens    0
-
-== Registrar acumulador
-=registraracumulador   "acumulador"
 
 == Terminar contagem
 =terminarcontadores
