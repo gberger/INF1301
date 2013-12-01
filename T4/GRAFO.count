@@ -88,6 +88,14 @@ GRA_VerificarEstrura-if17
 GRA_VerificarEstrura-if18
 GRA_VerificarEstrura-if19
 GRA_VerificarEstrura-if20
+GRA_VerificarEstrura-if21
+GRA_VerificarEstrura-if22
+GRA_VerificarEstrura-if23
+GRA_VerificarEstrura-if24
+GRA_VerificarEstrura-else0
+GRA_VerificarEstrura-else1
+GRA_VerificarEstrura-else2
+GRA_VerificarEstrura-else3
 GRA_VerificarEstrura-return
 DestruirConteudoListaDeAresta
 CriarVerticeGrafo

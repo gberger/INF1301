@@ -599,6 +599,8 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 *			8  - destaca vértice do grafo sem liberá-lo com free
 *			9  - atribui NULL ao ponteiro corrente
 *			10 - atribui NULL a um ponteiro de origem.
+*			11 - esvazia lista de vertices
+*			12 - atribui lixo a todos os ponteiros para a cabeca da estrutura
 *
 *  $FV Valor retornado
 *     GRA_CondRetOK

@@ -9,6 +9,13 @@
 =declararparm  grafo0 int 0
 =declararparm  grafo1 int 1
 =declararparm  grafo2 int 2
+=declararparm  grafo3 int 3
+=declararparm  grafo4 int 4
+=declararparm  grafo5 int 5
+=declararparm  grafo6 int 6
+=declararparm  grafo7 int 7
+=declararparm  grafo8 int 8
+=declararparm  grafo9 int 9
 
 =declararparm  a string "a"
 =declararparm  b string "b"
@@ -139,6 +146,217 @@
 =removerorigem grafo2 '?' VerticeInvalido
 =obtercorrente grafo2 "???" GrafoVazio
 =destruirgrafo grafo2 OK
+
+
+
+== Testar deturpacao tipo 1
+=criargrafo   grafo0  OK
+=inserirvertice   grafo0 nome1 A  OK
+=inserirvertice   grafo0 nome5 B  OK
+=inserirvertice   grafo0 nome2 C  OK
+=inserirverticenull grafo0 E OK
+=inseriraresta  grafo0 C B a OK
+=inseriraresta  grafo0 A C b OK
+=inseriraresta  grafo0 B A c OK
+=adicionarorigem grafo0 C OK
+=adicionarorigem grafo0 B OK
+
+=deturpar grafo0 1
+
+=verificar grafo0 5
+
+
+
+== Testar deturpacao tipo 2
+=criargrafo   grafo1  OK
+=inserirvertice   grafo1 nome1 A  OK
+=inserirvertice   grafo1 nome5 B  OK
+=inserirvertice   grafo1 nome2 C  OK
+=inserirverticenull grafo1 E OK
+=inseriraresta  grafo1 C B a OK
+=inseriraresta  grafo1 A C b OK
+=inseriraresta  grafo1 B A c OK
+=adicionarorigem grafo1 C OK
+=adicionarorigem grafo1 B OK
+
+=deturpar grafo1 2
+
+=verificar grafo1 2
+
+
+
+== Testar deturpacao tipo 3
+=criargrafo   grafo2  OK
+=inserirvertice   grafo2 nome1 A  OK
+=inserirvertice   grafo2 nome5 B  OK
+=inserirvertice   grafo2 nome2 C  OK
+=inserirverticenull grafo2 E OK
+=inseriraresta  grafo2 C B a OK
+=inseriraresta  grafo2 A C b OK
+=inseriraresta  grafo2 B A c OK
+=adicionarorigem grafo2 C OK
+=adicionarorigem grafo2 B OK
+
+=deturpar grafo2 3
+
+=verificar grafo2 1
+
+
+
+== Testar deturpacao tipo 4
+=criargrafo   grafo3  OK
+=inserirvertice   grafo3 nome1 A  OK
+=inserirvertice   grafo3 nome5 B  OK
+=inserirvertice   grafo3 nome2 C  OK
+=inserirverticenull grafo3 E OK
+=inseriraresta  grafo3 C B a OK
+=inseriraresta  grafo3 A C b OK
+=inseriraresta  grafo3 B A c OK
+=adicionarorigem grafo3 C OK
+=adicionarorigem grafo3 B OK
+
+=deturpar grafo3 4
+
+=verificar grafo3 2
+
+
+
+== Testar deturpacao tipo 5
+=criargrafo   grafo4  OK
+=inserirvertice   grafo4 nome1 A  OK
+=inserirvertice   grafo4 nome5 B  OK
+=inserirvertice   grafo4 nome2 C  OK
+=inserirverticenull grafo4 E OK
+=inseriraresta  grafo4 C B a OK
+=inseriraresta  grafo4 A C b OK
+=inseriraresta  grafo4 B A c OK
+=adicionarorigem grafo4 C OK
+=adicionarorigem grafo4 B OK
+
+=deturpar grafo4 5
+
+=verificar grafo4 2
+
+
+
+== Testar deturpacao tipo 6
+=criargrafo   grafo5  OK
+=inserirvertice   grafo5 nome1 A  OK
+=inserirvertice   grafo5 nome5 B  OK
+=inserirvertice   grafo5 nome2 C  OK
+=inserirverticenull grafo5 E OK
+=inseriraresta  grafo5 C B a OK
+=inseriraresta  grafo5 A C b OK
+=inseriraresta  grafo5 B A c OK
+=adicionarorigem grafo5 C OK
+=adicionarorigem grafo5 B OK
+
+=deturpar grafo5 6
+
+=verificar grafo5 1
+
+
+
+== Testar deturpacao tipo 7
+=criargrafo   grafo6  OK
+=inserirvertice   grafo6 nome1 A  OK
+=inserirvertice   grafo6 nome5 B  OK
+=inserirvertice   grafo6 nome2 C  OK
+=inserirverticenull grafo6 E OK
+=inseriraresta  grafo6 C B a OK
+=inseriraresta  grafo6 A C b OK
+=inseriraresta  grafo6 B A c OK
+=adicionarorigem grafo6 C OK
+=adicionarorigem grafo6 B OK
+
+=deturpar grafo6 7
+
+=verificar grafo6 1
+
+
+== Testar deturpacao tipo 8
+=criargrafo   grafo7  OK
+=inserirvertice   grafo7 nome1 A  OK
+=inserirvertice   grafo7 nome5 B  OK
+=inserirvertice   grafo7 nome2 C  OK
+=inserirverticenull grafo7 E OK
+=inseriraresta  grafo7 C B a OK
+=inseriraresta  grafo7 A C b OK
+=inseriraresta  grafo7 B A c OK
+=adicionarorigem grafo7 C OK
+=adicionarorigem grafo7 B OK
+
+=deturpar grafo7 8
+
+=verificar grafo7 5
+
+
+
+== Testar deturpacao tipo 9
+=criargrafo   grafo8  OK
+=inserirvertice   grafo8 nome1 A  OK
+
+
+=deturpar grafo8 9
+
+=verificar grafo8 4
+
+=destruirgrafo grafo8 OK
+
+
+== Testar deturpacao tipo 10
+=criargrafo   grafo9  OK
+=inserirvertice   grafo9 nome1 A  OK
+=inserirvertice   grafo9 nome5 B  OK
+=inserirvertice   grafo9 nome2 C  OK
+=inserirverticenull grafo9 E OK
+=inseriraresta  grafo9 C B a OK
+=inseriraresta  grafo9 A C b OK
+=inseriraresta  grafo9 B A c OK
+=adicionarorigem grafo9 C OK
+=adicionarorigem grafo9 B OK
+
+=deturpar grafo9 10
+
+=verificar grafo9 1
+
+=destruirgrafo grafo9 OK
+
+
+
+== Testar deturpacao tipo 11
+=criargrafo   grafo8  OK
+=inserirvertice   grafo8 nome1 A  OK
+=inserirvertice   grafo8 nome5 B  OK
+=inserirvertice   grafo8 nome2 C  OK
+=inserirverticenull grafo8 E OK
+=inseriraresta  grafo8 C B a OK
+=inseriraresta  grafo8 A C b OK
+=inseriraresta  grafo8 B A c OK
+=adicionarorigem grafo8 C OK
+=adicionarorigem grafo8 B OK
+
+=deturpar grafo8 11
+
+=verificar grafo8 5
+
+
+== Testar deturpacao tipo 12
+=criargrafo   grafo9  OK
+=inserirvertice   grafo9 nome1 A  OK
+=inserirvertice   grafo9 nome5 B  OK
+=inserirvertice   grafo9 nome2 C  OK
+=inserirverticenull grafo9 E OK
+=inseriraresta  grafo9 C B a OK
+=inseriraresta  grafo9 A C b OK
+=inseriraresta  grafo9 B A c OK
+=adicionarorigem grafo9 C OK
+=adicionarorigem grafo9 B OK
+
+=deturpar grafo9 12
+
+=verificar grafo9 10
+
 
 == Terminar controlar contadores
 =pararcontagem
