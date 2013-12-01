@@ -32,9 +32,11 @@ static const char DESTRUIR_GRAFO_CMD      [ ] = "=destruirgrafo"        ;
 static const char ESV_GRAFO_CMD           [ ] = "=esvaziargrafo"        ;
 static const char CORR_GRAFO_CMD          [ ] = "=obtercorrente"        ;
 static const char ALTCORR_GRAFO_CMD       [ ] = "=alterarcorrente"      ;
+static const char ALTCORRNULL_GRAFO_CMD   [ ] = "=alterarcorrentenull"  ;
 static const char IRVER_GRAFO_CMD         [ ] = "=irparavertice"        ;
 static const char ANDARVER_GRAFO_CMD      [ ] = "=andarparavertice"     ;
 static const char INSVER_GRAFO_CMD        [ ] = "=inserirvertice"       ;
+static const char INSVERNULL_GRAFO_CMD    [ ] = "=inserirverticenull"   ;
 static const char EXCCORR_GRAFO_CMD       [ ] = "=excluircorrente"      ;
 static const char INSAR_GRAFO_CMD         [ ] = "=inseriraresta"        ;
 static const char INSARO_GRAFO_CMD        [ ] = "=inserirarestaorigem"  ;
@@ -78,9 +80,11 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 * =esvaziargrafo         inxGrafo CondRetEsp
 * =obtercorrente         inxGrafo ValorComparado CondRetEsp
 * =alterarcorrente       inxGrafo ValorDoVertice CondRetEsp
+* =alterarcorrentenull   inxGrafo CondRetEsp
 * =irparavertice         inxGrafo idVertice CondRetEsp 
 * =andarparavertice      inxGrafo idVertice CondRetEsp
 * =inserirvertice        inxGrafo ValorDoVertice idVertice CondRetEsp
+* =inserirverticenull    inxGrafo idVertice CondRetEsp
 * =excluircorrente       inxGrafo CondRetEsp
 * =inseriraresta         inxGrafo idVertice1 idVertice2 idAresta CondRetEsp
 * =inserirarestaorigem   inxGrafo idVertice idAresta CondRetEsp
@@ -142,6 +146,8 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
            
             CondRet = GRA_DestruirGrafo( vtGRAFO[ inxGrafo ] );
 
+			vtGRAFO[ inxGrafo ] = NULL;
+
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao destruir grafo."  ) ;
 
@@ -177,6 +183,10 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
             CondRet = GRA_ObterValorCorrente( vtGRAFO[ inxGrafo ], &novoVertice );
 
+			if(CondRet != GRA_CondRetOK)
+				return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao obter valor corrente."  ) ;
+
             VER_ObterValor( novoVertice, &pValor);
 
             return TST_CompararString( StringDado , pValor ,
@@ -203,6 +213,27 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
             VER_AtribuirValor( novoVertice, StringDado ) ;
             
             CondRet = GRA_AlterarValorCorrente( vtGRAFO[ inxGrafo ], novoVertice );
+
+			if(CondRet != GRA_CondRetOK)
+				VER_DestruirVertice(novoVertice);
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao alterar corrente."  ) ;
+
+        } /* fim ativa: Testar alterar vertice corrente em Grafo */
+
+		/* Testar alterar vertice corrente para null em Grafo */
+        else if ( strcmp( ComandoTeste , ALTCORRNULL_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &CondRetEsp ) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            
+            CondRet = GRA_AlterarValorCorrente( vtGRAFO[ inxGrafo ], NULL );
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao alterar corrente."  ) ;
@@ -268,6 +299,23 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
                      "Condicao de retorno errada ao inserir vertice."  ) ;
 
         } /* fim ativa: Testar inserir vertice em Grafo */
+
+		/* Testar inserir vertice de valor null em Grafo */
+        else if ( strcmp( ComandoTeste , INSVERNULL_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ici" , &inxGrafo, &idVertice, &CondRetEsp ) ;
+
+            if ( ( numLidos != 3 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+            
+            CondRet = GRA_InserirVertice( vtGRAFO[ inxGrafo ], NULL, idVertice );
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao inserir vertice."  ) ;
+
+        } /* fim ativa: Testar inserir vertice de valor null em Grafo */
 
       /* Testar excluir vertice corrente em Grafo */
         else if ( strcmp( ComandoTeste , EXCCORR_GRAFO_CMD  ) == 0 ) {

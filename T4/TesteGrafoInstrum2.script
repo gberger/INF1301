@@ -3,6 +3,7 @@
 //          fl - Felipe Luiz
 //          jv - João Vicente
 // Data:      19/out/2013
+// Propósito: Testar superficialmente o módulo de teste de grafo.
 //
 
 == Inicializar valores
@@ -26,7 +27,6 @@
 =declararparm  B char 'B'
 =declararparm  C char 'C'
 =declararparm  D char 'D'
-=declararparm  E char 'E'
 
 =declararparm   OK               int  0
 =declararparm   GrafoVazio       int  1
@@ -38,7 +38,7 @@
 =declararparm   ArestaInvalida   int  7
 
 == Inicializar contadores
-=inicializarcontadores  ""
+=inicializarcontadores  "acumulador"
 =lercontadores          "Grafo"
 =iniciarcontagem
 
@@ -51,7 +51,6 @@
 =inserirvertice   grafo0 nome1 A  OK
 =inserirvertice   grafo0 nome5 B  OK
 =inserirvertice   grafo0 nome2 C  OK
-=inserirverticenull grafo0 E OK
 
 =inserirvertice   grafo1 nome1 A  OK
 =inserirvertice   grafo1 nome2 B  OK
@@ -72,16 +71,6 @@
 =adicionarorigem grafo0 C OK
 =adicionarorigem grafo0 B OK
 =adicionarorigem grafo1 A OK
-=adicionarorigem grafo0 D VerticeInvalido
-
-== Inserir arestas invalidas
-=inseriraresta  grafo0 D B "???" VerticeInvalido
-=inseriraresta  grafo0 B D "???" VerticeInvalido
-=inseriraresta  grafo0 C B "???" ArestaJaExiste
-
-== Remove Origens
-=removerorigem grafo0 C OK
-=removerorigem grafo0 A VerticeInvalido
 
 == Vai a Vertices
 =irparavertice grafo0 C OK
@@ -92,11 +81,6 @@
 =obtercorrente  grafo0 nome2 OK
 =obtercorrente  grafo1 nome1 OK
 
-== Alterar corrente
-=alterarcorrente grafo0 nome3 OK
-=obtercorrente  grafo0 nome3 OK
-=alterarcorrentenull grafo1 OK
-
 == Anda a Vertices
 =andarparavertice grafo0 B OK
 =andarparavertice grafo1 C VerticeInvalido
@@ -104,9 +88,12 @@
 == Adiciona Arestas no Corrente
 =inserirarestaorigem grafo0 C d OK
 
-== Adiciona Arestas Invalidas no Corrente
-=inserirarestaorigem grafo0 D "???" VerticeInvalido
-=inserirarestaorigem grafo0 C "???" ArestaJaExiste
+== Deturpar
+=deturpar grafo0 1
+
+== Registrar acumulador
+=registraracumulador   "acumulador"
+=terminarcontadores
 
 == Verificar estrutura
 =verificar  grafo0 0
@@ -128,24 +115,9 @@
 =destruirgrafo grafo0 OK
 =destruirgrafo grafo1 OK
 
-== Comandos em grafo vazio
-=criargrafo grafo2 OK
-=alterarcorrente grafo2 "???" GrafoVazio
-=andarparavertice grafo2 '?' GrafoVazio
-=inseriraresta  grafo2 '?' '?' "???" GrafoVazio
-=inserirarestaorigem grafo2 '?' "???" GrafoVazio
-=irparavertice grafo2 '?' GrafoVazio
-=adicionarorigem grafo2 '?' VerticeInvalido
-=removerorigem grafo2 '?' VerticeInvalido
-=obtercorrente grafo2 "???" GrafoVazio
-=destruirgrafo grafo2 OK
-
 == Terminar controlar contadores
 =pararcontagem
 =verificarcontagens    0
-
-== Registrar acumulador
-=registraracumulador   "acumulador"
 
 == Terminar contagem
 =terminarcontadores
