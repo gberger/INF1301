@@ -142,7 +142,7 @@
 	   *ppGrafo = pGrafo;
 
 #ifdef _DEBUG
-	   CED_EhEspacoAtivo(pGrafo);
+	   CED_MarcarEspacoAtivo(pGrafo);
 	   pGrafo->totalElem = 0;
 	   pGrafo->tamValores = 0;
 #endif
@@ -322,10 +322,18 @@
 
 	   vertice->pValor = pVertice;
 	   vertice->id = idVertice;
+
 #ifdef _DEBUG
 		(pGrafo->totalElem)++;
 		vertice->pCabeca = pGrafo;
 		vertice->tamValor = 0;
+		vertice->idTipo = CED_ObterTipoEspaco(pVertice);
+		pGrafo->tamValores -= vertice->tamValor;
+		if(pVertice != NULL)
+			vertice->tamValor = CED_ObterTamanhoValor(pVertice);
+		else
+			vertice->tamValor = 0;
+		pGrafo->tamValores += vertice->tamValor;
 #endif
 
 	   LIS_IrFinalLista(pGrafo->pListaVertices);
@@ -357,9 +365,11 @@
 	   }
 
 	   RemoverVertice(pGrafo, pGrafo->pVerticeCorrente);
+	   LIS_IrInicioLista(pGrafo->pListaVertices);
 	   LIS_ProcurarValor(pGrafo->pListaVertices, (void *) pGrafo->pVerticeCorrente);
 	   LIS_ExcluirElemento(pGrafo->pListaVertices);
 
+	   LIS_IrInicioLista(pGrafo->pListaOrigens);
 	   condRetLis = LIS_ProcurarValor(pGrafo->pListaOrigens, (void *) pGrafo->pVerticeCorrente);
 	   if(condRetLis == LIS_CondRetOK) {
 		   LIS_ExcluirElemento(pGrafo->pListaOrigens);
@@ -462,6 +472,7 @@
 
 					LIS_ExcluirElemento( pVertice->pListaSuc );
 
+					LIS_IrInicioLista( pVerticeDestino->pListaAnt);
 					LIS_ProcurarValor( pVerticeDestino->pListaAnt, pVertice);
 					LIS_ExcluirElemento( pVerticeDestino->pListaAnt );
 					return GRA_CondRetOK;
@@ -530,6 +541,8 @@
 	   return GRA_CondRetOK;
    }
 
+
+#ifdef _DEBUG
 /***********************************************************************
 *
 *  $FC Função: GRA Verificar estrutura
@@ -615,6 +628,7 @@
 					if(pAresta->pVerticeApontado->pCabeca != pGrafo)
 						INCERROS
 
+					LIS_IrInicioLista(pAresta->pVerticeApontado->pListaAnt);
 					if(LIS_ProcurarValor(pAresta->pVerticeApontado->pListaAnt, pVertice) != LIS_CondRetOK)
 						INCERROS
 
@@ -625,7 +639,7 @@
 		   if(pVertice->pCabeca != pGrafo)
 			   INCERROS
 
-		   if((pVertice->pValor == NULL && pVertice->tamValor != 0) || (pVertice->tamValor != CED_ObterTamanhoValor(pVertice->pValor) ))
+		   if((pVertice->pValor == NULL && pVertice->tamValor != 0) || (pVertice->pValor != NULL && pVertice->tamValor != CED_ObterTamanhoValor(pVertice->pValor) ))
 			   INCERROS
 
 		   if(pVertice->pValor != NULL && pVertice->idTipo != CED_ObterTipoEspaco(pVertice->pValor))
@@ -645,8 +659,12 @@
 	   if(pGrafo->tamValores != somaTam)
 		   INCERROS
 
+		//printf("\n tamvalores %d - somatam %d\n", pGrafo->tamValores, somaTam);
+
 	   return GRA_CondRetOK;
    }
+
+#undef INCERROS
 
 
 /***********************************************************************
@@ -659,7 +677,7 @@
    {
 	   return GRA_CondRetOK;
    }
-
+#endif
 
 /***** Código das funções encapuladas no módulo *****/
 
@@ -713,7 +731,7 @@
 	   }
 
 #ifdef _DEBUG
-	   CED_EhEspacoAtivo(pVertice);
+	   CED_MarcarEspacoAtivo(pVertice);
 #endif
 
 	   return pVertice;
@@ -796,6 +814,7 @@
 	   while( LIS_ObterValor( pVertice->pListaSuc ) ) {
 		   pAresta = (GRA_tpAresta *) LIS_ObterValor( pVertice->pListaSuc );
 		   if( pAresta != NULL && pAresta->pVerticeApontado != NULL && pAresta->pVerticeApontado->pListaAnt != NULL) {
+			   LIS_IrInicioLista( pAresta->pVerticeApontado->pListaAnt );
 			   LIS_ProcurarValor( pAresta->pVerticeApontado->pListaAnt, pVertice );
 			   LIS_ExcluirElemento( pAresta->pVerticeApontado->pListaAnt );
 		   }
@@ -873,7 +892,7 @@
 	   }
 
 #ifdef _DEBUG
-	   CED_EhEspacoAtivo(pAresta);
+	   CED_MarcarEspacoAtivo(pAresta);
 #endif
 
 	   return GRA_CondRetOK;

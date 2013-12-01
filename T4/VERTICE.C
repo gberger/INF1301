@@ -18,6 +18,9 @@
 #include "VERTICE.h"
 #undef VERTICE_OWN
 
+#ifdef _DEBUG
+#include "CESPDIN.H"
+#endif
 /***********************************************************************
 *
 *  $TC Tipo de dados: VER Elemento de vértice

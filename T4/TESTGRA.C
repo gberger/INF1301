@@ -196,7 +196,9 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
            
             VER_CriarVertice( &novoVertice );
 
+#ifdef _DEBUG
 			CED_DefinirTipoEspaco( novoVertice, ID_VER_tppVertice );
+#endif
 
             VER_AtribuirValor( novoVertice, StringDado ) ;
             
@@ -255,11 +257,12 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 
 #ifdef _DEBUG
 			CED_EhEspacoAtivo( novoVertice );
+			CED_DefinirTipoEspaco( novoVertice, ID_VER_tppVertice );
 #endif
 
             VER_AtribuirValor( novoVertice, StringDado ) ;
             
-            CondRet = GRA_InserirVertice( vtGRAFO[ inxGrafo ], novoVertice, idVertice );   
+            CondRet = GRA_InserirVertice( vtGRAFO[ inxGrafo ], novoVertice, idVertice );
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao inserir vertice."  ) ;
@@ -447,7 +450,7 @@ GRA_tppGrafo vtGRAFO[ DIM_VT_GRAFO ] ;
 ***********************************************************************/
 
    static void DestruirValor( void * pValor) {
-	   VER_EsvaziarVertice( (VER_tppVertice) pValor);
+	   VER_DestruirVertice( (VER_tppVertice) pValor);
    }
 
 
