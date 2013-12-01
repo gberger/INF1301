@@ -37,6 +37,12 @@
 =declararparm ArestaJaExiste   int  6
 =declararparm   ArestaInvalida   int  7
 
+== Inicializar contadores
+=inicializarcontadores  ""
+=lercontadores          "Grafo"
+=iniciarcontagem
+
+
 == Cria grafos
 =criargrafo   grafo0  OK
 =criargrafo   grafo1  OK
@@ -82,6 +88,13 @@
 == Adiciona Arestas no Corrente
 =inserirarestaorigem grafo0 C d OK
 
+== Deturpar
+=deturpar grafo0 1
+
+== Verificar estrutura
+=verificar  grafo0 0
+=verificar  grafo1 0
+
 == Exclui Vertices
 =excluircorrente grafo1 OK
 
@@ -97,5 +110,12 @@
 == Destroi Grafos
 =destruirgrafo grafo0 OK
 =destruirgrafo grafo1 OK
+
+== Terminar controlar contadores
+=pararcontagem
+=verificarcontagens    0
+
+== Terminar contagem
+=terminarcontadores
 
 // fim
