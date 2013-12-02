@@ -4,11 +4,13 @@ cls
 
 if exist estatisticas.estat  del estatisticas.estat
 
-pmod4        /sTesteGrafoInstrum             /lTesteGrafoInstrum              /aestatisticas
+TRAB4-1      /sTesteGrafoInstrum.script             /lTesteGrafoInstrum              /aestatisticas
 
-pmod4        /sTesteGrafoInstrum2             /lTesteGrafoInstrum2              /aestatisticas
+TRAB4-1      /sTesteGrafoInstrumDeturp.script       /lTesteGrafoInstrumDeturp        /aestatisticas
 
-TRAB4-2      /sTesteGrafo             /lTesteGrafo    /aestatisticas
+TRAB4-2      /sTesteGrafo.script                    /lTesteGrafo                     /aestatisticas
+
+type acumulador.count
 
 
 pause
