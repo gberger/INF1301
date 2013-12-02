@@ -5,7 +5,8 @@
 // Data:      19/out/2013
 // Propósito: Testar verificacao apos deturpacao de Grafo
 // Para que o teste ocorra completamente, TesteGrafoInstrum.scrip deve ser rodado antes
-// Este teste resulta em vazamento de memória, pois a deturpação impede que a destruição ocorra sem o programa voar.
+// Este teste resulta em vazamento de memória, pois a deturpação impede que a destruição
+//   seja chamada, já que a mesma faria o programa voar.
 //
 
 == Inicializar valores
