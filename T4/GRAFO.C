@@ -1039,6 +1039,7 @@
 			case 8:
 				if(pVertice != NULL) {
 					RemoverVerticeFreeOpcional(pGrafo, pVertice, 0);
+					CED_MarcarEspacoNaoAtivo(pVertice);
 					concluido = 1;
 				}
 				break;
